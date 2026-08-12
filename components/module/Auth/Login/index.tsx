@@ -76,7 +76,7 @@ const LoginPage = () => {
       <div className="flex w-full max-w-6xl items-center gap-28 px-4">
         <div className="hidden md:flex flex-1 items-center justify-center rounded-lg min-h-[90vh]">
           <Image
-            src="/images/otp.jpg"
+            src="/Login.jpg"
             alt="Logo"
             width={800}
             height={800}
