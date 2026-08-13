@@ -3,6 +3,7 @@
 
 import PHInput from "@/components/form/NRInput";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { useLoginMutation } from "@/redux/api/authApi";
 import { setUser } from "@/redux/features/authSlice";
 import { useAppDispatch } from "@/redux/hooks";
@@ -21,6 +22,7 @@ type LoginFormValues = {
   email: string;
   password: string;
 };
+
 interface CustomJwtPayload extends JwtPayload {
   role: string;
 }
@@ -72,35 +74,36 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="flex w-full max-w-6xl items-center gap-28 px-4">
-        <div className="hidden md:flex flex-1 items-center justify-center rounded-lg min-h-[90vh]">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+      <div className="flex flex-col md:flex-row w-full max-w-7xl items-center justify-center gap-8 lg:gap-16 xl:gap-24">
+        {/* Left Image Banner */}
+        <div className="hidden md:flex flex-1 items-center justify-center rounded-xs overflow-hidden min-h-[450px] lg:min-h-[600px] max-h-[85vh]">
           <Image
-            src="/Login.jpg"
+            src="/images/lip.jpg"
             alt="Logo"
             width={800}
             height={800}
-            className="object-cover rounded-lg"
+            className="w-full h-full object-cover rounded-xs"
             priority
           />
         </div>
 
-        <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-md">
-          <Link href="/">
-            <Image
-              src="/Logo.png"
-              alt="Logo"
-              width={50}
-              height={50}
-              className="mx-auto mb-4 rounded-2xl"
-            />
-          </Link>
-          <h1 className="text-center text-2xl font-semibold">Welcome Back</h1>
-          <p className="mb-6 mt-3 text-center text-sm text-gray-600">
-            Sign in to your account
-          </p>
+        {/* Right Form Card */}
+        <div className="w-full max-w-xl mx-auto bg-white p-6 sm:p-8 md:p-10 shadow-lg rounded-xs">
+          <div className="text-center mb-6">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 tracking-tight">
+              Welcome Back
+            </h1>
+            <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm md:text-base text-gray-600">
+              Sign in to your account
+            </p>
+          </div>
+
           <FormProvider {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-4 sm:space-y-5"
+            >
               <PHInput
                 control={form.control}
                 name="email"
@@ -120,27 +123,33 @@ const LoginPage = () => {
               <div className="flex justify-end">
                 <Link
                   href="/forgot-password"
-                  className="text-sm text-primary hover:underline"
+                  className="text-xs sm:text-sm text-primary hover:underline font-medium"
                 >
                   Forgot password?
                 </Link>
               </div>
 
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className="w-full py-6 font-semibold"
-              >
-                {isLoading ? "Loading..." : "Sign In"}
-              </Button>
+              <div className="pt-1">
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full py-5 sm:py-6 font-semibold rounded-xs text-sm sm:text-base transition-colors"
+                >
+                  {isLoading ? <Spinner /> : "Sign In"}
+                </Button>
+              </div>
             </form>
           </FormProvider>
-          <p className="mt-6 text-center text-sm text-gray-600">
+
+          <p className="mt-6 text-center text-xs sm:text-sm text-gray-600">
             Don&apos;t have an account?{" "}
-            <Link href="/register" className="text-black hover:underline">
+            <Link
+              href="/register"
+              className="text-gray-900 font-semibold hover:underline"
+            >
               Sign Up
             </Link>
-          </p>{" "}
+          </p>
         </div>
       </div>
     </div>

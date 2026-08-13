@@ -1,14 +1,19 @@
 import NextAuthSessionProvider from "@/lib/NextAuthSessionProvider";
 import ReduxProvider from "@/redux/ReduxProvider";
 import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
+import { DM_Sans, Roboto } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
 
 // console.log()
-const roboto = Roboto({
+// const roboto = Roboto({
+//   subsets: ["latin"],
+//   weight: ["100", "300", "400", "500", "700", "900"],
+// });
+
+const roboto = DM_Sans({
   subsets: ["latin"],
-  weight: ["100", "300", "400", "500", "700", "900"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {

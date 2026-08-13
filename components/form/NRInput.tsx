@@ -17,7 +17,6 @@ type PHInputProps = {
   name: string;
   label?: string;
   disabled?: boolean;
-  icon?: React.ComponentType<any>;
   placeholder?: string;
   control: any;
 };
@@ -27,23 +26,28 @@ const PHInput = ({
   name,
   label,
   disabled,
-  icon: Icon,
   placeholder,
   control,
 }: PHInputProps) => {
   const isPassword = type === "password";
   const [showPassword, setShowPassword] = useState(false);
 
-  // Adjust padding if there's an icon or password toggle
-  const inputPaddingClass = isPassword || Icon ? "px-10 py-6" : "py-6";
+  // Adjust padding if there's a password toggle
+  const inputPaddingClass = isPassword
+    ? "pl-3.5 pr-10 h-11 sm:h-12 text-sm sm:text-base"
+    : "px-3.5 h-11 sm:h-12 text-sm sm:text-base";
 
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className="space-y-2">
-          {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
+        <FormItem className="space-y-1.5 sm:space-y-2">
+          {label && (
+            <FormLabel htmlFor={name} className="text-sm font-medium text-gray-700">
+              {label}
+            </FormLabel>
+          )}
 
           <FormControl>
             <div className="relative">
@@ -56,31 +60,25 @@ const PHInput = ({
                 className={inputPaddingClass}
               />
 
-              {/* Left Icon */}
-              {Icon && (
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                  <Icon className="h-4 w-4" />
-                </div>
-              )}
-
               {/* Password Toggle */}
               {isPassword && (
                 <button
                   type="button"
+                  tabIndex={-1}
                   onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none transition-colors cursor-pointer"
                 >
                   {showPassword ? (
-                    <EyeOff className="h-4 w-4" />
+                    <EyeOff className="h-5 w-5" />
                   ) : (
-                    <Eye className="h-4 w-4" />
+                    <Eye className="h-5 w-5" />
                   )}
                 </button>
               )}
             </div>
           </FormControl>
 
-          <FormMessage />
+          <FormMessage className="text-xs sm:text-sm" />
         </FormItem>
       )}
     />
@@ -88,3 +86,4 @@ const PHInput = ({
 };
 
 export default PHInput;
+

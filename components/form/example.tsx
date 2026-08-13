@@ -11,7 +11,6 @@ import { useState } from "react";
 
 import { FormProvider, useForm } from "react-hook-form";
 
-import { Lock } from "lucide-react";
 import NRDatePicker from "./NRDatePicker";
 import PHInput from "./NRInput";
 import PHSelect from "./NRSelect";
@@ -69,7 +68,6 @@ export default function ProfileForm() {
             name="name"
             label="Full Name"
             placeholder="John Doe"
-            icon={Lock}
             type="text"
           />
 

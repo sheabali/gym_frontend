@@ -145,27 +145,30 @@ export default function Otp() {
   }, []);
 
   return (
-    <div className="min-h-screen relative flex items-center justify-center">
+    <div className="w-full flex items-center justify-center">
       <AnimatePresence>
         <motion.div
-          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.9, y: 20 }}
+          exit={{ opacity: 0, scale: 0.95, y: 20 }}
           transition={{ duration: 0.3, ease: [0.4, 0.0, 0.2, 1] }}
-          className="relative z-10 w-full max-w-md"
+          className="relative z-10 w-full max-w-md mx-auto"
         >
-          <div className="bg-white p-8 mx-auto">
+          <div className="bg-white p-4 sm:p-6 md:p-8 w-full">
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.3 }}
-              className="text-center mb-8"
+              className="text-center mb-6 sm:mb-8"
             >
-              <h1 className="text-[40px] font-bold text-gray-900 mb-2">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-bold text-gray-900 mb-2 tracking-tight">
                 Enter Code
               </h1>
-              <p className="text-gray-600 text-[18px]">
-                We’ve sent a code to {email}
+              <p className="text-gray-600 text-sm sm:text-base lg:text-[18px] break-words">
+                We’ve sent a code to{" "}
+                <span className="font-semibold text-gray-900 break-all">
+                  {email}
+                </span>
               </p>
             </motion.div>
 
@@ -174,12 +177,12 @@ export default function Otp() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.3 }}
               onSubmit={handleSubmit(onSubmit)}
-              className="space-y-6"
+              className="space-y-5 sm:space-y-6"
             >
               <div>
-                <div className="flex justify-between gap-2 sm:gap-3">
+                <div className="flex justify-between gap-2 sm:gap-3 md:gap-4">
                   {[0, 1, 2, 3].map((index) => (
-                    <div key={index} className="w-full">
+                    <div key={index} className="flex-1 flex justify-center">
                       <input
                         ref={(el) => {
                           inputRefs.current[index] = el;
@@ -190,7 +193,7 @@ export default function Otp() {
                         value={otpValues[index]}
                         onChange={(e) => handleChange(index, e.target.value)}
                         onKeyDown={(e) => handleKeyDown(index, e)}
-                        className="w-15 aspect-square text-center text-xl font-medium border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors border-gray-300"
+                        className="w-full max-w-[68px] aspect-square text-center text-lg sm:text-xl md:text-2xl font-semibold border rounded-xs focus:ring-2 focus:ring-primary/40 focus:border-primary outline-none transition-all border-gray-300 bg-white"
                         aria-label={`Digit ${index + 1} of OTP`}
                       />
                     </div>
@@ -200,13 +203,14 @@ export default function Otp() {
                   <motion.p
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mt-2 text-sm text-red-600 text-center"
+                    className="mt-2 text-xs sm:text-sm text-red-600 text-center font-medium"
                   >
                     Please enter a valid 4-digit code
                   </motion.p>
                 )}
               </div>
-              <div>
+
+              <div className="text-xs sm:text-sm md:text-base text-gray-600 text-center sm:text-left">
                 Didn’t get a code?{" "}
                 <span
                   onClick={handleResendOtp}
@@ -215,13 +219,14 @@ export default function Otp() {
                   Click to resend
                 </span>
               </div>
-              <div className="flex justify-between items-center gap-4">
+
+              <div className="flex items-center gap-3 sm:gap-4 pt-2">
                 <motion.button
                   type="submit"
                   disabled={isVerifyingOtp || otpValues.some((v) => !v)}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="cursor-pointer w-full bg-primary disabled:bg-primary/60 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center"
+                  className="cursor-pointer flex-1 bg-primary disabled:bg-primary/60 text-white font-medium py-3 px-4 rounded-xs transition-colors duration-200 flex items-center justify-center text-sm sm:text-base h-11 sm:h-12"
                 >
                   {isVerifyingOtp ? (
                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -230,19 +235,16 @@ export default function Otp() {
                   )}
                 </motion.button>
 
-                <div>
-                  <Link
-                    href="/forgot-password"
-                    className="text-black font-semibold hover:underline"
+                <Link href="/forgot-password" className="flex-1">
+                  <motion.button
+                    type="button"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="cursor-pointer w-full border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 font-medium py-3 px-4 rounded-xs transition-colors duration-200 flex items-center justify-center text-sm sm:text-base h-11 sm:h-12"
                   >
-                    <Button
-                      variant="outline"
-                      className="cursor-pointer w-full font-medium py-3 px-4 rounded-lg transition-colors duration-200 hover:bg-white flex items-center justify-center"
-                    >
-                      Cancel
-                    </Button>
-                  </Link>
-                </div>
+                    Cancel
+                  </motion.button>
+                </Link>
               </div>
             </motion.form>
           </div>
