@@ -5,7 +5,7 @@ import { DM_Sans, Roboto } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
 
-// console.log()
+console.log()
 // const roboto = Roboto({
 //   subsets: ["latin"],
 //   weight: ["100", "300", "400", "500", "700", "900"],
