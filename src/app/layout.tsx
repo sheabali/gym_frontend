@@ -4,8 +4,10 @@ import type { Metadata } from "next";
 import { DM_Sans, Roboto } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
+import { CloudCog } from "lucide-react";
 
-console.log()
+// console.log()
+// CloudCog
 // const roboto = Roboto({
 //   subsets: ["latin"],
 //   weight: ["100", "300", "400", "500", "700", "900"],
