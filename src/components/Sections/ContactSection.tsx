@@ -19,6 +19,9 @@ import {
   Check,
 } from "lucide-react";
 
+
+// ChannelMergerNode
+
 const formSchema = z.object({
   name: z.string().min(2, { message: "Please enter your full name (at least 2 letters)" }),
   phone: z
@@ -356,11 +359,10 @@ export default function ContactSection() {
                           key={opt.id}
                           type="button"
                           onClick={() => setValue("plan", opt.id)}
-                          className={`py-2.5 px-3 border text-center transition-all cursor-pointer rounded-xs ${
-                            isSelected
+                          className={`py-2.5 px-3 border text-center transition-all cursor-pointer rounded-xs ${isSelected
                               ? "bg-[#22c55e] !text-black font-bold border-[#22c55e] shadow-md shadow-[#22c55e]/20"
                               : "bg-[#121216] border-white/[0.08] text-zinc-300 hover:border-white/20 hover:text-white"
-                          }`}
+                            }`}
                         >
                           <span className={`text-xs block font-bold ${isSelected ? "!text-black" : "text-white"}`}>
                             {language === "bn" ? opt.titleBn : opt.titleEn}
@@ -387,11 +389,10 @@ export default function ContactSection() {
                           key={slot.id}
                           type="button"
                           onClick={() => setValue("slot", slot.id)}
-                          className={`py-2 px-2.5 border text-center transition-all cursor-pointer rounded-xs ${
-                            isSelected
+                          className={`py-2 px-2.5 border text-center transition-all cursor-pointer rounded-xs ${isSelected
                               ? "bg-[#22c55e] !text-black font-bold border-[#22c55e] shadow-md shadow-[#22c55e]/20"
                               : "bg-[#121216] border-white/[0.08] text-zinc-300 hover:border-white/20 hover:text-white"
-                          }`}
+                            }`}
                         >
                           <span className={`text-xs block font-bold ${isSelected ? "!text-black" : "text-white"}`}>
                             {language === "bn" ? slot.titleBn : slot.titleEn}
@@ -415,11 +416,10 @@ export default function ContactSection() {
                       type="text"
                       {...register("name")}
                       placeholder={t.contact.namePlaceholder}
-                      className={`w-full px-4 py-3 bg-[#121216] border text-sm text-white placeholder-zinc-600 focus:outline-none transition-all font-mono rounded-xs ${
-                        errors.name
+                      className={`w-full px-4 py-3 bg-[#121216] border text-sm text-white placeholder-zinc-600 focus:outline-none transition-all font-mono rounded-xs ${errors.name
                           ? "border-red-500 focus:border-red-500"
                           : "border-white/[0.08] focus:border-[#22c55e]"
-                      }`}
+                        }`}
                     />
                     {errors.name && (
                       <p className="text-xs text-red-400 mt-1 font-mono">
@@ -436,11 +436,10 @@ export default function ContactSection() {
                       type="tel"
                       {...register("phone")}
                       placeholder={t.contact.phonePlaceholder}
-                      className={`w-full px-4 py-3 bg-[#121216] border text-sm text-white placeholder-zinc-600 focus:outline-none transition-all font-mono rounded-xs ${
-                        errors.phone
+                      className={`w-full px-4 py-3 bg-[#121216] border text-sm text-white placeholder-zinc-600 focus:outline-none transition-all font-mono rounded-xs ${errors.phone
                           ? "border-red-500 focus:border-red-500"
                           : "border-white/[0.08] focus:border-[#22c55e]"
-                      }`}
+                        }`}
                     />
                     {errors.phone && (
                       <p className="text-xs text-red-400 mt-1 font-mono">
