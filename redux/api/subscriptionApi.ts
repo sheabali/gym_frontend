@@ -63,10 +63,24 @@ export const subscriptionApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Subscriptions", "User"],
     }),
+    adminRecordSubscription: builder.mutation({
+      query: (body: {
+        userId: string;
+        planId: string;
+        method?: string;
+        note?: string;
+      }) => ({
+        url: "/subscriptions/admin-record",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Subscriptions", "Admin", "User"],
+    }),
   }),
 });
 
 export const {
   useGetMySubscriptionsQuery,
   useCheckoutSubscriptionMutation,
+  useAdminRecordSubscriptionMutation,
 } = subscriptionApi;

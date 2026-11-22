@@ -67,6 +67,59 @@ export const classApi = baseApi.injectEndpoints({
       }),
       providesTags: (_result: any, _err: any, id: string) => [{ type: "Classes", id }],
     }),
+    createClassType: builder.mutation({
+      query: (body: {
+        name: string;
+        description?: string;
+        imageUrl?: string;
+        difficulty: "BEGINNER" | "INTERMEDIATE" | "ADVANCED" | "ALL_LEVELS";
+        durationMinutes: number;
+      }) => ({
+        url: "/classes/types",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Classes"],
+    }),
+    createSession: builder.mutation({
+      query: (body: {
+        classTypeId: string;
+        trainerId: string;
+        startsAt: string;
+        endsAt: string;
+        capacity: number;
+        room?: string;
+      }) => ({
+        url: "/classes/sessions",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Classes"],
+    }),
+    createRecurringSessions: builder.mutation({
+      query: (body: {
+        classTypeId: string;
+        trainerId: string;
+        dayOfWeek: number; // 0 = Sunday, 1 = Monday...
+        startTime: string; // HH:mm
+        durationMinutes: number;
+        capacity: number;
+        room?: string;
+        numberOfWeeks: number;
+      }) => ({
+        url: "/classes/sessions/recurring",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Classes"],
+    }),
+    cancelSession: builder.mutation({
+      query: (id: string) => ({
+        url: `/classes/sessions/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Classes"],
+    }),
   }),
 });
 
@@ -74,4 +127,8 @@ export const {
   useGetClassTypesQuery,
   useGetClassSessionsQuery,
   useGetClassSessionByIdQuery,
+  useCreateClassTypeMutation,
+  useCreateSessionMutation,
+  useCreateRecurringSessionsMutation,
+  useCancelSessionMutation,
 } = classApi;

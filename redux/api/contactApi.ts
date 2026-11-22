@@ -22,13 +22,32 @@ export const contactApi = baseApi.injectEndpoints({
       invalidatesTags: ["Contact"],
     }),
     getContacts: builder.query({
-      query: () => ({
+      query: (params?: { status?: string }) => ({
         url: "/contact",
         method: "GET",
+        params: params?.status ? { status: params.status } : {},
       }),
       providesTags: ["Contact"],
+    }),
+    updateContactStatus: builder.mutation({
+      query: ({
+        id,
+        status,
+      }: {
+        id: string;
+        status: "NEW" | "REPLIED" | "CLOSED";
+      }) => ({
+        url: `/contact/${id}/status`,
+        method: "PATCH",
+        body: { status },
+      }),
+      invalidatesTags: ["Contact"],
     }),
   }),
 });
 
-export const { useSubmitContactMutation, useGetContactsQuery } = contactApi;
+export const {
+  useSubmitContactMutation,
+  useGetContactsQuery,
+  useUpdateContactStatusMutation,
+} = contactApi;

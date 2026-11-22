@@ -49,7 +49,64 @@ export const trainerApi = baseApi.injectEndpoints({
       }),
       providesTags: (_result: any, _err: any, id: string) => [{ type: "Trainers", id }],
     }),
+    updateMyProfile: builder.mutation({
+      query: (body: {
+        bio?: string;
+        specialties?: string[];
+        certifications?: string[];
+        photoUrl?: string;
+      }) => ({
+        url: "/trainers/me",
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["Trainers", "User"],
+    }),
+    createTrainer: builder.mutation({
+      query: (body: {
+        name: string;
+        email: string;
+        phone: string;
+        password: string;
+        bio?: string;
+        specialties?: string[];
+        certifications?: string[];
+        photoUrl?: string;
+        isPublic?: boolean;
+        sortOrder?: number;
+      }) => ({
+        url: "/trainers",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Trainers"],
+    }),
+    updateTrainer: builder.mutation({
+      query: ({
+        id,
+        ...body
+      }: {
+        id: string;
+        bio?: string;
+        specialties?: string[];
+        certifications?: string[];
+        photoUrl?: string;
+        isPublic?: boolean;
+        sortOrder?: number;
+      }) => ({
+        url: `/trainers/${id}`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["Trainers"],
+    }),
   }),
 });
 
-export const { useGetTrainersQuery, useGetTrainerByIdQuery } = trainerApi;
+export const {
+  useGetTrainersQuery,
+  useGetTrainerByIdQuery,
+  useUpdateMyProfileMutation,
+  useCreateTrainerMutation,
+  useUpdateTrainerMutation,
+} = trainerApi;

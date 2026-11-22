@@ -27,6 +27,29 @@ export interface SinglePlanResponse {
   data: MembershipPlan;
 }
 
+export interface CreatePlanInput {
+  name: string;
+  slug?: string;
+  description?: string;
+  price: number; // in paisa
+  durationDays: number;
+  features: string[];
+  isActive?: boolean;
+  isFeatured?: boolean;
+  sortOrder?: number;
+}
+
+export interface UpdatePlanInput {
+  name?: string;
+  description?: string;
+  price?: number;
+  durationDays?: number;
+  features?: string[];
+  isActive?: boolean;
+  isFeatured?: boolean;
+  sortOrder?: number;
+}
+
 export const planApi = baseApi.injectEndpoints({
   endpoints: (builder: any) => ({
     getPlans: builder.query({
@@ -44,7 +67,36 @@ export const planApi = baseApi.injectEndpoints({
       }),
       providesTags: (_result: any, _err: any, slug: string) => [{ type: "Plans", id: slug }],
     }),
+    createPlan: builder.mutation({
+      query: (body: CreatePlanInput) => ({
+        url: "/plans",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Plans"],
+    }),
+    updatePlan: builder.mutation({
+      query: ({ id, ...body }: { id: string } & UpdatePlanInput) => ({
+        url: `/plans/${id}`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["Plans"],
+    }),
+    deletePlan: builder.mutation({
+      query: (id: string) => ({
+        url: `/plans/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Plans"],
+    }),
   }),
 });
 
-export const { useGetPlansQuery, useGetPlanBySlugQuery } = planApi;
+export const {
+  useGetPlansQuery,
+  useGetPlanBySlugQuery,
+  useCreatePlanMutation,
+  useUpdatePlanMutation,
+  useDeletePlanMutation,
+} = planApi;

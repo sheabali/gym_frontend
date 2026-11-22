@@ -52,8 +52,13 @@ const data = {
     navMain: [
       {
         title: "Trainer Portal",
-        url: "/user",
+        url: "/trainer",
         icon: LayoutDashboard,
+      },
+      {
+        title: "Member Portal",
+        url: "/user",
+        icon: User,
       },
       {
         title: "Go Back To Home",
@@ -68,6 +73,11 @@ const data = {
         title: "Admin Dashboard",
         url: "/admin/dashboard",
         icon: Shield,
+      },
+      {
+        title: "Trainer Portal",
+        url: "/trainer",
+        icon: Users,
       },
       {
         title: "Member Portal",

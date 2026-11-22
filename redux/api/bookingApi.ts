@@ -24,6 +24,28 @@ export interface BookingResponse {
   data: Booking;
 }
 
+export interface RosterAttendee {
+  id: string;
+  sessionId: string;
+  userId: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    photoUrl?: string | null;
+  };
+  status: "BOOKED" | "CANCELLED" | "ATTENDED" | "NO_SHOW";
+  bookedAt: string;
+  cancelledAt?: string | null;
+}
+
+export interface SessionRosterResponse {
+  success: boolean;
+  message?: string;
+  data: RosterAttendee[];
+}
+
 export const bookingApi = baseApi.injectEndpoints({
   endpoints: (builder: any) => ({
     getMyBookings: builder.query({
@@ -49,6 +71,27 @@ export const bookingApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Bookings", "Classes"],
     }),
+    getSessionRoster: builder.query({
+      query: (sessionId: string) => ({
+        url: `/bookings/sessions/${sessionId}`,
+        method: "GET",
+      }),
+      providesTags: ["Bookings"],
+    }),
+    markAttendance: builder.mutation({
+      query: ({
+        bookingId,
+        status,
+      }: {
+        bookingId: string;
+        status: "ATTENDED" | "NO_SHOW";
+      }) => ({
+        url: `/bookings/${bookingId}/attendance`,
+        method: "PATCH",
+        body: { status },
+      }),
+      invalidatesTags: ["Bookings", "Classes"],
+    }),
   }),
 });
 
@@ -56,4 +99,6 @@ export const {
   useGetMyBookingsQuery,
   useBookSessionMutation,
   useCancelBookingMutation,
+  useGetSessionRosterQuery,
+  useMarkAttendanceMutation,
 } = bookingApi;
