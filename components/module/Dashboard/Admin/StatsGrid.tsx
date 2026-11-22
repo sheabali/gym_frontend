@@ -3,71 +3,66 @@
 import { motion } from "framer-motion";
 import {
   Activity,
-  ArrowDownRight,
   ArrowUpRight,
-  CheckCircle2,
   Clock,
-  TrendingUp,
+  CreditCard,
   Users,
 } from "lucide-react";
-
-interface StatItem {
-  id: string;
-  title: string;
-  value: string;
-  change: string;
-  isPositive: boolean;
-  period: string;
-  icon: any;
-  accentColor: string;
-  progressPercent: number;
-}
+import { useGetAdminOverviewQuery } from "@/redux/api/adminApi";
 
 export default function StatsGrid() {
-  const stats: StatItem[] = [
+  const { data: overviewResponse, isLoading } = useGetAdminOverviewQuery(undefined) as any;
+  const metrics = overviewResponse?.data;
+
+  const activeMembers = metrics?.activeMembers ?? 0;
+  const monthlyRevenueBdt = metrics?.monthlyRevenue ? (metrics.monthlyRevenue / 100) : 0;
+  const todaySessions = metrics?.todaySessionsCount ?? 0;
+  const pendingPayments = metrics?.pendingPaymentsCount ?? 0;
+
+  const stats = [
     {
-      id: "total-users",
-      title: "Total Users",
-      value: "14,892",
-      change: "+12.5%",
+      id: "active-members",
+      title: "Active Subscribed Members",
+      value: isLoading ? "..." : activeMembers.toLocaleString("en-US"),
+      change: "+100%",
       isPositive: true,
-      period: "vs last month",
+      period: "current active roster",
       icon: Users,
       accentColor: "bg-emerald-50 text-emerald-600 border-emerald-200",
-      progressPercent: 82,
+      progressPercent: Math.min(100, Math.max(20, activeMembers * 10)),
     },
     {
-      id: "active-sessions",
-      title: "Active Sessions",
-      value: "3,420",
-      change: "+8.2%",
+      id: "monthly-revenue",
+      title: "30-Day Revenue (BDT)",
+      value: isLoading ? "..." : `৳${monthlyRevenueBdt.toLocaleString("en-US")}`,
+      change: "+15.2%",
       isPositive: true,
-      period: "vs yesterday",
-      icon: Activity,
+      period: "verified collections",
+      icon: CreditCard,
       accentColor: "bg-blue-50 text-blue-600 border-blue-200",
-      progressPercent: 68,
+      progressPercent: 85,
     },
     {
-      id: "pending-verifications",
-      title: "Pending Verifications",
-      value: "34",
-      change: "-5.1%",
-      isPositive: false,
-      period: "backlog queue",
+      id: "today-sessions",
+      title: "Today's Class Sessions",
+      value: isLoading ? "..." : todaySessions.toString(),
+      change: "On schedule",
+      isPositive: true,
+      period: "scheduled today",
+      icon: Activity,
+      accentColor: "bg-purple-50 text-purple-600 border-purple-200",
+      progressPercent: 75,
+    },
+    {
+      id: "pending-payments",
+      title: "Pending Invoices / Verifications",
+      value: isLoading ? "..." : pendingPayments.toString(),
+      change: pendingPayments > 0 ? "Action needed" : "Clean queue",
+      isPositive: pendingPayments === 0,
+      period: "cash / gateway pending",
       icon: Clock,
       accentColor: "bg-amber-50 text-amber-600 border-amber-200",
-      progressPercent: 35,
-    },
-    {
-      id: "conversion-rate",
-      title: "Platform Engagement",
-      value: "96.4%",
-      change: "+3.2%",
-      isPositive: true,
-      period: "retention rate",
-      icon: TrendingUp,
-      accentColor: "bg-purple-50 text-purple-600 border-purple-200",
-      progressPercent: 96,
+      progressPercent: Math.min(100, pendingPayments * 20),
     },
   ];
 
@@ -106,15 +101,10 @@ export default function StatsGrid() {
             <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-xs">
               <div className="flex items-center gap-1">
                 <span
-                  className={`inline-flex items-center font-semibold ${
-                    stat.isPositive ? "text-emerald-600" : "text-amber-600"
-                  }`}
+                  className={`inline-flex items-center font-semibold ${stat.isPositive ? "text-emerald-600" : "text-amber-600"
+                    }`}
                 >
-                  {stat.isPositive ? (
-                    <ArrowUpRight size={14} className="mr-0.5" />
-                  ) : (
-                    <ArrowDownRight size={14} className="mr-0.5" />
-                  )}
+                  <ArrowUpRight size={14} className="mr-0.5" />
                   {stat.change}
                 </span>
                 <span className="text-gray-400">{stat.period}</span>
@@ -122,9 +112,8 @@ export default function StatsGrid() {
 
               <div className="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
                 <div
-                  className={`h-full rounded-full ${
-                    stat.isPositive ? "bg-primary" : "bg-amber-400"
-                  }`}
+                  className={`h-full rounded-full ${stat.isPositive ? "bg-[#22c55e]" : "bg-amber-400"
+                    }`}
                   style={{ width: `${stat.progressPercent}%` }}
                 />
               </div>

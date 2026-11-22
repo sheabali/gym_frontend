@@ -8,10 +8,9 @@ import {
 } from "@/components/ui/sidebar";
 import Logo from "@/src/assets/logo.png";
 import {
-  HandCoins,
   Home,
-  InfoIcon,
   LayoutDashboard,
+  Shield,
   User,
   Users,
 } from "lucide-react";
@@ -24,14 +23,37 @@ const data = {
   user: {
     navMain: [
       {
-        title: "Dashboard",
+        title: "Member Portal",
         url: "/user",
         icon: LayoutDashboard,
       },
       {
-        title: "Your Profile",
-        url: "/user/dashboard/profile",
-        icon: User,
+        title: "Go Back To Home",
+        url: "/",
+        icon: Home,
+      },
+    ],
+  },
+  member: {
+    navMain: [
+      {
+        title: "Member Portal",
+        url: "/user",
+        icon: LayoutDashboard,
+      },
+      {
+        title: "Go Back To Home",
+        url: "/",
+        icon: Home,
+      },
+    ],
+  },
+  trainer: {
+    navMain: [
+      {
+        title: "Trainer Portal",
+        url: "/user",
+        icon: LayoutDashboard,
       },
       {
         title: "Go Back To Home",
@@ -43,31 +65,14 @@ const data = {
   admin: {
     navMain: [
       {
-        title: "Dashboard",
+        title: "Admin Dashboard",
         url: "/admin/dashboard",
+        icon: Shield,
+      },
+      {
+        title: "Member Portal",
+        url: "/user",
         icon: LayoutDashboard,
-      },
-      {
-        title: "Users",
-        url: "/user/dashboard/users",
-        icon: HandCoins,
-        items: [
-          {
-            title: "Users",
-            url: "/user/dashboard/estimates",
-            icon: Users,
-          },
-          {
-            title: "Pending Users",
-            url: "/user/dashboard/pending-users",
-            icon: InfoIcon,
-          },
-        ],
-      },
-      {
-        title: "Your Profile",
-        url: "/user/dashboard/profile",
-        icon: User,
       },
       {
         title: "Go Back To Home",
@@ -78,31 +83,31 @@ const data = {
   },
 };
 
-// add roles based on your requirements
 interface AppSidebarProps {
   role: string;
 }
 
 export default function AppSidebar({ role, ...props }: AppSidebarProps) {
-  const sidebarData = data[role?.toLowerCase() as keyof typeof data];
+  const normalizedRole = role?.toLowerCase();
+  const sidebarData = data[normalizedRole as keyof typeof data] || data.user;
 
   return (
     <Sidebar
       collapsible="icon"
-      className="w-64 bg-white border-r border-blue-200"
+      className="w-64 bg-white border-r border-gray-200"
       {...props}
     >
       <SidebarHeader>
         <Link
           href={"/"}
-          className="flex items-center w-full max-h-40 justify-center"
+          className="flex items-center w-full max-h-40 justify-center p-3"
         >
           <Image
             src={Logo.src}
-            alt="Logo"
-            width={300}
-            height={300}
-            className="size-auto "
+            alt="Platinum Gym Logo"
+            width={180}
+            height={60}
+            className="h-10 w-auto object-contain"
           />
         </Link>
       </SidebarHeader>

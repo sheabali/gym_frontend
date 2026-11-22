@@ -1,14 +1,56 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
-import { PRICING_PLANS, BUSINESS_INFO } from "@/data/gymData";
-import { ArrowUpRight, Check, MapPin, Globe, Facebook, Sparkles } from "lucide-react";
+import { PRICING_PLANS } from "@/src/data/gymData";
+import { useGetPlansQuery } from "@/redux/api/planApi";
+import { useCheckoutSubscriptionMutation } from "@/redux/api/subscriptionApi";
+import { useAppSelector } from "@/redux/hooks";
+import { ArrowUpRight, Check, Globe, CreditCard, Banknote, Loader2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function PricingSection() {
   const { language, t } = useLanguage();
+  const router = useRouter();
+  const token = useAppSelector((state) => state.auth.token);
+  const { data: plansData, isLoading: plansLoading } = useGetPlansQuery(undefined) as any;
+  const [checkoutSubscription, { isLoading: checkingOut }] = useCheckoutSubscriptionMutation() as any;
 
-  const handleSelectPlan = (planId: string) => {
+  const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
+  const [selectedPlanDetails, setSelectedPlanDetails] = useState<{
+    id: string;
+    name: string;
+    price: number;
+    durationDays: number;
+  } | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<"ONLINE" | "CASH">("ONLINE");
+
+  // Format plans: if backend plans exist and are active, display them alongside official rates
+  const backendPlans = plansData?.data || [];
+
+  const handleSelectPlan = (planId: string, planName?: string, pricePaisa?: number, durationDays?: number) => {
+    // If backend plan ID is available and user is authenticated, open checkout modal
+    if (token && planId && pricePaisa) {
+      setSelectedPlanDetails({
+        id: planId,
+        name: planName || "Membership Plan",
+        price: pricePaisa / 100,
+        durationDays: durationDays || 30,
+      });
+      setCheckoutModalOpen(true);
+      return;
+    }
+
+    // Otherwise, scroll to contact inquiry and prefill
     const el = document.getElementById("contact");
     if (el) {
       const topOffset = 75;
@@ -24,6 +66,68 @@ export default function PricingSection() {
       );
     }
   };
+
+  const handleConfirmCheckout = async () => {
+    if (!selectedPlanDetails) return;
+
+    try {
+      const result = await checkoutSubscription({
+        planId: selectedPlanDetails.id,
+        paymentMethod,
+      }).unwrap();
+
+      if (paymentMethod === "ONLINE" && result.data.gatewayUrl) {
+        toast.info(language === "bn" ? "পেমেন্ট গেটওয়েতে রিডাইরেক্ট করা হচ্ছে..." : "Redirecting to SSLCommerz gateway...");
+        window.location.href = result.data.gatewayUrl;
+      } else {
+        toast.success(
+          language === "bn"
+            ? `সাবস্ক্রিপশন সফলভাবে শুরু হয়েছে! ট্রানজ্যাকশন আইডি: ${result.data.payment.tranId}`
+            : `Subscription requested! Tran ID: ${result.data.payment.tranId}. Please pay at front desk.`
+        );
+        setCheckoutModalOpen(false);
+        router.push("/user");
+      }
+    } catch (err: any) {
+      const errMsg = err?.data?.message || err?.message || "Failed to initiate subscription.";
+      toast.error(errMsg);
+    }
+  };
+
+  // Determine which plan list to display: use backend plans if available, else static official rate card
+  const displayPlans = backendPlans.length > 0
+    ? backendPlans.map((bp: any) => {
+      const matchingStatic = PRICING_PLANS.find(
+        (sp) => sp.nameEn.toLowerCase().includes(bp.name.toLowerCase()) || bp.name.toLowerCase().includes(sp.id)
+      );
+      return {
+        id: bp.id,
+        rawId: bp.id,
+        name: bp.name,
+        nameEn: bp.name,
+        nameBn: matchingStatic?.nameBn || bp.name,
+        periodEn: `${bp.durationDays} Days Access`,
+        periodBn: `${bp.durationDays} দিনের মেম্বারশিপ`,
+        price: bp.price / 100, // paisa to BDT
+        pricePaisa: bp.price,
+        durationDays: bp.durationDays,
+        admissionFee: matchingStatic?.admissionFee || 2000,
+        durationFee: bp.price / 100,
+        subTotal: (bp.price / 100) + (matchingStatic?.admissionFee || 2000),
+        discount: matchingStatic?.discount || 0,
+        popular: bp.isFeatured,
+        badgeEn: bp.isFeatured ? "POPULAR" : "OFFICIAL",
+        badgeBn: bp.isFeatured ? "জনপ্রিয়" : "অফিশিয়াল",
+        featuresEn: bp.features && bp.features.length > 0 ? bp.features : (matchingStatic?.featuresEn || []),
+        featuresBn: matchingStatic?.featuresBn || (bp.features && bp.features.length > 0 ? bp.features : []),
+      };
+    })
+    : PRICING_PLANS.map((sp: any) => ({
+      ...sp,
+      rawId: sp.id,
+      pricePaisa: sp.price * 100,
+      durationDays: sp.id === "single" ? 30 : sp.id === "half-yearly" ? 180 : 365,
+    }));
 
   return (
     <section id="pricing" className="py-28 px-4 sm:px-6 lg:px-8 border-b border-white/[0.06] bg-[#0b0b0d]">
@@ -53,7 +157,7 @@ export default function PricingSection() {
 
         {/* 4 Official Rate Card Package Columns */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch mb-14">
-          {PRICING_PLANS.map((plan) => {
+          {displayPlans.map((plan: any) => {
             const isPopular = plan.popular;
             const name = language === "bn" ? plan.nameBn : plan.nameEn;
             const period = language === "bn" ? plan.periodBn : plan.periodEn;
@@ -69,12 +173,12 @@ export default function PricingSection() {
                   }`}
               >
                 <div>
-                  {/* Rate Card Green Header Bar (Matching the physical card) */}
+                  {/* Rate Card Green Header Bar */}
                   <div className="bg-[#22c55e] px-4 py-2.5 flex items-center justify-between">
                     <span className="text-black font-black text-xs sm:text-sm tracking-wider uppercase">
                       {name}
                     </span>
-                    {plan.badgeEn && (
+                    {badge && (
                       <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-sm bg-black text-[#22c55e] uppercase">
                         {badge}
                       </span>
@@ -82,7 +186,7 @@ export default function PricingSection() {
                   </div>
 
                   <div className="p-6">
-                    {/* Itemized Rate Table (Exact match to the official rate card) */}
+                    {/* Itemized Rate Table */}
                     <div className="space-y-2.5 pb-5 mb-5 border-b border-white/[0.08] font-mono text-xs">
                       <div className="flex items-center justify-between text-zinc-400">
                         <span>{language === "bn" ? "ভর্তি ফি" : "ADMISSION FEE"}</span>
@@ -128,7 +232,7 @@ export default function PricingSection() {
 
                     {/* Features List */}
                     <ul className="space-y-2.5 mb-6 text-xs text-zinc-300 font-sans">
-                      {features.map((feature, i) => (
+                      {features.map((feature: any, i: number) => (
                         <li key={i} className="flex items-start gap-2.5 leading-snug">
                           <Check className="w-3.5 h-3.5 text-[#22c55e] shrink-0 mt-0.5" />
                           <span>{feature}</span>
@@ -138,19 +242,18 @@ export default function PricingSection() {
                   </div>
                 </div>
 
-                {/* Select Button */}
+                {/* Select / Subscribe Button */}
                 <div className="p-6 pt-0">
                   <button
                     type="button"
-                    onClick={() => handleSelectPlan(plan.id)}
-                    className={`w-full py-3 text-xs uppercase tracking-wider font-bold transition-all cursor-pointer flex items-center justify-center gap-2 group rounded-xs ${
-                      isPopular
-                        ? "bg-[#22c55e] !text-black hover:bg-[#16a34a] shadow-lg shadow-[#22c55e]/25"
-                        : "bg-white/[0.03] border border-white/[0.12] text-white hover:bg-[#22c55e] hover:!text-black hover:border-[#22c55e]"
-                    }`}
+                    onClick={() => handleSelectPlan(plan.rawId, plan.nameEn, plan.pricePaisa, plan.durationDays)}
+                    className={`w-full py-3 text-xs uppercase tracking-wider font-bold transition-all cursor-pointer flex items-center justify-center gap-2 group rounded-xs ${isPopular
+                      ? "bg-[#22c55e] !text-black hover:bg-[#16a34a] shadow-lg shadow-[#22c55e]/25"
+                      : "bg-white/[0.03] border border-white/[0.12] text-white hover:bg-[#22c55e] hover:!text-black hover:border-[#22c55e]"
+                      }`}
                   >
                     <span className={isPopular ? "!text-black font-black" : "text-white group-hover:!text-black font-bold"}>
-                      {t.pricing.selectPlan}
+                      {token && plan.pricePaisa ? (language === "bn" ? "সাবস্ক্রাইব করুন" : "Subscribe Now") : t.pricing.selectPlan}
                     </span>
                     <ArrowUpRight className={`w-4 h-4 ${isPopular ? "!text-black stroke-[2.5]" : "text-white group-hover:!text-black stroke-[2]"}`} />
                   </button>
@@ -160,7 +263,7 @@ export default function PricingSection() {
           })}
         </div>
 
-        {/* Official 3-Branch Network Directory (Direct from the official rate card) */}
+        {/* 3-Branch Network Directory */}
         <div className="border border-white/[0.08] p-6 sm:p-8 bg-[#0e0e12] space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/[0.06]">
             <div>
@@ -189,7 +292,6 @@ export default function PricingSection() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
-            {/* Branch 01 */}
             <div className="p-4 rounded-lg bg-white/[0.02] border border-white/[0.06]">
               <span className="text-[10px] text-zinc-500 uppercase block mb-1">BRANCH 01</span>
               <span className="text-white font-bold block mb-1 font-sans">Block-J, Banasree</span>
@@ -198,7 +300,6 @@ export default function PricingSection() {
               </p>
             </div>
 
-            {/* Branch 02 (Featured) */}
             <div className="p-4 rounded-lg bg-[#22c55e]/5 border border-[#22c55e]/30 relative">
               <span className="absolute top-2 right-2 text-[9px] font-bold px-1.5 py-0.2 rounded bg-[#22c55e] text-black uppercase">
                 THIS CAMPUS
@@ -210,7 +311,6 @@ export default function PricingSection() {
               </p>
             </div>
 
-            {/* Branch 03 */}
             <div className="p-4 rounded-lg bg-white/[0.02] border border-white/[0.06]">
               <span className="text-[10px] text-zinc-500 uppercase block mb-1">BRANCH 03</span>
               <span className="text-white font-bold block mb-1 font-sans">Aftab Nagar, Badda</span>
@@ -221,6 +321,81 @@ export default function PricingSection() {
           </div>
         </div>
       </div>
+
+      {/* Checkout Dialog for Logged-In Members */}
+      <Dialog open={checkoutModalOpen} onOpenChange={setCheckoutModalOpen}>
+        <DialogContent className="sm:max-w-md bg-[#0e0e12] border border-white/[0.1] text-white">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-bold uppercase tracking-tight text-white flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#22c55e]" />
+              Confirm Membership Checkout
+            </DialogTitle>
+            <DialogDescription className="text-xs text-zinc-400">
+              Select your payment method to activate or renew your Platinum Gym membership.
+            </DialogDescription>
+          </DialogHeader>
+
+          {selectedPlanDetails && (
+            <div className="space-y-4 py-2">
+              <div className="p-3 rounded-lg bg-white/[0.03] border border-white/[0.06] flex justify-between items-center text-xs">
+                <div>
+                  <span className="font-bold text-white block">{selectedPlanDetails.name}</span>
+                  <span className="text-zinc-400 font-mono text-[11px]">{selectedPlanDetails.durationDays} Days Active Access</span>
+                </div>
+                <span className="text-base font-bold text-[#22c55e] font-mono">
+                  ৳{selectedPlanDetails.price.toLocaleString("en-US")}
+                </span>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-semibold text-zinc-300 block">Select Payment Channel:</label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod("ONLINE")}
+                    className={`p-3 rounded-lg border text-left flex flex-col gap-1 transition-all cursor-pointer ${paymentMethod === "ONLINE"
+                      ? "border-[#22c55e] bg-[#22c55e]/10 text-white"
+                      : "border-white/[0.1] bg-white/[0.02] text-zinc-400 hover:text-white"
+                      }`}
+                  >
+                    <CreditCard className="w-5 h-5 text-[#22c55e]" />
+                    <span className="text-xs font-bold">Online Gateway</span>
+                    <span className="text-[10px] text-zinc-400">Cards / bKash / Nagad</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod("CASH")}
+                    className={`p-3 rounded-lg border text-left flex flex-col gap-1 transition-all cursor-pointer ${paymentMethod === "CASH"
+                      ? "border-[#22c55e] bg-[#22c55e]/10 text-white"
+                      : "border-white/[0.1] bg-white/[0.02] text-zinc-400 hover:text-white"
+                      }`}
+                  >
+                    <Banknote className="w-5 h-5 text-amber-400" />
+                    <span className="text-xs font-bold">Cash at Reception</span>
+                    <span className="text-[10px] text-zinc-400">Pay at Front Desk</span>
+                  </button>
+                </div>
+              </div>
+
+              <Button
+                onClick={handleConfirmCheckout}
+                disabled={checkingOut}
+                className="w-full bg-[#22c55e] hover:bg-[#16a34a] text-black font-bold text-xs uppercase py-3 cursor-pointer"
+              >
+                {checkingOut ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Processing Checkout...
+                  </>
+                ) : (
+                  `Confirm & ${paymentMethod === "ONLINE" ? "Proceed to Payment" : "Submit Request"}`
+                )}
+              </Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }

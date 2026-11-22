@@ -59,22 +59,15 @@ export default function RegistrationForm() {
   });
 
   const onSubmit = async (data: RegisterFormValues) => {
-    const payload: any = {
-      firstName: data.firstName,
-      lastName: data.lastName,
+    const payload = {
+      name: `${data.firstName} ${data.lastName}`.trim(),
       email: data.email,
+      phone: data.phoneNumber,
       password: data.password,
     };
 
-    if (data.skillLevel) payload.skillLevel = data.skillLevel;
-    if (data.dateOfBirth) payload.dateOfBirth = data.dateOfBirth;
-    if (data.phoneNumber) payload.phoneNumber = data.phoneNumber;
-
-    const formData = new FormData();
-    formData.append("data", JSON.stringify(payload));
-
     try {
-      const res = await registerUser(formData).unwrap();
+      const res = await registerUser(payload).unwrap();
 
       if (res.success) {
         toast.success(res.message || "Registration successful");

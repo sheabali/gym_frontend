@@ -7,6 +7,7 @@ import * as z from "zod";
 import { toast } from "sonner";
 import { useLanguage } from "@/context/LanguageContext";
 import { BUSINESS_INFO } from "@/data/gymData";
+import { useSubmitContactMutation } from "@/redux/api/contactApi";
 import {
   MapPin,
   Phone,
@@ -80,28 +81,37 @@ export default function ContactSection() {
     setTimeout(() => setCopiedPlusCode(false), 3000);
   };
 
+  const [submitContact] = useSubmitContactMutation();
+
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+      const messageContent = `Plan: ${data.plan} | Preferred Slot: ${data.slot}${
+        data.message ? ` | Note: ${data.message}` : ""
+      }`;
 
-      const res = await response.json();
-
-      if (response.ok && res.success) {
-        setIsSubmitted(true);
-        toast.success(
-          language === "bn"
-            ? "আপনার বার্তা সফলভাবে গৃহীত হয়েছে! ফ্রন্ট ডেস্ক থেকে দ্রুত কল করা হবে।"
-            : "Enrollment transmission received. Reception desk will verify your session shortly."
-        );
-        reset();
-      } else {
-        toast.error(res.message || "Submission failed. Please dial 01733-521052 directly.");
+      try {
+        await submitContact({
+          name: data.name,
+          phone: data.phone,
+          message: messageContent,
+        }).unwrap();
+      } catch {
+        // Fallback to local API route
+        await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
       }
+
+      setIsSubmitted(true);
+      toast.success(
+        language === "bn"
+          ? "আপনার বার্তা সফলভাবে গৃহীত হয়েছে! ফ্রন্ট ডেস্ক থেকে দ্রুত কল করা হবে।"
+          : "Enrollment transmission received. Reception desk will verify your session shortly."
+      );
+      reset();
     } catch (err) {
       toast.error(
         language === "bn"

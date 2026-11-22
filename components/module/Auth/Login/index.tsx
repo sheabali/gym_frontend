@@ -50,110 +50,118 @@ const LoginPage = () => {
       const res = await login(data).unwrap();
 
       if (res.success) {
-        const token = res.data.token;
+        const token = res.data.accessToken || res.data.token;
 
         setCookie(token);
 
-        const user = jwtDecode<CustomJwtPayload>(token);
+        let decodedRole = "MEMBER";
+        try {
+          const decoded = jwtDecode<CustomJwtPayload>(token);
+          decodedRole = decoded.role;
+        } catch {
+          // ignore decode errors if already in res.data.user
+        }
+
+        const user = res.data.user || { role: decodedRole };
 
         dispatch(setUser({ token, user }));
 
         toast.success(res.message || "Login successful!");
 
-        if (user?.role === "ADMIN") {
-          router.push("/admin/dashboard");
+          if (user?.role === "ADMIN" || decodedRole === "ADMIN") {
+            router.push("/admin/dashboard");
+          } else {
+            router.push("/");
+          }
         } else {
-          router.push("/");
+          toast.error(res.message || "Login failed");
         }
-      } else {
-        toast.error(res.message || "Login failed");
+      } catch (error: any) {
+        toast.error(error?.data?.message || "Something went wrong");
       }
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Something went wrong");
-    }
-  };
+    };
 
-  return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 sm:p-6 lg:p-8">
-      <div className="flex flex-col md:flex-row w-full max-w-7xl items-center justify-center gap-8 lg:gap-16 xl:gap-24">
-        {/* Left Image Banner */}
-        <div className="hidden md:flex flex-1 items-center justify-center rounded-xs overflow-hidden min-h-[450px] lg:min-h-[600px] max-h-[85vh]">
-          <Image
-            src="/images/lip.jpg"
-            alt="Logo"
-            width={800}
-            height={800}
-            className="w-full h-full object-cover rounded-xs"
-            priority
-          />
-        </div>
-
-        {/* Right Form Card */}
-        <div className="w-full max-w-xl mx-auto bg-white p-6 sm:p-8 md:p-10 shadow-lg rounded-xs">
-          <div className="text-center mb-6">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 tracking-tight">
-              Welcome Back
-            </h1>
-            <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm md:text-base text-gray-600">
-              Sign in to your account
-            </p>
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+        <div className="flex flex-col md:flex-row w-full max-w-7xl items-center justify-center gap-8 lg:gap-16 xl:gap-24">
+          {/* Left Image Banner */}
+          <div className="hidden md:flex flex-1 items-center justify-center rounded-xs overflow-hidden min-h-[450px] lg:min-h-[600px] max-h-[85vh]">
+            <Image
+              src="/images/lip.jpg"
+              alt="Logo"
+              width={800}
+              height={800}
+              className="w-full h-full object-cover rounded-xs"
+              priority
+            />
           </div>
 
-          <FormProvider {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-4 sm:space-y-5"
-            >
-              <PHInput
-                control={form.control}
-                name="email"
-                label="Email"
-                type="email"
-                placeholder="Enter your email"
-              />
+          {/* Right Form Card */}
+          <div className="w-full max-w-xl mx-auto bg-white p-6 sm:p-8 md:p-10 shadow-lg rounded-xs">
+            <div className="text-center mb-6">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 tracking-tight">
+                Welcome Back
+              </h1>
+              <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm md:text-base text-gray-600">
+                Sign in to your account
+              </p>
+            </div>
 
-              <PHInput
-                control={form.control}
-                name="password"
-                label="Password"
-                type="password"
-                placeholder="Enter your password"
-              />
+            <FormProvider {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4 sm:space-y-5"
+              >
+                <PHInput
+                  control={form.control}
+                  name="email"
+                  label="Email"
+                  type="email"
+                  placeholder="Enter your email"
+                />
 
-              <div className="flex justify-end">
-                <Link
-                  href="/forgot-password"
-                  className="text-xs sm:text-sm text-primary hover:underline font-medium"
-                >
-                  Forgot password?
-                </Link>
-              </div>
+                <PHInput
+                  control={form.control}
+                  name="password"
+                  label="Password"
+                  type="password"
+                  placeholder="Enter your password"
+                />
 
-              <div className="pt-1">
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full py-5 sm:py-6 font-semibold rounded-xs text-sm sm:text-base transition-colors"
-                >
-                  {isLoading ? <Spinner /> : "Sign In"}
-                </Button>
-              </div>
-            </form>
-          </FormProvider>
+                <div className="flex justify-end">
+                  <Link
+                    href="/forgot-password"
+                    className="text-xs sm:text-sm text-primary hover:underline font-medium"
+                  >
+                    Forgot password?
+                  </Link>
+                </div>
 
-          <p className="mt-6 text-center text-xs sm:text-sm text-gray-600">
-            Don&apos;t have an account?{" "}
-            <Link
-              href="/register"
-              className="text-gray-900 font-semibold hover:underline"
-            >
-              Sign Up
-            </Link>
-          </p>
+                <div className="pt-1">
+                  <Button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full py-5 sm:py-6 font-semibold rounded-xs text-sm sm:text-base transition-colors"
+                  >
+                    {isLoading ? <Spinner /> : "Sign In"}
+                  </Button>
+                </div>
+              </form>
+            </FormProvider>
+
+            <p className="mt-6 text-center text-xs sm:text-sm text-gray-600">
+              Don&apos;t have an account?{" "}
+              <Link
+                href="/register"
+                className="text-gray-900 font-semibold hover:underline"
+              >
+                Sign Up
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
 
-export default LoginPage;
+  export default LoginPage;

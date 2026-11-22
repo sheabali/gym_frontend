@@ -3,11 +3,14 @@
 import React from "react";
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
-import { TRAINERS_DATA } from "@/data/gymData";
+import { TRAINERS_DATA } from "@/src/data/gymData";
+import { useGetTrainersQuery } from "@/redux/api/trainerApi";
 import { ArrowUpRight } from "lucide-react";
 
 export default function TrainersSection() {
   const { language, t } = useLanguage();
+  const { data: trainersResponse } = useGetTrainersQuery(undefined) as any;
+  const apiTrainers = trainersResponse?.data || [];
 
   const handleInquire = () => {
     const el = document.getElementById("contact");
@@ -21,6 +24,32 @@ export default function TrainersSection() {
       });
     }
   };
+
+  // Merge API trainers with static showcase data for rich display
+  const displayTrainers = apiTrainers.length > 0
+    ? apiTrainers.map((at: any, idx: number) => {
+      const fallback = TRAINERS_DATA[idx % TRAINERS_DATA.length];
+      return {
+        id: at.id,
+        name: at.user.name,
+        role: at.bio || fallback.roleEn,
+        experience: at.certifications.length > 0 ? at.certifications.join(" • ") : fallback.experienceEn,
+        shifts: "Daily Floor Shifts",
+        specialities: at.specialties.length > 0 ? at.specialties : fallback.specialityEn,
+        image: at.photoUrl || at.user.photoUrl || fallback.image,
+        gender: fallback.gender,
+      };
+    })
+    : TRAINERS_DATA.map((t: any) => ({
+      id: t.id,
+      name: language === "bn" ? t.nameBn : t.nameEn,
+      role: language === "bn" ? t.roleBn : t.roleEn,
+      experience: language === "bn" ? t.experienceBn : t.experienceEn,
+      shifts: language === "bn" ? t.shiftsBn : t.shiftsEn,
+      specialities: language === "bn" ? t.specialityBn : t.specialityEn,
+      image: t.image,
+      gender: t.gender,
+    }));
 
   return (
     <section id="trainers" className="py-28 px-4 sm:px-6 lg:px-8 border-b border-white/[0.06] bg-[#0c0c0f]">
@@ -44,15 +73,7 @@ export default function TrainersSection() {
 
         {/* High-Fashion Editorial Roster Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {TRAINERS_DATA.map((trainer, idx) => {
-            const name = language === "bn" ? trainer.nameBn : trainer.nameEn;
-            const role = language === "bn" ? trainer.roleBn : trainer.roleEn;
-            const experience =
-              language === "bn" ? trainer.experienceBn : trainer.experienceEn;
-            const shifts =
-              language === "bn" ? trainer.shiftsBn : trainer.shiftsEn;
-            const specialities =
-              language === "bn" ? trainer.specialityBn : trainer.specialityEn;
+          {displayTrainers.map((trainer: any, idx: number) => {
             const isFemale = trainer.gender === "female";
 
             return (
@@ -61,11 +82,11 @@ export default function TrainersSection() {
                 className="border border-white/[0.08] bg-[#0e0e12] p-2 flex flex-col justify-between group hover:border-white/20 transition-all duration-300"
               >
                 <div>
-                  {/* High-Contrast Photo Container */}
+                  {/* Photo Container */}
                   <div className="aspect-[3/4] relative w-full overflow-hidden bg-zinc-900 mb-4">
                     <Image
                       src={trainer.image}
-                      alt={name}
+                      alt={trainer.name}
                       fill
                       className="object-cover grayscale contrast-115 group-hover:scale-102 transition-transform duration-700"
                       sizes="(max-width: 768px) 100vw, 300px"
@@ -77,19 +98,19 @@ export default function TrainersSection() {
 
                   {/* Typographic Identity */}
                   <div className="px-2">
-                    <div className="mono-label text-[10px] text-zinc-400 mb-1">
-                      {experience}
+                    <div className="mono-label text-[10px] text-zinc-400 mb-1 truncate">
+                      {trainer.experience}
                     </div>
-                    <h3 className="text-lg font-bold text-white tracking-tight mb-1">
-                      {name}
+                    <h3 className="text-lg font-bold text-white tracking-tight mb-1 truncate">
+                      {trainer.name}
                     </h3>
-                    <p className="text-xs text-zinc-400 font-medium mb-4 leading-snug">
-                      {role}
+                    <p className="text-xs text-zinc-400 font-medium mb-4 leading-snug line-clamp-2">
+                      {trainer.role}
                     </p>
 
                     {/* Speciality tags */}
                     <div className="flex flex-wrap gap-1.5 mb-4">
-                      {specialities.map((spec, i) => (
+                      {trainer.specialities.map((spec: string, i: number) => (
                         <span
                           key={i}
                           className="text-[10px] mono-label px-2 py-0.5 border border-white/[0.06] bg-white/[0.02] text-zinc-400"
@@ -103,11 +124,11 @@ export default function TrainersSection() {
 
                 {/* Footer Strip */}
                 <div className="pt-3 px-2 border-t border-white/[0.06] flex items-center justify-between text-[11px] mono-label text-zinc-400">
-                  <span className="truncate max-w-[170px]">{shifts}</span>
+                  <span className="truncate max-w-[170px]">{trainer.shifts}</span>
                   <button
                     type="button"
                     onClick={handleInquire}
-                    className="text-white hover:text-zinc-300 transition-colors"
+                    className="text-white hover:text-zinc-300 transition-colors cursor-pointer"
                   >
                     <ArrowUpRight className="w-3.5 h-3.5" />
                   </button>

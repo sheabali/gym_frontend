@@ -15,29 +15,46 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import placeholder from "@/src/assets/placeholders/image_placeholder.png";
 import { ChevronsUpDown, LogOut } from "lucide-react";
 
-import { useGetMeQuery } from "@/redux/api/authApi";
+import { useGetMeQuery, useLogoutMutation } from "@/redux/api/authApi";
 import { logout } from "@/redux/features/authSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
   const token = useAppSelector((state) => state.auth.token);
   const dispatch = useAppDispatch();
+  const [logoutMutation] = useLogoutMutation();
 
-  const { data, error, isLoading } = useGetMeQuery({ skip: !token }) as any;
+  const { data: response, error, isLoading } = useGetMeQuery(undefined, {
+    skip: !token,
+  }) as any;
+
+  const user = response?.data || response;
 
   const router = useRouter();
   const pathname = usePathname();
 
   const handleLogout = async () => {
+    try {
+      await logoutMutation({}).unwrap();
+    } catch {
+      // ignore network errors on logout
+    }
     dispatch(logout());
-    router.push("/login?redirect=" + pathname);
+    router.push("/login?redirect=" + encodeURIComponent(pathname));
   };
+
+  const displayName = user?.name || "Member";
+  const displayEmail = user?.email || "Signed in";
+  const initials = displayName
+    .split(" ")
+    .map((n: string) => n[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 
   // Loading state
   if (isLoading) {
@@ -49,25 +66,7 @@ export function NavUser() {
               <AvatarFallback className="rounded-lg">...</AvatarFallback>
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-semibold">Loading...</span>
-            </div>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-      </SidebarMenu>
-    );
-  }
-
-  // Error state
-  if (error) {
-    return (
-      <SidebarMenu>
-        <SidebarMenuItem>
-          <SidebarMenuButton size="lg" disabled>
-            <Avatar className="h-8 w-8 rounded-lg">
-              <AvatarFallback className="rounded-lg">!</AvatarFallback>
-            </Avatar>
-            <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-semibold text-red-500">Error</span>
+              <span className="truncate font-semibold text-gray-500">Loading...</span>
             </div>
           </SidebarMenuButton>
         </SidebarMenuItem>
@@ -82,33 +81,29 @@ export function NavUser() {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground cursor-pointer"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage
-                  src={data?.image || placeholder}
-                  alt={data?.firstName ?? "User"}
-                  className="h-8 w-8 object-cover rounded-lg"
-                />
-                <AvatarFallback className="rounded-lg">
-                  <Image
-                    src={data?.image || placeholder}
-                    alt={data?.firstName ?? "User"}
-                    width={60}
-                    height={60}
+              <Avatar className="h-8 w-8 rounded-lg border border-gray-200">
+                {user?.photoUrl && (
+                  <AvatarImage
+                    src={user.photoUrl}
+                    alt={displayName}
                     className="h-8 w-8 object-cover rounded-lg"
                   />
+                )}
+                <AvatarFallback className="rounded-lg bg-emerald-50 text-emerald-700 font-bold text-xs">
+                  {initials || "PG"}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">
-                  {data?.firstName || "User"}
+                <span className="truncate font-semibold text-gray-900">
+                  {displayName}
                 </span>
-                <span className="truncate text-xs">
-                  {data?.email || "No email"}
+                <span className="truncate text-xs text-gray-500">
+                  {displayEmail}
                 </span>
               </div>
-              <ChevronsUpDown className="ml-auto size-4" />
+              <ChevronsUpDown className="ml-auto size-4 text-gray-400" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -118,37 +113,33 @@ export function NavUser() {
             sideOffset={4}
           >
             <DropdownMenuLabel className="p-0 font-normal">
-              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+              <div className="flex items-center gap-2 px-2 py-2 text-left text-sm border-b border-gray-100">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage
-                    src={data?.image || placeholder.src}
-                    alt={data?.firstName ?? "User"}
-                    className="h-8 w-8 object-cover rounded-lg"
-                  />
-                  <AvatarFallback className="rounded-lg">
-                    <Image
-                      src={data?.image || placeholder}
-                      alt={data?.firstName ?? "User"}
-                      width={60}
-                      height={60}
+                  {user?.photoUrl && (
+                    <AvatarImage
+                      src={user.photoUrl}
+                      alt={displayName}
                       className="h-8 w-8 object-cover rounded-lg"
                     />
+                  )}
+                  <AvatarFallback className="rounded-lg bg-emerald-50 text-emerald-700 font-bold text-xs">
+                    {initials || "PG"}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">
-                    {data?.firstName || "User"}
+                  <span className="truncate font-semibold text-gray-900">
+                    {displayName}
                   </span>
-                  <span className="truncate text-xs">
-                    {data?.email || "No email"}
+                  <span className="truncate text-xs text-gray-500">
+                    {displayEmail}
                   </span>
                 </div>
               </div>
             </DropdownMenuLabel>
 
-            <DropdownMenuItem onClick={handleLogout}>
-              <LogOut />
-              Log out
+            <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-red-600 focus:text-red-700">
+              <LogOut className="mr-2 h-4 w-4" />
+              Sign out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

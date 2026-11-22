@@ -3,14 +3,17 @@
 import React, { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { BUSINESS_INFO } from "@/data/gymData";
+import { useGetFaqsQuery } from "@/redux/api/contentApi";
 import { ArrowUpRight, Plus, Minus, ShieldCheck, Check } from "lucide-react";
 
 export default function FaqSection() {
   const { language } = useLanguage();
   const [activeTab, setActiveTab] = useState<"all" | "shifts" | "privacy" | "coaching" | "admission">("all");
   const [openId, setOpenId] = useState<string | null>("proto-1");
+  const { data: faqsResponse } = useGetFaqsQuery(undefined) as any;
+  const apiFaqs = faqsResponse?.data || [];
 
-  const protocols = [
+  const baseProtocols = [
     {
       id: "proto-1",
       code: "01 // SEC-TIMETABLE",
@@ -160,6 +163,20 @@ export default function FaqSection() {
     },
   ];
 
+  const protocols = [
+    ...apiFaqs.map((faq: any, idx: number) => ({
+      id: faq.id,
+      code: `0${idx + 1} // FAQ-LIVE`,
+      category: "admission",
+      categoryLabel: "GENERAL FAQ",
+      badge: "VERIFIED",
+      question: faq.question,
+      answer: faq.answer,
+      specs: [],
+    })),
+    ...baseProtocols,
+  ];
+
   const filtered =
     activeTab === "all"
       ? protocols
@@ -198,11 +215,10 @@ export default function FaqSection() {
               key={tab.key}
               type="button"
               onClick={() => setActiveTab(tab.key as any)}
-              className={`px-4 py-2 text-xs font-mono uppercase tracking-wider transition-all cursor-pointer rounded-xs ${
-                activeTab === tab.key
-                  ? "bg-[#22c55e] !text-black font-black shadow-md shadow-[#22c55e]/20"
-                  : "text-zinc-400 hover:text-white border border-white/[0.08]"
-              }`}
+              className={`px-4 py-2 text-xs font-mono uppercase tracking-wider transition-all cursor-pointer rounded-xs ${activeTab === tab.key
+                ? "bg-[#22c55e] !text-black font-black shadow-md shadow-[#22c55e]/20"
+                : "text-zinc-400 hover:text-white border border-white/[0.08]"
+                }`}
             >
               <span className={activeTab === tab.key ? "!text-black font-black" : ""}>
                 {language === "bn" ? tab.labelBn : tab.labelEn}
@@ -213,7 +229,7 @@ export default function FaqSection() {
 
         {/* Architectural Departure-Board Table (Identical to ScheduleSection & FacilitiesSection) */}
         <div className="border border-white/[0.08] divide-y divide-white/[0.08] bg-[#0e0e12] mb-12">
-          {filtered.map((item) => {
+          {filtered.map((item: any) => {
             const isOpen = openId === item.id;
 
             return (
@@ -240,9 +256,8 @@ export default function FaqSection() {
                       </div>
 
                       <h3
-                        className={`text-lg sm:text-xl font-bold tracking-tight transition-colors ${
-                          isOpen ? "text-white" : "text-zinc-300 group-hover:text-white"
-                        }`}
+                        className={`text-lg sm:text-xl font-bold tracking-tight transition-colors ${isOpen ? "text-white" : "text-zinc-300 group-hover:text-white"
+                          }`}
                       >
                         {item.question}
                       </h3>
@@ -250,11 +265,10 @@ export default function FaqSection() {
                   </div>
 
                   <div
-                    className={`w-8 h-8 border flex items-center justify-center shrink-0 transition-all ${
-                      isOpen
-                        ? "bg-[#22c55e] border-[#22c55e] text-black font-bold shadow-md shadow-[#22c55e]/20"
-                        : "border-white/[0.12] bg-white/[0.02] text-zinc-400 group-hover:border-white/30 group-hover:text-white"
-                    }`}
+                    className={`w-8 h-8 border flex items-center justify-center shrink-0 transition-all ${isOpen
+                      ? "bg-[#22c55e] border-[#22c55e] text-black font-bold shadow-md shadow-[#22c55e]/20"
+                      : "border-white/[0.12] bg-white/[0.02] text-zinc-400 group-hover:border-white/30 group-hover:text-white"
+                      }`}
                   >
                     {isOpen ? <Minus className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
                   </div>
@@ -270,7 +284,7 @@ export default function FaqSection() {
 
                       {/* Technical Specifications Matrix Grid */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
-                        {item.specs.map((spec, i) => (
+                        {item.specs.map((spec: any, i: number) => (
                           <div
                             key={i}
                             className="p-3.5 border border-white/[0.08] bg-[#0e0e12]"

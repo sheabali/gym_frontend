@@ -1,11 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { baseApi } from "./baseApi";
+
+export interface UserProfile {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  role: "MEMBER" | "TRAINER" | "ADMIN";
+  status: "ACTIVE" | "SUSPENDED" | "DEACTIVATED";
+  photoUrl?: string | null;
+  trialUsed: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder: any) => ({
     login: builder.mutation({
-      query: (credentials: any) => ({
+      query: (credentials: { email: string; password: string }) => ({
         url: "/auth/login",
         method: "POST",
         body: credentials,
@@ -13,12 +25,32 @@ export const authApi = baseApi.injectEndpoints({
       invalidatesTags: ["User"],
     }),
     register: builder.mutation({
-      query: (credentials: any) => ({
+      query: (userData: { name: string; email: string; phone: string; password: string }) => ({
         url: "/auth/register",
         method: "POST",
-        body: credentials,
+        body: userData,
       }),
       invalidatesTags: ["User"],
+    }),
+    logout: builder.mutation({
+      query: () => ({
+        url: "/auth/logout",
+        method: "POST",
+      }),
+      invalidatesTags: ["User", "Bookings", "Subscriptions"],
+    }),
+    getMe: builder.query({
+      query: () => ({
+        url: "/auth/me",
+        method: "GET",
+      }),
+      providesTags: ["User"],
+    }),
+    refreshToken: builder.mutation({
+      query: () => ({
+        url: "/auth/refresh",
+        method: "POST",
+      }),
     }),
     socialAuth: builder.mutation({
       query: (credentials: any) => ({
@@ -64,17 +96,10 @@ export const authApi = baseApi.injectEndpoints({
         body: data,
       }),
     }),
-    getMe: builder.query({
-      query: () => ({
-        url: "/users/profile",
-        method: "GET",
-      }),
-      providesTags: ["User"],
-    }),
     updateUser: builder.mutation({
       query: (data: any) => ({
-        url: "/users/update-profile",
-        method: "PUT",
+        url: "/users/profile",
+        method: "PATCH",
         body: data,
       }),
       invalidatesTags: ["User"],
@@ -85,12 +110,14 @@ export const authApi = baseApi.injectEndpoints({
 export const {
   useLoginMutation,
   useRegisterMutation,
+  useLogoutMutation,
+  useGetMeQuery,
+  useRefreshTokenMutation,
   useSocialAuthMutation,
   useForgotPasswordMutation,
   useResendOtpMutation,
   useVerifyOtpMutation,
   useResetPasswordMutation,
   useChangePasswordMutation,
-  useGetMeQuery,
   useUpdateUserMutation,
 } = authApi;

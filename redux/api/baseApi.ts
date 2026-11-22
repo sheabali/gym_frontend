@@ -16,10 +16,14 @@ const baseQueryWithAuth: ReturnType<typeof fetchBaseQuery> = async (
 ) => {
   const rawBaseQuery = fetchBaseQuery({
     baseUrl,
+    credentials: "include",
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth?.token;
       if (token) {
-        headers.set("Authorization", `${token}`);
+        headers.set(
+          "Authorization",
+          token.startsWith("Bearer ") ? token : `Bearer ${token}`
+        );
       }
       return headers;
     },
@@ -32,10 +36,6 @@ const baseQueryWithAuth: ReturnType<typeof fetchBaseQuery> = async (
     (result.error.status === 401 || result.error.status === 403)
   ) {
     api.dispatch(logout());
-    // Redirect to login page
-    // if (typeof window !== "undefined") {
-    //   window.location.href = "/login";
-    // }
   }
 
   return result;
@@ -44,8 +44,19 @@ const baseQueryWithAuth: ReturnType<typeof fetchBaseQuery> = async (
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: baseQueryWithAuth,
-  tagTypes: ["User", "Events"],
-  endpoints: (builder) => ({}),
+  tagTypes: [
+    "User",
+    "Plans",
+    "Classes",
+    "Bookings",
+    "Subscriptions",
+    "Trainers",
+    "Admin",
+    "Content",
+    "Contact",
+    "Events",
+  ],
+  endpoints: (_builder) => ({}),
 });
 
 //* for refresh token use this following setup of base api
