@@ -144,13 +144,13 @@ export default function TrainersManager() {
   return (
     <div className="space-y-4">
       {/* Header & Controls */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-xs border border-gray-200/80 shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#0e0e12] p-4 rounded-xs border border-white/[0.08] shadow-lg">
         <div>
-          <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
-            <Users className="w-4 h-4 text-emerald-600" />
+          <h2 className="text-base font-bold text-white flex items-center gap-2">
+            <Users className="w-4 h-4 text-[#22c55e]" />
             <span>Trainers & Coaching Staff Directory</span>
           </h2>
-          <p className="text-xs text-gray-500 mt-0.5">
+          <p className="text-xs text-zinc-400 mt-0.5">
             Manage fitness coach accounts, assign credentials, and curate public specialties.
           </p>
         </div>
@@ -161,29 +161,29 @@ export default function TrainersManager() {
             setAddModalOpen(true);
           }}
           size="sm"
-          className="gap-1.5 text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer"
+          className="gap-1.5 text-xs font-semibold bg-[#22c55e] hover:bg-[#16a34a] text-black font-black uppercase font-mono tracking-wider cursor-pointer rounded-xs"
         >
-          <Plus size={14} />
+          <Plus size={14} className="stroke-[2.5]" />
           <span>Onboard New Trainer</span>
         </Button>
       </div>
 
       {/* Trainers Cards Grid */}
       {isLoading ? (
-        <div className="flex h-48 items-center justify-center bg-white rounded-xs border border-gray-200">
-          <Loader2 className="w-6 h-6 animate-spin text-emerald-600" />
+        <div className="flex h-48 items-center justify-center bg-[#0e0e12] rounded-xs border border-white/[0.08]">
+          <Loader2 className="w-6 h-6 animate-spin text-[#22c55e]" />
         </div>
       ) : trainers.length === 0 ? (
-        <div className="bg-white p-12 text-center rounded-xs border border-gray-200 shadow-xs">
-          <Users className="w-10 h-10 text-gray-300 mx-auto mb-2" />
-          <p className="text-sm font-semibold text-gray-900">No trainers registered yet</p>
+        <div className="bg-[#0e0e12] p-12 text-center rounded-xs border border-white/[0.08] shadow-lg">
+          <Users className="w-10 h-10 text-zinc-600 mx-auto mb-2" />
+          <p className="text-sm font-semibold text-white">No trainers registered yet</p>
           <Button
             onClick={() => {
               resetForm();
               setAddModalOpen(true);
             }}
             size="sm"
-            className="mt-3 text-xs"
+            className="mt-3 text-xs bg-[#22c55e] text-black font-bold hover:bg-[#16a34a]"
           >
             Onboard First Coach
           </Button>
@@ -193,78 +193,78 @@ export default function TrainersManager() {
           {trainers.map((t) => (
             <div
               key={t.id}
-              className="bg-white p-5 rounded-xs border border-gray-200/80 shadow-xs flex flex-col justify-between hover:border-emerald-300 transition-all"
+              className="bg-[#0e0e12] p-5 rounded-xs border border-white/[0.08] shadow-lg flex flex-col justify-between hover:border-[#22c55e]/50 transition-all"
             >
               <div>
                 <div className="flex items-start justify-between gap-2 mb-3">
                   <div>
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#22c55e] bg-[#22c55e]/10 px-2 py-0.5 rounded border border-[#22c55e]/30">
                       TRAINER ACCOUNT
                     </span>
-                    <h3 className="text-base font-bold text-gray-900 mt-1">
+                    <h3 className="text-base font-bold text-white mt-1">
                       {t.user?.name || "Coach"}
                     </h3>
                   </div>
                   <Badge
                     variant={t.isPublic ? "default" : "secondary"}
-                    className="text-[10px]"
+                    className={t.isPublic ? "text-[10px] bg-[#22c55e] text-black font-bold" : "text-[10px] bg-white/[0.06] text-zinc-400"}
                   >
                     {t.isPublic ? "PUBLIC" : "PRIVATE"}
                   </Badge>
                 </div>
 
-                <div className="space-y-1 text-xs text-gray-600 mb-3">
+                <div className="space-y-1 text-xs text-zinc-400 mb-3">
                   <div className="flex items-center gap-1.5">
-                    <Mail size={12} className="text-gray-400" />
-                    <span>{t.user?.email}</span>
+                    <Mail size={12} className="text-zinc-500" />
+                    <span className="text-zinc-300">{t.user?.email}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <Phone size={12} className="text-gray-400" />
-                    <span>{t.user?.phone || "N/A"}</span>
+                    <Phone size={12} className="text-zinc-500" />
+                    <span className="text-zinc-300">{t.user?.phone || "N/A"}</span>
                   </div>
                 </div>
 
                 {t.bio && (
-                  <p className="text-xs text-gray-600 line-clamp-2 italic mb-3">
+                  <p className="text-xs text-zinc-400 line-clamp-2 italic mb-3">
                     &quot;{t.bio}&quot;
                   </p>
                 )}
 
                 {/* Specialties */}
                 <div className="space-y-1 mb-3">
-                  <span className="text-[10px] font-bold text-gray-400 uppercase block">
+                  <span className="text-[10px] font-bold text-zinc-500 uppercase block font-mono">
                     Specialties
                   </span>
                   <div className="flex flex-wrap gap-1">
                     {(t.specialties || []).map((spec, idx) => (
                       <span
                         key={idx}
-                        className="text-[10px] bg-gray-50 text-gray-700 border border-gray-200 px-1.5 py-0.5 rounded font-mono"
+                        className="text-[10px] bg-white/[0.04] text-zinc-300 border border-white/[0.08] px-1.5 py-0.5 rounded font-mono"
                       >
                         {spec}
                       </span>
                     ))}
                     {(t.specialties || []).length === 0 && (
-                      <span className="text-xs text-gray-400 italic">None specified</span>
+                      <span className="text-xs text-zinc-500 italic">None specified</span>
                     )}
                   </div>
                 </div>
 
                 {/* Certifications */}
                 {(t.certifications || []).length > 0 && (
-                  <div className="flex items-center gap-1 text-[11px] text-emerald-700">
+                  <div className="flex items-center gap-1 text-[11px] text-[#22c55e] font-mono">
                     <Award size={13} />
                     <span>{t.certifications.length} certifications recorded</span>
                   </div>
                 )}
               </div>
 
-              <div className="pt-4 mt-3 border-t border-gray-100 flex justify-end">
+              <div className="pt-4 mt-3 border-t border-white/[0.08] flex justify-end">
                 <Button
                   size="sm"
                   variant="outline"
                   onClick={() => handleOpenEdit(t)}
-                  className="h-7 px-2.5 text-xs gap-1 cursor-pointer"
+                  className="h-7 px-2.5 text-xs gap-1 border-white/[0.12] bg-white/[0.03] text-zinc-200 hover:bg-white/[0.08] hover:text-white cursor-pointer"
                 >
                   <Edit2 size={12} />
                   <span>Edit Profile</span>
@@ -277,19 +277,19 @@ export default function TrainersManager() {
 
       {/* Modal: Onboard New Trainer */}
       <Dialog open={addModalOpen} onOpenChange={setAddModalOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md bg-[#0e0e12] border-white/[0.08] text-white">
           <DialogHeader>
-            <DialogTitle className="text-base font-bold text-gray-900">
+            <DialogTitle className="text-base font-bold text-white">
               Onboard New Coach
             </DialogTitle>
-            <DialogDescription className="text-xs text-gray-500">
+            <DialogDescription className="text-xs text-zinc-400">
               Create a coach login account and initialize their directory profile.
             </DialogDescription>
           </DialogHeader>
 
           <form onSubmit={handleCreateTrainer} className="space-y-3 text-xs mt-2">
             <div>
-              <label className="block font-semibold text-gray-700 mb-1">
+              <label className="block font-semibold text-zinc-300 mb-1">
                 Full Name *
               </label>
               <Input
@@ -297,12 +297,13 @@ export default function TrainersManager() {
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Coach Tariqul Islam"
                 required
+                className="bg-[#0b0b0d] border-white/[0.12] text-white placeholder:text-zinc-600 focus-visible:ring-[#22c55e]"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block font-semibold text-gray-700 mb-1">
+                <label className="block font-semibold text-zinc-300 mb-1">
                   Email Address *
                 </label>
                 <Input
@@ -311,11 +312,12 @@ export default function TrainersManager() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="tariqul@platinumgym.com"
                   required
+                  className="bg-[#0b0b0d] border-white/[0.12] text-white placeholder:text-zinc-600 focus-visible:ring-[#22c55e]"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold text-gray-700 mb-1">
+                <label className="block font-semibold text-zinc-300 mb-1">
                   Phone (Bangladesh) *
                 </label>
                 <Input
@@ -323,12 +325,13 @@ export default function TrainersManager() {
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+8801700000000"
                   required
+                  className="bg-[#0b0b0d] border-white/[0.12] text-white placeholder:text-zinc-600 focus-visible:ring-[#22c55e]"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block font-semibold text-gray-700 mb-1">
+              <label className="block font-semibold text-zinc-300 mb-1">
                 Initial Password *
               </label>
               <Input
@@ -337,33 +340,36 @@ export default function TrainersManager() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Min 8 characters"
                 required
+                className="bg-[#0b0b0d] border-white/[0.12] text-white placeholder:text-zinc-600 focus-visible:ring-[#22c55e]"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-gray-700 mb-1">
+              <label className="block font-semibold text-zinc-300 mb-1">
                 Specialties (Comma Separated)
               </label>
               <Input
                 value={specialtiesInput}
                 onChange={(e) => setSpecialtiesInput(e.target.value)}
                 placeholder="Powerlifting, Functional HIIT, Hypertrophy"
+                className="bg-[#0b0b0d] border-white/[0.12] text-white placeholder:text-zinc-600 focus-visible:ring-[#22c55e]"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-gray-700 mb-1">
+              <label className="block font-semibold text-zinc-300 mb-1">
                 Certifications (Comma Separated)
               </label>
               <Input
                 value={certificationsInput}
                 onChange={(e) => setCertificationsInput(e.target.value)}
                 placeholder="CSCS, ACE Certified, CPR/AED"
+                className="bg-[#0b0b0d] border-white/[0.12] text-white placeholder:text-zinc-600 focus-visible:ring-[#22c55e]"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-gray-700 mb-1">
+              <label className="block font-semibold text-zinc-300 mb-1">
                 Professional Bio
               </label>
               <Textarea
@@ -371,6 +377,7 @@ export default function TrainersManager() {
                 onChange={(e) => setBio(e.target.value)}
                 placeholder="Brief athletic background..."
                 rows={2}
+                className="bg-[#0b0b0d] border-white/[0.12] text-white placeholder:text-zinc-600 focus-visible:ring-[#22c55e]"
               />
             </div>
 
@@ -379,24 +386,24 @@ export default function TrainersManager() {
                 type="checkbox"
                 checked={isPublic}
                 onChange={(e) => setIsPublic(e.target.checked)}
-                className="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                className="rounded border-white/[0.2] bg-[#0b0b0d] text-[#22c55e] focus:ring-[#22c55e]"
               />
-              <span className="font-semibold text-gray-700">Display in Public Directory</span>
+              <span className="font-semibold text-zinc-300">Display in Public Directory</span>
             </label>
 
-            <div className="pt-3 border-t border-gray-100 flex justify-end gap-2">
+            <div className="pt-3 border-t border-white/[0.08] flex justify-end gap-2">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setAddModalOpen(false)}
-                className="text-xs"
+                className="text-xs border-white/[0.12] bg-white/[0.03] text-zinc-300 hover:bg-white/[0.08] hover:text-white"
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 disabled={isCreating}
-                className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white"
+                className="text-xs bg-[#22c55e] hover:bg-[#16a34a] text-black font-bold font-mono uppercase"
               >
                 {isCreating ? (
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -411,47 +418,50 @@ export default function TrainersManager() {
 
       {/* Modal: Edit Existing Trainer */}
       <Dialog open={editModalOpen} onOpenChange={setEditModalOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md bg-[#0e0e12] border-white/[0.08] text-white">
           <DialogHeader>
-            <DialogTitle className="text-base font-bold text-gray-900">
+            <DialogTitle className="text-base font-bold text-white">
               Edit Trainer Profile: {selectedTrainer?.user?.name}
             </DialogTitle>
-            <DialogDescription className="text-xs text-gray-500">
+            <DialogDescription className="text-xs text-zinc-400">
               Update coach bio, certifications, and public visibility.
             </DialogDescription>
           </DialogHeader>
 
           <form onSubmit={handleUpdateTrainer} className="space-y-3 text-xs mt-2">
             <div>
-              <label className="block font-semibold text-gray-700 mb-1">
+              <label className="block font-semibold text-zinc-300 mb-1">
                 Specialties (Comma Separated)
               </label>
               <Input
                 value={specialtiesInput}
                 onChange={(e) => setSpecialtiesInput(e.target.value)}
                 placeholder="Powerlifting, HIIT"
+                className="bg-[#0b0b0d] border-white/[0.12] text-white placeholder:text-zinc-600 focus-visible:ring-[#22c55e]"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-gray-700 mb-1">
+              <label className="block font-semibold text-zinc-300 mb-1">
                 Certifications (Comma Separated)
               </label>
               <Input
                 value={certificationsInput}
                 onChange={(e) => setCertificationsInput(e.target.value)}
                 placeholder="CSCS, ACE"
+                className="bg-[#0b0b0d] border-white/[0.12] text-white placeholder:text-zinc-600 focus-visible:ring-[#22c55e]"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-gray-700 mb-1">
+              <label className="block font-semibold text-zinc-300 mb-1">
                 Professional Bio
               </label>
               <Textarea
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 rows={3}
+                className="bg-[#0b0b0d] border-white/[0.12] text-white placeholder:text-zinc-600 focus-visible:ring-[#22c55e]"
               />
             </div>
 
@@ -460,24 +470,24 @@ export default function TrainersManager() {
                 type="checkbox"
                 checked={isPublic}
                 onChange={(e) => setIsPublic(e.target.checked)}
-                className="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                className="rounded border-white/[0.2] bg-[#0b0b0d] text-[#22c55e] focus:ring-[#22c55e]"
               />
-              <span className="font-semibold text-gray-700">Display in Public Directory</span>
+              <span className="font-semibold text-zinc-300">Display in Public Directory</span>
             </label>
 
-            <div className="pt-3 border-t border-gray-100 flex justify-end gap-2">
+            <div className="pt-3 border-t border-white/[0.08] flex justify-end gap-2">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setEditModalOpen(false)}
-                className="text-xs"
+                className="text-xs border-white/[0.12] bg-white/[0.03] text-zinc-300 hover:bg-white/[0.08] hover:text-white"
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 disabled={isUpdating}
-                className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white"
+                className="text-xs bg-[#22c55e] hover:bg-[#16a34a] text-black font-bold font-mono uppercase"
               >
                 {isUpdating ? (
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />

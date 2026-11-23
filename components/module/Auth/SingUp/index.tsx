@@ -80,28 +80,47 @@ export default function RegistrationForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 sm:p-6 lg:p-8">
-      <div className="flex flex-col md:flex-row w-full max-w-7xl items-center justify-center gap-8 lg:gap-16 xl:gap-24">
+    <div className="min-h-screen bg-[#0b0b0d] text-white flex items-center justify-center p-4 sm:p-6 lg:p-8">
+      <div className="flex flex-col md:flex-row w-full max-w-7xl items-center justify-center gap-8 lg:gap-12 xl:gap-16">
         {/* Left Image Banner */}
-        <div className="hidden md:flex flex-1 items-center justify-center rounded-xs overflow-hidden min-h-[450px] lg:min-h-[600px] max-h-[85vh]">
-          <Image
-            src="/images/rgp.jpg"
-            alt="Registration"
-            className="w-full h-full object-cover rounded-xs"
-            width={1000}
-            height={1000}
-            priority
-          />
+        <div className="hidden md:flex flex-1 relative border border-white/[0.08] bg-[#121216] p-2 rounded-xs overflow-hidden min-h-[450px] lg:min-h-[640px] max-h-[85vh] group">
+          <div className="relative w-full h-full min-h-[440px] lg:min-h-[620px] overflow-hidden rounded-xs bg-zinc-900">
+            <Image
+              src="/images/rgp.jpg"
+              alt="Registration"
+              fill
+              className="object-cover contrast-110 grayscale-[30%] group-hover:grayscale-0 transition-all duration-700"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+            <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs font-mono text-zinc-300">
+              <span className="mono-label text-[11px] text-white font-bold">
+                ATHLETIC SANCTUARY • BLOCK-D
+              </span>
+              <span className="text-[#22c55e] font-mono font-bold text-[11px]">
+                JOIN THE RANKS
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* Right Form Card */}
-        <div className="w-full max-w-xl mx-auto bg-white p-6 sm:p-8 md:p-10 shadow-lg rounded-xs">
-          <div className="text-center mb-6">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 tracking-tight">
-              Create your account
+        <div className="w-full max-w-xl mx-auto bg-[#0e0e12] border border-white/[0.08] p-6 sm:p-8 md:p-10 shadow-2xl rounded-xs">
+          <div className="flex items-center justify-between pb-4 mb-6 border-b border-white/[0.06] text-xs font-mono">
+            <span className="mono-label text-zinc-400">
+              AUTH • NEW MEMBER ENROLLMENT
+            </span>
+            <span className="text-[#22c55e] font-bold text-[11px]">
+              BANASREE CAMPUS
+            </span>
+          </div>
+
+          <div className="mb-6">
+            <h1 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight">
+              Create Your Account
             </h1>
-            <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm md:text-base text-gray-600">
-              Sign up to get started
+            <p className="mt-1.5 text-xs sm:text-sm text-zinc-400 font-sans">
+              Sign up to book classes, select membership packages, and access training schedules.
             </p>
           </div>
 
@@ -133,7 +152,7 @@ export default function RegistrationForm() {
                 name="email"
                 label="Email Address"
                 type="email"
-                placeholder="you@example.com"
+                placeholder="you@domain.com"
               />
 
               {/* Password & Confirm Password */}
@@ -143,7 +162,7 @@ export default function RegistrationForm() {
                   name="password"
                   label="Password"
                   type="password"
-                  placeholder="Enter password"
+                  placeholder="At least 6 chars"
                 />
 
                 <PHInput
@@ -151,7 +170,7 @@ export default function RegistrationForm() {
                   name="confirmPassword"
                   label="Confirm Password"
                   type="password"
-                  placeholder="Confirm password"
+                  placeholder="Re-enter password"
                 />
               </div>
 
@@ -162,55 +181,55 @@ export default function RegistrationForm() {
                     type="checkbox"
                     id="agreedToTerms"
                     {...form.register("agreedToTerms")}
-                    className="mt-1 w-4 h-4 text-primary border-gray-300 rounded-xs focus:ring-primary cursor-pointer accent-primary"
+                    className="mt-1 w-4 h-4 bg-[#121216] border-white/[0.2] rounded-xs accent-[#22c55e] cursor-pointer"
                   />
                   <label
                     htmlFor="agreedToTerms"
-                    className="text-xs sm:text-sm text-gray-600 leading-relaxed cursor-pointer"
+                    className="text-xs text-zinc-400 leading-relaxed cursor-pointer font-sans"
                   >
                     I agree to the{" "}
                     <Link
                       href="/terms-privacy"
-                      className="text-primary hover:underline font-medium"
+                      className="text-[#22c55e] hover:underline font-semibold"
                     >
                       Terms & Conditions
                     </Link>{" "}
                     and{" "}
                     <Link
                       href="/terms-privacy"
-                      className="text-primary hover:underline font-medium"
+                      className="text-[#22c55e] hover:underline font-semibold"
                     >
                       Privacy Policy
                     </Link>
                   </label>
                 </div>
                 {form.formState.errors.agreedToTerms?.message && (
-                  <p className="text-red-500 text-xs sm:text-sm mt-1">
+                  <p className="text-red-400 text-xs mt-1 font-mono">
                     {form.formState.errors.agreedToTerms.message}
                   </p>
                 )}
               </div>
 
               {/* Submit Button */}
-              <div className="pt-1">
+              <div className="pt-2">
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-5 sm:py-6 font-semibold rounded-xs text-sm sm:text-base transition-colors"
+                  className="w-full py-4 text-xs sm:text-sm font-mono uppercase tracking-wider font-black !text-black bg-[#22c55e] hover:bg-[#16a34a] transition-all rounded-xs shadow-lg shadow-[#22c55e]/20 cursor-pointer"
                 >
-                  {isLoading ? <Spinner /> : "Sign Up"}
+                  {isLoading ? <Spinner /> : "Complete Registration"}
                 </Button>
               </div>
 
-              <p className="mt-6 text-center text-xs sm:text-sm text-gray-600">
-                Already have an account?{" "}
+              <div className="mt-8 pt-4 border-t border-white/[0.06] flex items-center justify-between text-xs text-zinc-400 font-sans">
+                <span>Already have an account?</span>
                 <Link
                   href="/login"
-                  className="text-gray-900 font-semibold hover:underline"
+                  className="text-[#22c55e] font-bold hover:underline font-mono uppercase tracking-wider"
                 >
-                  Log in
+                  Sign In →
                 </Link>
-              </p>
+              </div>
             </form>
           </FormProvider>
         </div>

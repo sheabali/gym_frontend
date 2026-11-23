@@ -8,6 +8,8 @@ import { toast } from "sonner";
 import { useLanguage } from "@/context/LanguageContext";
 import { BUSINESS_INFO } from "@/data/gymData";
 import { useSubmitContactMutation } from "@/redux/api/contactApi";
+import { motion } from "framer-motion";
+import MagneticButton from "@/components/Motion/MagneticButton";
 import {
   MapPin,
   Phone,
@@ -204,8 +206,9 @@ export default function ContactSection() {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14 pb-8 border-b border-white/[0.08]">
           <div>
-            <div className="mono-label text-zinc-400 mb-2">
-              [ 10 // PHYSICAL LOCATION & DIRECT ENROLLMENT ]
+            <div className="mono-label text-zinc-400 mb-2 font-mono flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
+              <span>10 • PHYSICAL LOCATION & DIRECT ENROLLMENT</span>
             </div>
             <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white uppercase">
               {language === "bn" ? "লোকেশন ও যোগাযোগ" : "Visit & Connect"}
@@ -275,14 +278,14 @@ export default function ContactSection() {
             </div>
 
             {/* Google Map Box */}
-            <div className="border border-white/[0.08] bg-[#0e0e12] overflow-hidden">
+            <div className="border border-white/[0.08] bg-[#0e0e12] overflow-hidden rounded-xs shadow-xl">
               <div className="h-64 sm:h-72 w-full relative">
                 <iframe
                   title="Platinum Gym Banasree Dhaka Map"
                   src={BUSINESS_INFO.googleMapsEmbedUrl}
                   width="100%"
                   height="100%"
-                  style={{ border: 0 }}
+                  style={{ border: 0, filter: "invert(90%) hue-rotate(180deg) contrast(120%)" }}
                   allowFullScreen={false}
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
@@ -347,7 +350,7 @@ export default function ContactSection() {
                     onClick={() => setIsSubmitted(false)}
                     className="px-5 py-2.5 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.12] text-xs font-mono uppercase tracking-wider text-white transition-colors cursor-pointer rounded-xs"
                   >
-                    {language === "bn" ? "আরেকটি ফর্ম পূরণ করুন" : "SUBMIT ANOTHER RECORD"}
+                    {language === "bn" ? "আরেকটি ফর্ম পূরণ করুন" : "SUBMIT ANOTHER INQUIRY"}
                   </button>
                 </div>
               </div>
@@ -358,13 +361,15 @@ export default function ContactSection() {
                   <label className="text-xs font-mono uppercase tracking-wider text-zinc-300 font-semibold mb-2.5 block">
                     01. SELECT PLAN / GOAL
                   </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-2">
                     {planOptions.map((opt) => {
                       const isSelected = selectedPlan === opt.id;
                       return (
-                        <button
+                        <motion.button
                           key={opt.id}
                           type="button"
+                          whileHover={{ y: -2 }}
+                          whileTap={{ scale: 0.96 }}
                           onClick={() => setValue("plan", opt.id)}
                           className={`py-2.5 px-3 border text-center transition-all cursor-pointer rounded-xs ${
                             isSelected
@@ -378,7 +383,7 @@ export default function ContactSection() {
                           <span className={`text-[10px] font-mono block mt-0.5 ${isSelected ? "!text-black/80 font-bold" : "text-[#22c55e]"}`}>
                             {opt.price}
                           </span>
-                        </button>
+                        </motion.button>
                       );
                     })}
                   </div>
@@ -393,9 +398,11 @@ export default function ContactSection() {
                     {slotOptions.map((slot) => {
                       const isSelected = selectedSlot === slot.id;
                       return (
-                        <button
+                        <motion.button
                           key={slot.id}
                           type="button"
+                          whileHover={{ y: -2 }}
+                          whileTap={{ scale: 0.96 }}
                           onClick={() => setValue("slot", slot.id)}
                           className={`py-2 px-2.5 border text-center transition-all cursor-pointer rounded-xs ${
                             isSelected
@@ -409,7 +416,7 @@ export default function ContactSection() {
                           <span className={`text-[10px] font-mono block mt-0.5 ${isSelected ? "!text-black/80" : "text-zinc-400"}`}>
                             {slot.time}
                           </span>
-                        </button>
+                        </motion.button>
                       );
                     })}
                   </div>
@@ -460,9 +467,22 @@ export default function ContactSection() {
                   </div>
                 </div>
 
-                {/* 4. Action Button */}
+                {/* Optional Message Field */}
+                <div>
+                  <label className="block text-xs font-mono uppercase tracking-wider text-zinc-400 mb-1.5 font-medium">
+                    {language === "bn" ? "অতিরিক্ত বার্তা বা লক্ষ্য (ঐচ্ছিক)" : "Additional Notes or Goal (Optional)"}
+                  </label>
+                  <textarea
+                    {...register("message")}
+                    rows={2}
+                    placeholder={language === "bn" ? "আপনার কোনো বিশেষ লক্ষ্য বা জিজ্ঞাসা থাকলে লিখুন..." : "Any fitness goals, weight targets, or questions..."}
+                    className="w-full px-4 py-2.5 bg-[#121216] border border-white/[0.08] focus:border-[#22c55e] text-sm text-white placeholder-zinc-600 focus:outline-none transition-all font-mono rounded-xs resize-none"
+                  />
+                </div>
+
+                {/* 4. Action Button with Magnetic Pull */}
                 <div className="pt-2">
-                  <button
+                  <MagneticButton
                     type="submit"
                     disabled={isSubmitting}
                     className="w-full py-4 rounded-xs text-xs sm:text-sm font-mono uppercase tracking-wider font-black !text-black bg-[#22c55e] hover:bg-[#16a34a] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed shadow-xl shadow-[#22c55e]/25"
@@ -477,7 +497,7 @@ export default function ContactSection() {
                         <ArrowRight className="w-4 h-4 !text-black stroke-[2.5]" />
                       </>
                     )}
-                  </button>
+                  </MagneticButton>
 
                   <div className="flex items-center justify-center gap-2 pt-3 text-[11px] font-mono text-zinc-400">
                     <ShieldCheck className="w-3.5 h-3.5 text-[#22c55e]" />

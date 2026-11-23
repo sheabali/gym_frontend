@@ -40,7 +40,7 @@ export default function AdminDashboardModule() {
       <DashboardHeader />
 
       {/* 2. Admin Feature Navigation Tabs */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 border-b border-gray-200/80">
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 border-b border-white/[0.08]">
         {navTabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -49,13 +49,13 @@ export default function AdminDashboardModule() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xs transition-all whitespace-nowrap cursor-pointer ${
+              className={`flex items-center gap-2 px-3.5 py-2 text-xs font-mono uppercase tracking-wider font-bold rounded-xs transition-all whitespace-nowrap cursor-pointer ${
                 isActive
-                  ? "bg-emerald-600 text-white shadow-xs"
-                  : "bg-white text-gray-600 hover:text-gray-900 hover:bg-gray-100 border border-gray-200/60"
+                  ? "bg-[#22c55e] !text-black shadow-md shadow-[#22c55e]/20"
+                  : "bg-[#121216] text-zinc-400 hover:text-white hover:bg-white/[0.04] border border-white/[0.08]"
               }`}
             >
-              <Icon size={14} className={isActive ? "text-white" : "text-gray-400"} />
+              <Icon size={14} className={isActive ? "!text-black" : "text-zinc-400"} />
               <span>{tab.label}</span>
             </button>
           );

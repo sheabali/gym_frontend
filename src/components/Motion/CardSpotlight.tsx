@@ -8,13 +8,15 @@ interface CardSpotlightProps {
   className?: string;
   spotlightColor?: string;
   enableTilt?: boolean;
+  showReticles?: boolean;
 }
 
 export default function CardSpotlight({
   children,
   className = "",
-  spotlightColor = "rgba(255, 94, 20, 0.18)",
+  spotlightColor = "rgba(34, 197, 94, 0.14)",
   enableTilt = true,
+  showReticles = false,
 }: CardSpotlightProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [mousePosition, setMousePosition] = useState<{ x: number; y: number }>({
@@ -38,8 +40,8 @@ export default function CardSpotlight({
     if (enableTilt) {
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
-      const rotateX = ((y - centerY) / centerY) * -6; // Max 6 deg
-      const rotateY = ((x - centerX) / centerX) * 6; // Max 6 deg
+      const rotateX = ((y - centerY) / centerY) * -5; // Max 5 deg tilt
+      const rotateY = ((x - centerX) / centerX) * 5; // Max 5 deg tilt
       setTilt({ rotateX, rotateY });
     }
   };
@@ -65,15 +67,15 @@ export default function CardSpotlight({
           ? {
               rotateX: tilt.rotateX,
               rotateY: tilt.rotateY,
-              scale: isHovered ? 1.015 : 1,
+              scale: isHovered ? 1.01 : 1,
             }
           : {}
       }
-      transition={{ type: "spring", stiffness: 350, damping: 25 }}
+      transition={{ type: "spring", stiffness: 300, damping: 25 }}
       style={{
         transformStyle: "preserve-3d",
       }}
-      className={`relative overflow-hidden rounded-2xl bg-zinc-900/60 border border-white/10 backdrop-blur-xl transition-colors duration-300 ${className}`}
+      className={`relative overflow-hidden rounded-xs bg-[#0e0e12] border border-white/[0.08] transition-colors duration-300 ${className}`}
     >
       {/* Dynamic Cursor Spotlight Radial Glow */}
       <div
@@ -86,7 +88,7 @@ export default function CardSpotlight({
 
       {/* Subtle border highlight under cursor */}
       <div
-        className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition-opacity duration-300 z-10 border border-[#22c55e]/50"
+        className="pointer-events-none absolute -inset-px rounded-xs opacity-0 transition-opacity duration-300 z-10 border border-[#22c55e]/40"
         style={{
           opacity: isHovered ? 1 : 0,
           maskImage: `radial-gradient(220px circle at ${mousePosition.x}px ${mousePosition.y}px, black, transparent)`,
@@ -94,7 +96,25 @@ export default function CardSpotlight({
         }}
       />
 
-      {/* Content wrapper with slight 3D elevation */}
+      {/* Optional Corner Telemetry Reticles */}
+      {showReticles && (
+        <>
+          <span className="pointer-events-none absolute top-1 left-1 text-[9px] font-mono text-white/20 select-none">
+            +
+          </span>
+          <span className="pointer-events-none absolute top-1 right-1 text-[9px] font-mono text-white/20 select-none">
+            +
+          </span>
+          <span className="pointer-events-none absolute bottom-1 left-1 text-[9px] font-mono text-white/20 select-none">
+            +
+          </span>
+          <span className="pointer-events-none absolute bottom-1 right-1 text-[9px] font-mono text-white/20 select-none">
+            +
+          </span>
+        </>
+      )}
+
+      {/* Content wrapper */}
       <div className="relative z-20 h-full w-full">{children}</div>
     </motion.div>
   );

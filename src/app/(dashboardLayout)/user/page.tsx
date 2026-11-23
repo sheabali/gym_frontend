@@ -33,12 +33,14 @@ import Link from "next/link";
 
 export default function UserDashboardPage() {
   const token = useAppSelector((state) => state.auth.token);
-  const [activeTab, setActiveTab] = useState<"overview" | "bookings" | "schedule" | "billing">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "schedule" | "billing">("overview");
+  const [scheduleFilter, setScheduleFilter] = useState<"ALL" | "MORNING" | "FEMALE" | "COMBINED" | "PRIME">("ALL");
+  const [cancellingBookingId, setCancellingBookingId] = useState<string | null>(null);
 
   // API hooks
   const { data: meResponse, isLoading: meLoading } = useGetMeQuery(undefined, { skip: !token }) as any;
   const { data: subsResponse, isLoading: subsLoading } = useGetMySubscriptionsQuery(undefined, { skip: !token }) as any;
-  const { data: bookingsResponse, isLoading: bookingsLoading } = useGetMyBookingsQuery(undefined, { skip: !token }) as any;
+  const { data: bookingsResponse, isLoading: bookingsLoading, refetch: refetchBookings } = useGetMyBookingsQuery(undefined, { skip: !token }) as any;
   const { data: sessionsResponse, isLoading: sessionsLoading } = useGetClassSessionsQuery(undefined) as any;
 
   const [bookSession, { isLoading: isBooking }] = useBookSessionMutation();
@@ -55,16 +57,20 @@ export default function UserDashboardPage() {
   const handleBook = async (sessionId: string) => {
     try {
       await bookSession({ sessionId }).unwrap();
-      toast.success("Spot booked successfully! See you in class.");
+      toast.success("Spot reserved successfully! See you in class.");
+      refetchBookings();
     } catch (err: any) {
       toast.error(err?.data?.message || "Booking failed. Please ensure you have an active membership.");
     }
   };
 
-  const handleCancel = async (bookingId: string) => {
+  const handleConfirmCancel = async () => {
+    if (!cancellingBookingId) return;
     try {
-      await cancelBooking(bookingId).unwrap();
+      await cancelBooking(cancellingBookingId).unwrap();
       toast.success("Booking cancelled successfully.");
+      setCancellingBookingId(null);
+      refetchBookings();
     } catch (err: any) {
       toast.error(err?.data?.message || "Cancellation failed. Cutoff is 2 hours before session start.");
     }
@@ -81,29 +87,44 @@ export default function UserDashboardPage() {
   if (meLoading) {
     return (
       <div className="flex h-96 items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-emerald-600" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#22c55e]" />
       </div>
     );
   }
 
   const daysRemaining = activeSubscription ? calculateDaysRemaining(activeSubscription.endDate) : 0;
+  const totalDays = activeSubscription?.planDuration || 30;
+  const progressPercent = Math.min(100, Math.max(5, (daysRemaining / totalDays) * 100));
+
+  const filteredSessions = availableSessions.filter((session: any) => {
+    if (scheduleFilter === "ALL") return true;
+    const title = (session.classType?.name || "").toLowerCase();
+    const room = (session.room || "").toLowerCase();
+    const hour = new Date(session.startsAt).getHours();
+
+    if (scheduleFilter === "MORNING") return hour >= 7 && hour < 12;
+    if (scheduleFilter === "FEMALE") return hour >= 12 && hour < 16.5 || title.includes("female") || room.includes("female");
+    if (scheduleFilter === "COMBINED") return hour >= 16.5 && hour < 18.5 || title.includes("combined");
+    if (scheduleFilter === "PRIME") return hour >= 18.5 || title.includes("prime") || title.includes("male");
+    return true;
+  });
 
   return (
-    <div className="space-y-6 container mx-auto py-2">
+    <div className="space-y-6 container mx-auto py-2 text-white">
       {/* 1. Header Banner */}
-      <div className="bg-white p-6 rounded-xs border border-gray-200/80 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-[#0e0e12] p-6 rounded-xs border border-white/[0.08] shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-              Platinum Member
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#22c55e] bg-[#22c55e]/10 px-2 py-0.5 rounded-xs border border-[#22c55e]/30">
+              PLATINUM ATHLETE
             </span>
-            <span className="text-xs text-gray-400">• Banasree Campus</span>
+            <span className="text-xs text-zinc-500 font-mono">• BANASREE BLOCK-D</span>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
-            Welcome back, {user?.name || "Member"}!
+          <h1 className="text-2xl font-black text-white uppercase tracking-tight">
+            Welcome back, {user?.name || "Member"}
           </h1>
-          <p className="text-xs text-gray-500 mt-0.5">
-            Track your memberships, manage class bookings, and view verified payment receipts.
+          <p className="text-xs text-zinc-400 mt-0.5 font-sans">
+            Manage your active membership, book coaching sessions, and inspect payment receipts.
           </p>
         </div>
 
@@ -112,7 +133,7 @@ export default function UserDashboardPage() {
             <Button
               variant="outline"
               size="sm"
-              className="text-xs rounded-xs border-gray-200 cursor-pointer"
+              className="text-xs font-mono uppercase tracking-wider rounded-xs border-white/[0.12] bg-white/[0.02] text-white hover:bg-white/[0.08] cursor-pointer"
             >
               Browse Plans
             </Button>
@@ -120,9 +141,9 @@ export default function UserDashboardPage() {
           <Button
             size="sm"
             onClick={() => setActiveTab("schedule")}
-            className="text-xs rounded-xs bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer"
+            className="text-xs font-mono uppercase tracking-wider font-black rounded-xs bg-[#22c55e] hover:bg-[#16a34a] !text-black shadow-md shadow-[#22c55e]/20 cursor-pointer"
           >
-            <Plus size={14} className="mr-1" />
+            <Plus size={14} className="mr-1 stroke-[2.5]" />
             Book a Class
           </Button>
         </div>
@@ -131,29 +152,29 @@ export default function UserDashboardPage() {
       {/* 2. Membership Status Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Active Membership Status */}
-        <div className="bg-white p-5 rounded-xs border border-gray-200/80 shadow-xs flex flex-col justify-between">
+        <div className="bg-[#0e0e12] p-5 rounded-xs border border-white/[0.08] shadow-lg flex flex-col justify-between">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Membership Status
+            <span className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+              Membership State
             </span>
             {activeSubscription ? (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                <CheckCircle2 size={13} className="text-emerald-600" />
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-xs text-[11px] font-mono font-bold bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/30">
+                <CheckCircle2 size={13} className="text-[#22c55e]" />
                 ACTIVE
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-                <AlertCircle size={13} className="text-amber-600" />
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-xs text-[11px] font-mono font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30">
+                <AlertCircle size={13} className="text-amber-400" />
                 NO ACTIVE PLAN
               </span>
             )}
           </div>
 
           <div className="my-2">
-            <h3 className="text-xl font-bold text-gray-900">
+            <h3 className="text-xl font-bold text-white tracking-tight">
               {activeSubscription ? activeSubscription.planName : "Inactive Member"}
             </h3>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-zinc-400 mt-1 font-sans">
               {activeSubscription && activeSubscription.endDate
                 ? `Expires on ${new Date(activeSubscription.endDate).toLocaleDateString("en-US", {
                   month: "short",
@@ -161,15 +182,31 @@ export default function UserDashboardPage() {
                   year: "numeric",
                   timeZone: "Asia/Dhaka",
                 })}`
-                : "Choose a membership plan to unlock booking & gym floor access."}
+                : "Select an official package to activate daily gym floor access."}
             </p>
+
+            {/* Days Remaining Progress Bar */}
+            {activeSubscription && (
+              <div className="mt-3">
+                <div className="flex justify-between text-[11px] font-mono text-zinc-400 mb-1">
+                  <span>VALIDITY REMAINING</span>
+                  <span className="text-[#22c55e] font-bold">{daysRemaining} DAYS</span>
+                </div>
+                <div className="w-full bg-white/[0.08] h-1.5 rounded-full overflow-hidden">
+                  <div
+                    className="bg-[#22c55e] h-full rounded-full transition-all duration-500"
+                    style={{ width: `${progressPercent}%` }}
+                  />
+                </div>
+              </div>
+            )}
           </div>
 
-          <div className="pt-3 border-t border-gray-100 flex items-center justify-between text-xs">
-            <span className="text-gray-500 font-mono">
+          <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs">
+            <span className="text-zinc-500 font-mono">
               {activeSubscription ? `${daysRemaining} days remaining` : "0 days left"}
             </span>
-            <Link href="/#pricing" className="text-emerald-600 font-semibold hover:underline flex items-center gap-0.5">
+            <Link href="/#pricing" className="text-[#22c55e] font-mono uppercase tracking-wider font-bold hover:underline flex items-center gap-0.5">
               {activeSubscription ? "Renew Plan" : "Enroll Now"}
               <ArrowUpRight size={13} />
             </Link>
@@ -177,128 +214,136 @@ export default function UserDashboardPage() {
         </div>
 
         {/* Bookings KPI */}
-        <div className="bg-white p-5 rounded-xs border border-gray-200/80 shadow-xs flex flex-col justify-between">
+        <div className="bg-[#0e0e12] p-5 rounded-xs border border-white/[0.08] shadow-lg flex flex-col justify-between">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Class Bookings
+            <span className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+              Reserved Sessions
             </span>
-            <div className="p-1.5 rounded bg-blue-50 text-blue-600 border border-blue-200">
+            <div className="p-1.5 rounded-xs bg-blue-500/10 text-blue-400 border border-blue-500/30">
               <Dumbbell size={16} />
             </div>
           </div>
 
           <div className="my-2">
-            <h3 className="text-2xl font-bold text-gray-900 tracking-tight">
+            <h3 className="text-2xl font-black text-white tracking-tight font-mono">
               {bookings.filter((b: any) => b.status === "BOOKED").length} Active
             </h3>
-            <p className="text-xs text-gray-500 mt-1">
-              Total sessions scheduled on your calendar
+            <p className="text-xs text-zinc-400 mt-1 font-sans">
+              Upcoming class spots reserved on your schedule
             </p>
           </div>
 
-          <div className="pt-3 border-t border-gray-100 flex items-center justify-between text-xs">
-            <span className="text-gray-500 font-mono">
+          <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs font-mono">
+            <span className="text-zinc-500">
               {bookings.length} historical bookings
             </span>
             <button
-              onClick={() => setActiveTab("bookings")}
-              className="text-blue-600 font-semibold hover:underline cursor-pointer"
+              onClick={() => setActiveTab("overview")}
+              className="text-blue-400 font-bold hover:underline cursor-pointer uppercase tracking-wider"
             >
               View All
             </button>
           </div>
         </div>
 
-        {/* Profile & Security */}
-        <div className="bg-white p-5 rounded-xs border border-gray-200/80 shadow-xs flex flex-col justify-between">
+        {/* Profile & Telemetry */}
+        <div className="bg-[#0e0e12] p-5 rounded-xs border border-white/[0.08] shadow-lg flex flex-col justify-between">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Contact & Profile
+            <span className="text-xs font-mono uppercase tracking-wider text-zinc-400">
+              Account Telemetry
             </span>
-            <div className="p-1.5 rounded bg-purple-50 text-purple-600 border border-purple-200">
+            <div className="p-1.5 rounded-xs bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/30">
               <ShieldCheck size={16} />
             </div>
           </div>
 
-          <div className="my-2 text-xs space-y-1">
+          <div className="my-2 text-xs space-y-1.5 font-mono">
             <div className="flex justify-between">
-              <span className="text-gray-400">Phone:</span>
-              <span className="font-semibold text-gray-800 font-mono">{user?.phone || "N/A"}</span>
+              <span className="text-zinc-500">PHONE:</span>
+              <span className="font-bold text-white">{user?.phone || "N/A"}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-400">Email:</span>
-              <span className="font-semibold text-gray-800">{user?.email || "N/A"}</span>
+              <span className="text-zinc-500">EMAIL:</span>
+              <span className="font-bold text-white truncate max-w-[170px]">{user?.email || "N/A"}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-400">Free Trial:</span>
-              <span className="font-semibold text-gray-800">{user?.trialUsed ? "Used" : "Available"}</span>
+              <span className="text-zinc-500">COMPLIMENTARY TRIAL:</span>
+              <span className={`font-bold ${user?.trialUsed ? "text-zinc-500" : "text-[#22c55e]"}`}>
+                {user?.trialUsed ? "USED" : "AVAILABLE"}
+              </span>
             </div>
           </div>
 
-          <div className="pt-3 border-t border-gray-100 flex items-center justify-between text-xs">
-            <span className="text-emerald-600 font-semibold flex items-center gap-1">
+          <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs font-mono">
+            <span className="text-[#22c55e] font-bold flex items-center gap-1 text-[11px]">
               <CheckCircle2 size={13} />
-              Verified Account
+              VERIFIED ATHLETE
             </span>
-            <span className="text-gray-400">Member #{user?.id?.slice(-5) || "001"}</span>
+            <span className="text-zinc-500 text-[11px]">#PG-{user?.id?.slice(-5) || "001"}</span>
           </div>
         </div>
       </div>
 
-      {/* 3. Tabbed Navigation */}
-      <div className="border-b border-gray-200">
-        <nav className="flex space-x-6 text-xs font-semibold">
+      {/* 3. Tabbed Navigation with Icons */}
+      <div className="border-b border-white/[0.08]">
+        <nav className="flex space-x-2 sm:space-x-4 text-xs font-mono uppercase tracking-wider">
           {[
-            { key: "overview", label: "My Bookings" },
-            { key: "schedule", label: "Book a Class Session" },
-            { key: "billing", label: "Membership & Payment History" },
-          ].map((tab) => (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key as any)}
-              className={`pb-3 border-b-2 transition-all cursor-pointer ${activeTab === tab.key
-                ? "border-emerald-600 text-emerald-700 font-bold"
-                : "border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-300"
+            { key: "overview", label: "My Bookings", icon: Calendar },
+            { key: "schedule", label: "Book a Session", icon: Dumbbell },
+            { key: "billing", label: "Dues & Receipts", icon: CreditCard },
+          ].map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.key;
+            return (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key as any)}
+                className={`pb-3.5 px-3 border-b-2 flex items-center gap-2 transition-all cursor-pointer font-bold ${
+                  isActive
+                    ? "border-[#22c55e] text-[#22c55e]"
+                    : "border-transparent text-zinc-400 hover:text-white hover:border-white/20"
                 }`}
-            >
-              {tab.label}
-            </button>
-          ))}
+              >
+                <Icon size={14} className={isActive ? "text-[#22c55e]" : "text-zinc-500"} />
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
         </nav>
       </div>
 
       {/* 4. Tab Content */}
       {/* Tab A: Bookings */}
       {activeTab === "overview" && (
-        <div className="bg-white p-6 rounded-xs border border-gray-200/80 shadow-xs">
-          <div className="flex items-center justify-between mb-4">
+        <div className="bg-[#0e0e12] p-6 rounded-xs border border-white/[0.08] shadow-lg">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-white/[0.06]">
             <div>
-              <h2 className="text-base font-bold text-gray-900">Your Scheduled Class Sessions</h2>
-              <p className="text-xs text-gray-500">Upcoming workouts and floor coaching sessions</p>
+              <h2 className="text-base font-black text-white uppercase tracking-tight">Your Reserved Class Sessions</h2>
+              <p className="text-xs text-zinc-400 font-sans mt-0.5">Upcoming scheduled workouts and coaching sessions</p>
             </div>
             <Button
               size="sm"
               variant="outline"
               onClick={() => setActiveTab("schedule")}
-              className="text-xs rounded-xs"
+              className="text-xs font-mono uppercase tracking-wider rounded-xs border-white/[0.12] bg-white/[0.02] text-white hover:bg-white/[0.08] cursor-pointer"
             >
               + Reserve Another Spot
             </Button>
           </div>
 
           {bookingsLoading ? (
-            <div className="py-8 text-center text-xs text-gray-500">Loading your bookings...</div>
+            <div className="py-8 text-center text-xs text-zinc-500 font-mono">Loading your reserved sessions...</div>
           ) : bookings.length === 0 ? (
             <div className="py-12 text-center">
-              <Calendar className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-              <h3 className="text-sm font-bold text-gray-800">No sessions booked yet</h3>
-              <p className="text-xs text-gray-500 max-w-sm mx-auto mt-1 mb-4">
-                You haven&apos;t reserved any class sessions. Browse the weekly schedule to book your spot.
+              <Calendar className="w-10 h-10 text-zinc-600 mx-auto mb-3" />
+              <h3 className="text-sm font-bold text-white">No sessions booked yet</h3>
+              <p className="text-xs text-zinc-400 max-w-sm mx-auto mt-1 mb-4 font-sans">
+                You haven&apos;t reserved any class sessions yet. Browse the weekly schedule to book your spot.
               </p>
               <Button
                 size="sm"
                 onClick={() => setActiveTab("schedule")}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs"
+                className="bg-[#22c55e] hover:bg-[#16a34a] !text-black font-mono uppercase font-black text-xs"
               >
                 Browse Available Sessions
               </Button>
@@ -306,17 +351,17 @@ export default function UserDashboardPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-gray-50 text-gray-600 border-b border-gray-200 uppercase text-[11px] font-semibold">
+                <thead className="bg-[#121217] text-zinc-400 border-b border-white/[0.08] uppercase text-[10px] font-mono tracking-wider">
                   <tr>
                     <th className="py-3 px-4">Class</th>
                     <th className="py-3 px-4">Date & Time</th>
-                    <th className="py-3 px-4">Trainer</th>
-                    <th className="py-3 px-4">Room</th>
+                    <th className="py-3 px-4">Coach on Duty</th>
+                    <th className="py-3 px-4">Studio / Room</th>
                     <th className="py-3 px-4">Status</th>
                     <th className="py-3 px-4 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-white/[0.05]">
                   {bookings.map((booking: any) => {
                     const session = booking.session;
                     const startsAt = new Date(session.startsAt);
@@ -333,26 +378,26 @@ export default function UserDashboardPage() {
                     });
 
                     return (
-                      <tr key={booking.id} className="hover:bg-gray-50/50">
-                        <td className="py-3.5 px-4 font-bold text-gray-900">
+                      <tr key={booking.id} className="hover:bg-white/[0.02] transition-colors">
+                        <td className="py-3.5 px-4 font-bold text-white">
                           {session.classType?.name || "Fitness Class"}
                         </td>
-                        <td className="py-3.5 px-4 text-gray-600 font-mono">
+                        <td className="py-3.5 px-4 text-zinc-300 font-mono">
                           {dateStr} • {timeStr}
                         </td>
-                        <td className="py-3.5 px-4 text-gray-600">
-                          {session.trainer?.name || "Trainer"}
+                        <td className="py-3.5 px-4 text-zinc-300">
+                          {session.trainer?.name || "Floor Trainer"}
                         </td>
-                        <td className="py-3.5 px-4 text-gray-500">
+                        <td className="py-3.5 px-4 text-zinc-500 font-mono">
                           {session.room || "Main Studio"}
                         </td>
                         <td className="py-3.5 px-4">
                           {booking.status === "BOOKED" ? (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-xs text-[10px] font-mono font-bold bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/30">
                               BOOKED
                             </span>
                           ) : (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-gray-100 text-gray-600">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-xs text-[10px] font-mono font-medium bg-white/[0.04] text-zinc-400">
                               {booking.status}
                             </span>
                           )}
@@ -362,9 +407,8 @@ export default function UserDashboardPage() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => handleCancel(booking.id)}
-                              disabled={isCancelling}
-                              className="text-xs text-red-600 hover:text-red-700 hover:bg-red-50 h-7 px-2 cursor-pointer"
+                              onClick={() => setCancellingBookingId(booking.id)}
+                              className="text-xs font-mono uppercase text-red-400 hover:text-red-300 hover:bg-red-500/10 h-7 px-2 cursor-pointer rounded-xs"
                             >
                               <XCircle size={13} className="mr-1" />
                               Cancel
@@ -383,23 +427,42 @@ export default function UserDashboardPage() {
 
       {/* Tab B: Available Schedule */}
       {activeTab === "schedule" && (
-        <div className="bg-white p-6 rounded-xs border border-gray-200/80 shadow-xs">
-          <div className="mb-4">
-            <h2 className="text-base font-bold text-gray-900">Weekly Scheduled Classes & Sessions</h2>
-            <p className="text-xs text-gray-500">
-              Select an upcoming session to reserve your training spot. Capacity is limited to ensure spacious workouts.
-            </p>
+        <div className="bg-[#0e0e12] p-6 rounded-xs border border-white/[0.08] shadow-lg">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-white/[0.06]">
+            <div>
+              <h2 className="text-base font-black text-white uppercase tracking-tight">Scheduled Classes & Sessions</h2>
+              <p className="text-xs text-zinc-400 font-sans mt-0.5">
+                Reserve your coaching slot. Sessions maintain strict capacity limits.
+              </p>
+            </div>
+
+            {/* Shift Filter Buttons */}
+            <div className="flex flex-wrap items-center gap-1.5 p-0.5 bg-[#121216] border border-white/[0.08] rounded-xs font-mono text-[11px]">
+              {(["ALL", "MORNING", "FEMALE", "COMBINED", "PRIME"] as const).map((filter) => (
+                <button
+                  key={filter}
+                  onClick={() => setScheduleFilter(filter)}
+                  className={`px-2.5 py-1 rounded-xs uppercase tracking-wider transition-all cursor-pointer ${
+                    scheduleFilter === filter
+                      ? "bg-[#22c55e] !text-black font-black"
+                      : "text-zinc-400 hover:text-white"
+                  }`}
+                >
+                  {filter}
+                </button>
+              ))}
+            </div>
           </div>
 
           {sessionsLoading ? (
-            <div className="py-8 text-center text-xs text-gray-500">Loading scheduled sessions...</div>
-          ) : availableSessions.length === 0 ? (
-            <div className="py-8 text-center text-xs text-gray-500">
-              No sessions currently scheduled. Please check back shortly or inquire at the front desk.
+            <div className="py-8 text-center text-xs text-zinc-500 font-mono">Loading scheduled sessions...</div>
+          ) : filteredSessions.length === 0 ? (
+            <div className="py-8 text-center text-xs text-zinc-500 font-mono">
+              No sessions found matching this shift filter. Please select another slot.
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {availableSessions.map((session: any) => {
+              {filteredSessions.map((session: any) => {
                 const startsAt = new Date(session.startsAt);
                 const timeStr = startsAt.toLocaleTimeString("en-US", {
                   hour: "2-digit",
@@ -420,36 +483,37 @@ export default function UserDashboardPage() {
                 return (
                   <div
                     key={session.id}
-                    className="p-4 rounded-xs border border-gray-200 bg-gray-50/50 flex flex-col justify-between hover:border-gray-300 transition-all"
+                    className="p-4 rounded-xs border border-white/[0.08] bg-[#121216] flex flex-col justify-between hover:border-white/20 transition-all"
                   >
                     <div>
-                      <div className="flex items-center justify-between text-xs text-gray-500 mb-1 font-mono">
+                      <div className="flex items-center justify-between text-xs text-zinc-400 mb-1.5 font-mono">
                         <span>{dateStr}</span>
-                        <span className="font-bold text-gray-800">{timeStr}</span>
+                        <span className="font-bold text-[#22c55e]">{timeStr}</span>
                       </div>
 
-                      <h3 className="text-sm font-bold text-gray-900 mb-1">
+                      <h3 className="text-sm font-bold text-white mb-1">
                         {session.classType?.name || "Fitness Class"}
                       </h3>
 
-                      <p className="text-xs text-gray-600 mb-2">
+                      <p className="text-xs text-zinc-400 mb-3 font-sans">
                         Coach: {session.trainer?.name || "Floor Specialist"} • {session.room || "Studio 1"}
                       </p>
 
                       <div className="flex items-center gap-2 text-xs">
-                        <span className={`px-2 py-0.5 rounded text-[11px] font-semibold ${availableSeats > 0 ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-red-50 text-red-700 border border-red-200"
-                          }`}>
-                          {availableSeats > 0 ? `${availableSeats} spots left` : "Session Full"}
+                        <span className={`px-2 py-0.5 rounded-xs font-mono text-[10px] font-bold ${
+                          availableSeats > 0 ? "bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/30" : "bg-red-500/10 text-red-400 border border-red-500/30"
+                        }`}>
+                          {availableSeats > 0 ? `${availableSeats} SPOTS LEFT` : "SESSION FULL"}
                         </span>
                       </div>
                     </div>
 
-                    <div className="mt-4 pt-3 border-t border-gray-200/80">
+                    <div className="mt-4 pt-3 border-t border-white/[0.06]">
                       {isAlreadyBooked ? (
                         <Button
                           disabled
                           size="sm"
-                          className="w-full text-xs bg-emerald-100 text-emerald-800 font-semibold"
+                          className="w-full text-xs font-mono uppercase font-bold bg-[#22c55e]/20 text-[#22c55e] border border-[#22c55e]/30"
                         >
                           <CheckCircle2 size={13} className="mr-1" />
                           Reserved
@@ -459,7 +523,7 @@ export default function UserDashboardPage() {
                           size="sm"
                           onClick={() => handleBook(session.id)}
                           disabled={availableSeats <= 0 || isBooking}
-                          className="w-full text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-semibold cursor-pointer"
+                          className="w-full text-xs font-mono uppercase tracking-wider font-black bg-[#22c55e] hover:bg-[#16a34a] !text-black cursor-pointer shadow-md shadow-[#22c55e]/20"
                         >
                           {availableSeats <= 0 ? "Session Full" : "Book Spot"}
                         </Button>
@@ -475,30 +539,30 @@ export default function UserDashboardPage() {
 
       {/* Tab C: Billing & Invoices */}
       {activeTab === "billing" && (
-        <div className="bg-white p-6 rounded-xs border border-gray-200/80 shadow-xs">
-          <div className="flex items-center justify-between mb-4">
+        <div className="bg-[#0e0e12] p-6 rounded-xs border border-white/[0.08] shadow-lg">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-white/[0.06]">
             <div>
-              <h2 className="text-base font-bold text-gray-900">Subscription Invoices & Receipts</h2>
-              <p className="text-xs text-gray-500">Record of all membership dues and verified payments</p>
+              <h2 className="text-base font-black text-white uppercase tracking-tight">Subscription Invoices & Receipts</h2>
+              <p className="text-xs text-zinc-400 font-sans mt-0.5">Verified record of membership dues and transactions</p>
             </div>
             <Link href="/#pricing">
-              <Button size="sm" className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white">
+              <Button size="sm" className="text-xs font-mono uppercase tracking-wider font-black bg-[#22c55e] hover:bg-[#16a34a] !text-black">
                 New Subscription
               </Button>
             </Link>
           </div>
 
           {subsLoading ? (
-            <div className="py-8 text-center text-xs text-gray-500">Loading payment history...</div>
+            <div className="py-8 text-center text-xs text-zinc-500 font-mono">Loading payment history...</div>
           ) : subscriptions.length === 0 ? (
             <div className="py-10 text-center">
-              <CreditCard className="w-10 h-10 text-gray-300 mx-auto mb-2" />
-              <h3 className="text-sm font-bold text-gray-800">No past payments found</h3>
-              <p className="text-xs text-gray-500 mt-1 mb-4">
-                You have not purchased any subscriptions yet.
+              <CreditCard className="w-10 h-10 text-zinc-600 mx-auto mb-2" />
+              <h3 className="text-sm font-bold text-white">No past subscriptions found</h3>
+              <p className="text-xs text-zinc-400 mt-1 mb-4 font-sans">
+                You have not initiated or activated any subscriptions yet.
               </p>
               <Link href="/#pricing">
-                <Button size="sm" className="bg-emerald-600 text-white text-xs">
+                <Button size="sm" className="bg-[#22c55e] !text-black font-mono uppercase font-black text-xs">
                   View Official Rate Card
                 </Button>
               </Link>
@@ -506,17 +570,17 @@ export default function UserDashboardPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-gray-50 text-gray-600 border-b border-gray-200 uppercase text-[11px] font-semibold">
+                <thead className="bg-[#121217] text-zinc-400 border-b border-white/[0.08] uppercase text-[10px] font-mono tracking-wider">
                   <tr>
-                    <th className="py-3 px-4">Plan Name</th>
+                    <th className="py-3 px-4">Plan Package</th>
                     <th className="py-3 px-4">Amount Paid</th>
                     <th className="py-3 px-4">Status</th>
-                    <th className="py-3 px-4">Start Date</th>
+                    <th className="py-3 px-4">Activation Date</th>
                     <th className="py-3 px-4">Expiration Date</th>
-                    <th className="py-3 px-4">Created Date</th>
+                    <th className="py-3 px-4">Invoiced On</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-white/[0.05]">
                   {subscriptions.map((sub: any) => {
                     const priceBdt = sub.pricePaid / 100;
                     const createdDate = new Date(sub.createdAt).toLocaleDateString("en-US", {
@@ -540,29 +604,29 @@ export default function UserDashboardPage() {
                       : "N/A";
 
                     return (
-                      <tr key={sub.id} className="hover:bg-gray-50/50">
-                        <td className="py-3.5 px-4 font-bold text-gray-900">{sub.planName}</td>
-                        <td className="py-3.5 px-4 font-mono font-bold text-gray-900">
+                      <tr key={sub.id} className="hover:bg-white/[0.02] transition-colors">
+                        <td className="py-3.5 px-4 font-bold text-white">{sub.planName}</td>
+                        <td className="py-3.5 px-4 font-mono font-bold text-[#22c55e]">
                           ৳{priceBdt.toLocaleString("en-US")}
                         </td>
                         <td className="py-3.5 px-4">
                           {sub.status === "ACTIVE" ? (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-xs text-[10px] font-mono font-bold bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/30">
                               ACTIVE
                             </span>
                           ) : sub.status === "PENDING" ? (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-xs text-[10px] font-mono font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30">
                               PENDING
                             </span>
                           ) : (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-gray-100 text-gray-600">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-xs text-[10px] font-mono font-medium bg-white/[0.04] text-zinc-400">
                               {sub.status}
                             </span>
                           )}
                         </td>
-                        <td className="py-3.5 px-4 text-gray-600 font-mono">{startDate}</td>
-                        <td className="py-3.5 px-4 text-gray-600 font-mono">{endDate}</td>
-                        <td className="py-3.5 px-4 text-gray-500 font-mono">{createdDate}</td>
+                        <td className="py-3.5 px-4 text-zinc-300 font-mono">{startDate}</td>
+                        <td className="py-3.5 px-4 text-zinc-300 font-mono">{endDate}</td>
+                        <td className="py-3.5 px-4 text-zinc-500 font-mono">{createdDate}</td>
                       </tr>
                     );
                   })}
@@ -570,6 +634,39 @@ export default function UserDashboardPage() {
               </table>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Cancellation Confirmation Dialog */}
+      {cancellingBookingId && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#0e0e12] border border-white/[0.1] p-6 max-w-md w-full rounded-xs shadow-2xl text-white space-y-4">
+            <div className="flex items-center gap-2 text-amber-400">
+              <AlertCircle size={20} />
+              <h4 className="font-bold uppercase tracking-tight text-white">Confirm Booking Cancellation</h4>
+            </div>
+            <p className="text-xs text-zinc-400 leading-relaxed font-sans">
+              Are you sure you want to cancel this class reservation? Note: Cancellations must be submitted at least 2 hours prior to the session start time.
+            </p>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCancellingBookingId(null)}
+                className="text-xs font-mono uppercase tracking-wider rounded-xs border-white/[0.12] bg-white/[0.02] text-white hover:bg-white/[0.08]"
+              >
+                Keep Booking
+              </Button>
+              <Button
+                size="sm"
+                onClick={handleConfirmCancel}
+                disabled={isCancelling}
+                className="text-xs font-mono uppercase tracking-wider font-bold bg-red-600 hover:bg-red-700 text-white rounded-xs"
+              >
+                {isCancelling ? "Cancelling..." : "Confirm Cancellation"}
+              </Button>
+            </div>
+          </div>
         </div>
       )}
     </div>

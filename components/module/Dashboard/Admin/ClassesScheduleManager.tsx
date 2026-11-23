@@ -169,18 +169,18 @@ export default function ClassesScheduleManager() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 text-white">
       {/* Header & Controls */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-xs border border-gray-200/80 shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#0e0e12] p-4 rounded-xs border border-white/[0.08] shadow-lg">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-emerald-50 text-emerald-700 rounded border border-emerald-200">
+          <div className="p-2 bg-[#22c55e]/10 text-[#22c55e] rounded-xs border border-[#22c55e]/30">
             <Calendar className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-base font-bold text-gray-900">
+            <h2 className="text-base font-black text-white uppercase tracking-tight">
               Classes & Schedule Management
             </h2>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-zinc-400 font-sans">
               Configure class offerings, schedule daily sessions, or bulk-generate weekly calendars.
             </p>
           </div>
@@ -191,7 +191,7 @@ export default function ClassesScheduleManager() {
             onClick={() => setTypeModalOpen(true)}
             variant="outline"
             size="sm"
-            className="text-xs gap-1.5 cursor-pointer"
+            className="text-xs font-mono uppercase tracking-wider rounded-xs border-white/[0.12] bg-white/[0.02] text-white hover:bg-white/[0.08] gap-1.5 cursor-pointer"
           >
             <Dumbbell size={14} />
             <span>New Class Type</span>
@@ -201,7 +201,7 @@ export default function ClassesScheduleManager() {
             onClick={() => setRecurringModalOpen(true)}
             variant="outline"
             size="sm"
-            className="text-xs gap-1.5 border-emerald-300 text-emerald-800 bg-emerald-50/50 hover:bg-emerald-100 cursor-pointer"
+            className="text-xs font-mono uppercase tracking-wider rounded-xs gap-1.5 border-[#22c55e]/30 text-[#22c55e] bg-[#22c55e]/5 hover:bg-[#22c55e]/15 cursor-pointer"
           >
             <Repeat size={14} />
             <span>Bulk Weekly Generator</span>
@@ -210,32 +210,32 @@ export default function ClassesScheduleManager() {
           <Button
             onClick={() => setSessionModalOpen(true)}
             size="sm"
-            className="text-xs gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer"
+            className="text-xs font-mono uppercase tracking-wider font-black gap-1.5 bg-[#22c55e] hover:bg-[#16a34a] !text-black cursor-pointer rounded-xs shadow-md shadow-[#22c55e]/20"
           >
-            <Plus size={14} />
+            <Plus size={14} className="stroke-[2.5]" />
             <span>Schedule Session</span>
           </Button>
         </div>
       </div>
 
       {/* Sub-tab Switcher */}
-      <div className="flex items-center gap-2 border-b border-gray-200 pb-1">
+      <div className="flex items-center gap-2 border-b border-white/[0.08] pb-1">
         <button
           onClick={() => setActiveSubTab("sessions")}
-          className={`px-3 py-1.5 text-xs font-semibold border-b-2 transition-all cursor-pointer ${
+          className={`px-3 py-1.5 text-xs font-semibold border-b-2 transition-all cursor-pointer font-mono uppercase tracking-wider ${
             activeSubTab === "sessions"
-              ? "border-emerald-600 text-emerald-700"
-              : "border-transparent text-gray-500 hover:text-gray-900"
+              ? "border-[#22c55e] text-[#22c55e]"
+              : "border-transparent text-zinc-400 hover:text-white"
           }`}
         >
           Scheduled Sessions ({sessions.length})
         </button>
         <button
           onClick={() => setActiveSubTab("types")}
-          className={`px-3 py-1.5 text-xs font-semibold border-b-2 transition-all cursor-pointer ${
+          className={`px-3 py-1.5 text-xs font-semibold border-b-2 transition-all cursor-pointer font-mono uppercase tracking-wider ${
             activeSubTab === "types"
-              ? "border-emerald-600 text-emerald-700"
-              : "border-transparent text-gray-500 hover:text-gray-900"
+              ? "border-[#22c55e] text-[#22c55e]"
+              : "border-transparent text-zinc-400 hover:text-white"
           }`}
         >
           Class Types Catalog ({classTypes.length})
@@ -245,20 +245,20 @@ export default function ClassesScheduleManager() {
       {/* Sessions View */}
       {activeSubTab === "sessions" ? (
         sessionsLoading ? (
-          <div className="flex h-48 items-center justify-center bg-white rounded-xs border border-gray-200">
-            <Loader2 className="w-6 h-6 animate-spin text-emerald-600" />
+          <div className="flex h-48 items-center justify-center bg-[#0e0e12] rounded-xs border border-white/[0.08]">
+            <Loader2 className="w-6 h-6 animate-spin text-[#22c55e]" />
           </div>
         ) : sessions.length === 0 ? (
-          <div className="bg-white p-12 text-center rounded-xs border border-gray-200 shadow-xs">
-            <Calendar className="w-10 h-10 text-gray-300 mx-auto mb-2" />
-            <p className="text-sm font-semibold text-gray-900">No sessions currently scheduled</p>
-            <p className="text-xs text-gray-500 mt-1">Use &quot;Schedule Session&quot; or the &quot;Bulk Weekly Generator&quot; to populate your timetable.</p>
+          <div className="bg-[#0e0e12] p-12 text-center rounded-xs border border-white/[0.08] shadow-lg">
+            <Calendar className="w-10 h-10 text-zinc-600 mx-auto mb-2" />
+            <p className="text-sm font-semibold text-white">No sessions currently scheduled</p>
+            <p className="text-xs text-zinc-400 mt-1">Use &quot;Schedule Session&quot; or the &quot;Bulk Weekly Generator&quot; to populate your timetable.</p>
           </div>
         ) : (
-          <div className="bg-white rounded-xs border border-gray-200/80 shadow-xs overflow-hidden">
+          <div className="bg-[#0e0e12] rounded-xs border border-white/[0.08] shadow-lg overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-gray-50 border-b border-gray-200 text-gray-600 uppercase font-mono text-[10px]">
+                <thead className="bg-white/[0.02] border-b border-white/[0.08] text-zinc-400 uppercase font-mono text-[10px]">
                   <tr>
                     <th className="py-3 px-4">Class & Room</th>
                     <th className="py-3 px-4">Instructor</th>
@@ -268,37 +268,37 @@ export default function ClassesScheduleManager() {
                     <th className="py-3 px-4 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-white/[0.04]">
                   {sessions.map((session) => {
                     const starts = new Date(session.startsAt);
                     const ends = new Date(session.endsAt);
                     const isCancelled = session.status === "CANCELLED";
 
                     return (
-                      <tr key={session.id} className="hover:bg-gray-50/50">
+                      <tr key={session.id} className="hover:bg-white/[0.02] transition-colors">
                         <td className="py-3 px-4">
-                          <div className="font-bold text-gray-900">
+                          <div className="font-bold text-white">
                             {session.classType?.name || "Class"}
                           </div>
-                          <div className="text-[11px] text-gray-500 flex items-center gap-1 mt-0.5">
-                            <MapPin className="w-3 h-3 text-gray-400" />
+                          <div className="text-[11px] text-zinc-400 flex items-center gap-1 mt-0.5">
+                            <MapPin className="w-3 h-3 text-[#22c55e]" />
                             <span>{session.room || "Studio 1"}</span>
                           </div>
                         </td>
                         <td className="py-3 px-4">
-                          <span className="font-semibold text-gray-800">
+                          <span className="font-semibold text-zinc-200">
                             {session.trainer?.name || "Assigned Coach"}
                           </span>
                         </td>
                         <td className="py-3 px-4">
-                          <div className="font-semibold text-gray-900">
+                          <div className="font-semibold text-white">
                             {starts.toLocaleDateString("en-US", {
                               weekday: "short",
                               month: "short",
                               day: "numeric",
                             })}
                           </div>
-                          <div className="text-[11px] text-gray-500 font-mono">
+                          <div className="text-[11px] text-zinc-400 font-mono">
                             {starts.toLocaleTimeString("en-US", {
                               hour: "2-digit",
                               minute: "2-digit",
@@ -311,10 +311,10 @@ export default function ClassesScheduleManager() {
                           </div>
                         </td>
                         <td className="py-3 px-4">
-                          <span className="font-bold text-gray-900">
+                          <span className="font-bold text-white font-mono">
                             {session.bookedCount || 0}
                           </span>
-                          <span className="text-gray-400"> / {session.capacity} spots</span>
+                          <span className="text-zinc-500 font-mono"> / {session.capacity} spots</span>
                         </td>
                         <td className="py-3 px-4">
                           <Badge
@@ -325,7 +325,13 @@ export default function ClassesScheduleManager() {
                                 ? "secondary"
                                 : "default"
                             }
-                            className="text-[10px]"
+                            className={`text-[10px] font-mono ${
+                              !isCancelled && session.status !== "COMPLETED"
+                                ? "bg-[#22c55e] text-black font-bold"
+                                : session.status === "COMPLETED"
+                                ? "bg-white/[0.08] text-zinc-400"
+                                : ""
+                            }`}
                           >
                             {session.status}
                           </Badge>
@@ -336,7 +342,7 @@ export default function ClassesScheduleManager() {
                               size="sm"
                               variant="outline"
                               onClick={() => handleCancelSession(session.id)}
-                              className="h-7 px-2 text-[11px] text-rose-600 hover:text-rose-700 hover:bg-rose-50 border-gray-200 cursor-pointer"
+                              className="h-7 px-2 text-[11px] text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 border-rose-500/30 cursor-pointer"
                             >
                               <Trash2 size={12} />
                               <span>Cancel</span>
@@ -357,27 +363,27 @@ export default function ClassesScheduleManager() {
           {classTypes.map((type) => (
             <div
               key={type.id}
-              className="bg-white p-5 rounded-xs border border-gray-200/80 shadow-xs flex flex-col justify-between"
+              className="bg-[#0e0e12] p-5 rounded-xs border border-white/[0.08] shadow-lg flex flex-col justify-between hover:border-[#22c55e]/40 transition-all"
             >
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <Badge variant="outline" className="text-[10px] font-mono">
+                  <Badge variant="outline" className="text-[10px] font-mono border-white/[0.12] text-zinc-300">
                     {type.difficulty}
                   </Badge>
-                  <span className="text-xs text-gray-400 flex items-center gap-1">
+                  <span className="text-xs text-zinc-400 flex items-center gap-1">
                     <Clock size={12} />
                     {type.durationMinutes} min
                   </span>
                 </div>
-                <h3 className="text-base font-bold text-gray-900">{type.name}</h3>
-                <p className="text-xs text-gray-600 mt-2 line-clamp-3">
+                <h3 className="text-base font-bold text-white">{type.name}</h3>
+                <p className="text-xs text-zinc-400 mt-2 line-clamp-3">
                   {type.description || "No description provided."}
                 </p>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-500">
+              <div className="mt-4 pt-3 border-t border-white/[0.08] flex items-center justify-between text-[11px] text-zinc-500">
                 <span>Slug: /{type.slug}</span>
-                <span className="text-emerald-700 font-semibold font-mono">ACTIVE</span>
+                <span className="text-[#22c55e] font-semibold font-mono">ACTIVE</span>
               </div>
             </div>
           ))}
@@ -386,19 +392,19 @@ export default function ClassesScheduleManager() {
 
       {/* Modal: New Class Type */}
       <Dialog open={typeModalOpen} onOpenChange={setTypeModalOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md bg-[#0e0e12] border-white/[0.08] text-white">
           <DialogHeader>
-            <DialogTitle className="text-base font-bold text-gray-900">
+            <DialogTitle className="text-base font-bold text-white">
               Create New Class Type
             </DialogTitle>
-            <DialogDescription className="text-xs text-gray-500">
+            <DialogDescription className="text-xs text-zinc-400">
               Define a reusable workout format (e.g. HIIT, CrossFit, Yoga).
             </DialogDescription>
           </DialogHeader>
 
           <form onSubmit={handleCreateClassType} className="space-y-4 text-xs mt-2">
             <div>
-              <label className="block font-semibold text-gray-700 mb-1">
+              <label className="block font-semibold text-zinc-300 mb-1">
                 Class Type Name *
               </label>
               <Input
@@ -406,28 +412,29 @@ export default function ClassesScheduleManager() {
                 onChange={(e) => setTypeName(e.target.value)}
                 placeholder="e.g. Functional Strength & Hypertrophy"
                 required
+                className="bg-[#0b0b0d] border-white/[0.12] text-white placeholder:text-zinc-600 focus-visible:ring-[#22c55e]"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block font-semibold text-gray-700 mb-1">
+                <label className="block font-semibold text-zinc-300 mb-1">
                   Difficulty Level
                 </label>
                 <select
                   value={typeDifficulty}
                   onChange={(e) => setTypeDifficulty(e.target.value as any)}
-                  className="w-full h-9 border border-gray-200 rounded-xs px-2 text-xs bg-white"
+                  className="w-full h-9 border border-white/[0.12] rounded-xs px-2 text-xs bg-[#0b0b0d] text-white focus:outline-none focus:ring-1 focus:ring-[#22c55e]"
                 >
-                  <option value="ALL_LEVELS">All Levels</option>
-                  <option value="BEGINNER">Beginner</option>
-                  <option value="INTERMEDIATE">Intermediate</option>
-                  <option value="ADVANCED">Advanced</option>
+                  <option value="ALL_LEVELS" className="bg-[#0e0e12] text-white">All Levels</option>
+                  <option value="BEGINNER" className="bg-[#0e0e12] text-white">Beginner</option>
+                  <option value="INTERMEDIATE" className="bg-[#0e0e12] text-white">Intermediate</option>
+                  <option value="ADVANCED" className="bg-[#0e0e12] text-white">Advanced</option>
                 </select>
               </div>
 
               <div>
-                <label className="block font-semibold text-gray-700 mb-1">
+                <label className="block font-semibold text-zinc-300 mb-1">
                   Duration (Minutes)
                 </label>
                 <Input
@@ -436,12 +443,13 @@ export default function ClassesScheduleManager() {
                   onChange={(e) => setTypeDuration(e.target.value)}
                   placeholder="60"
                   required
+                  className="bg-[#0b0b0d] border-white/[0.12] text-white placeholder:text-zinc-600 focus-visible:ring-[#22c55e]"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block font-semibold text-gray-700 mb-1">
+              <label className="block font-semibold text-zinc-300 mb-1">
                 Description
               </label>
               <Textarea
@@ -449,22 +457,23 @@ export default function ClassesScheduleManager() {
                 onChange={(e) => setTypeDescription(e.target.value)}
                 placeholder="Workout objectives, equipment used, and prerequisites..."
                 rows={3}
+                className="bg-[#0b0b0d] border-white/[0.12] text-white placeholder:text-zinc-600 focus-visible:ring-[#22c55e]"
               />
             </div>
 
-            <div className="pt-3 border-t border-gray-100 flex justify-end gap-2">
+            <div className="pt-3 border-t border-white/[0.08] flex justify-end gap-2">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setTypeModalOpen(false)}
-                className="text-xs"
+                className="text-xs border-white/[0.12] bg-white/[0.03] text-zinc-300 hover:bg-white/[0.08] hover:text-white"
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 disabled={isCreatingType}
-                className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white"
+                className="text-xs bg-[#22c55e] hover:bg-[#16a34a] text-black font-bold font-mono uppercase"
               >
                 {isCreatingType ? (
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -479,30 +488,30 @@ export default function ClassesScheduleManager() {
 
       {/* Modal: Schedule Individual Session */}
       <Dialog open={sessionModalOpen} onOpenChange={setSessionModalOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md bg-[#0e0e12] border-white/[0.08] text-white">
           <DialogHeader>
-            <DialogTitle className="text-base font-bold text-gray-900">
+            <DialogTitle className="text-base font-bold text-white">
               Schedule Class Session
             </DialogTitle>
-            <DialogDescription className="text-xs text-gray-500">
+            <DialogDescription className="text-xs text-zinc-400">
               Add a single session to the gym timetable.
             </DialogDescription>
           </DialogHeader>
 
           <form onSubmit={handleCreateSession} className="space-y-4 text-xs mt-2">
             <div>
-              <label className="block font-semibold text-gray-700 mb-1">
+              <label className="block font-semibold text-zinc-300 mb-1">
                 Select Class Type *
               </label>
               <select
                 value={selectedClassTypeId}
                 onChange={(e) => setSelectedClassTypeId(e.target.value)}
-                className="w-full h-9 border border-gray-200 rounded-xs px-2 text-xs bg-white"
+                className="w-full h-9 border border-white/[0.12] rounded-xs px-2 text-xs bg-[#0b0b0d] text-white focus:outline-none focus:ring-1 focus:ring-[#22c55e]"
                 required
               >
-                <option value="">-- Choose Class Type --</option>
+                <option value="" className="bg-[#0e0e12] text-white">-- Choose Class Type --</option>
                 {classTypes.map((t) => (
-                  <option key={t.id} value={t.id}>
+                  <option key={t.id} value={t.id} className="bg-[#0e0e12] text-white">
                     {t.name} ({t.durationMinutes}m)
                   </option>
                 ))}
@@ -510,18 +519,18 @@ export default function ClassesScheduleManager() {
             </div>
 
             <div>
-              <label className="block font-semibold text-gray-700 mb-1">
+              <label className="block font-semibold text-zinc-300 mb-1">
                 Assign Instructor *
               </label>
               <select
                 value={selectedTrainerId}
                 onChange={(e) => setSelectedTrainerId(e.target.value)}
-                className="w-full h-9 border border-gray-200 rounded-xs px-2 text-xs bg-white"
+                className="w-full h-9 border border-white/[0.12] rounded-xs px-2 text-xs bg-[#0b0b0d] text-white focus:outline-none focus:ring-1 focus:ring-[#22c55e]"
                 required
               >
-                <option value="">-- Choose Coach --</option>
+                <option value="" className="bg-[#0e0e12] text-white">-- Choose Coach --</option>
                 {trainers.map((t) => (
-                  <option key={t.userId} value={t.userId}>
+                  <option key={t.userId} value={t.userId} className="bg-[#0e0e12] text-white">
                     {t.user?.name || "Trainer"} ({t.user?.email})
                   </option>
                 ))}
@@ -530,7 +539,7 @@ export default function ClassesScheduleManager() {
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block font-semibold text-gray-700 mb-1">
+                <label className="block font-semibold text-zinc-300 mb-1">
                   Start Date & Time *
                 </label>
                 <Input
@@ -538,11 +547,12 @@ export default function ClassesScheduleManager() {
                   value={sessionStart}
                   onChange={(e) => setSessionStart(e.target.value)}
                   required
+                  className="bg-[#0b0b0d] border-white/[0.12] text-white placeholder:text-zinc-600 focus-visible:ring-[#22c55e]"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold text-gray-700 mb-1">
+                <label className="block font-semibold text-zinc-300 mb-1">
                   End Date & Time *
                 </label>
                 <Input
@@ -550,13 +560,14 @@ export default function ClassesScheduleManager() {
                   value={sessionEnd}
                   onChange={(e) => setSessionEnd(e.target.value)}
                   required
+                  className="bg-[#0b0b0d] border-white/[0.12] text-white placeholder:text-zinc-600 focus-visible:ring-[#22c55e]"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block font-semibold text-gray-700 mb-1">
+                <label className="block font-semibold text-zinc-300 mb-1">
                   Capacity (Spots) *
                 </label>
                 <Input
@@ -565,34 +576,36 @@ export default function ClassesScheduleManager() {
                   value={sessionCapacity}
                   onChange={(e) => setSessionCapacity(e.target.value)}
                   required
+                  className="bg-[#0b0b0d] border-white/[0.12] text-white placeholder:text-zinc-600 focus-visible:ring-[#22c55e]"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold text-gray-700 mb-1">
+                <label className="block font-semibold text-zinc-300 mb-1">
                   Studio / Room
                 </label>
                 <Input
                   value={sessionRoom}
                   onChange={(e) => setSessionRoom(e.target.value)}
                   placeholder="Studio 1"
+                  className="bg-[#0b0b0d] border-white/[0.12] text-white placeholder:text-zinc-600 focus-visible:ring-[#22c55e]"
                 />
               </div>
             </div>
 
-            <div className="pt-3 border-t border-gray-100 flex justify-end gap-2">
+            <div className="pt-3 border-t border-white/[0.08] flex justify-end gap-2">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setSessionModalOpen(false)}
-                className="text-xs"
+                className="text-xs border-white/[0.12] bg-white/[0.03] text-zinc-300 hover:bg-white/[0.08] hover:text-white"
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 disabled={isCreatingSession}
-                className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white"
+                className="text-xs bg-[#22c55e] hover:bg-[#16a34a] text-black font-bold font-mono uppercase"
               >
                 {isCreatingSession ? (
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -607,31 +620,31 @@ export default function ClassesScheduleManager() {
 
       {/* Modal: Bulk Recurring Schedule Generator */}
       <Dialog open={recurringModalOpen} onOpenChange={setRecurringModalOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md bg-[#0e0e12] border-white/[0.08] text-white">
           <DialogHeader>
-            <DialogTitle className="text-base font-bold text-gray-900 flex items-center gap-2">
-              <Repeat className="w-4 h-4 text-emerald-600" />
+            <DialogTitle className="text-base font-bold text-white flex items-center gap-2">
+              <Repeat className="w-4 h-4 text-[#22c55e]" />
               <span>Bulk Recurring Weekly Generator</span>
             </DialogTitle>
-            <DialogDescription className="text-xs text-gray-500">
+            <DialogDescription className="text-xs text-zinc-400">
               Generate recurring weekly sessions automatically for up to 12 weeks ahead.
             </DialogDescription>
           </DialogHeader>
 
           <form onSubmit={handleCreateRecurring} className="space-y-4 text-xs mt-2">
             <div>
-              <label className="block font-semibold text-gray-700 mb-1">
+              <label className="block font-semibold text-zinc-300 mb-1">
                 Select Class Type *
               </label>
               <select
                 value={selectedClassTypeId}
                 onChange={(e) => setSelectedClassTypeId(e.target.value)}
-                className="w-full h-9 border border-gray-200 rounded-xs px-2 text-xs bg-white"
+                className="w-full h-9 border border-white/[0.12] rounded-xs px-2 text-xs bg-[#0b0b0d] text-white focus:outline-none focus:ring-1 focus:ring-[#22c55e]"
                 required
               >
-                <option value="">-- Choose Class Type --</option>
+                <option value="" className="bg-[#0e0e12] text-white">-- Choose Class Type --</option>
                 {classTypes.map((t) => (
-                  <option key={t.id} value={t.id}>
+                  <option key={t.id} value={t.id} className="bg-[#0e0e12] text-white">
                     {t.name}
                   </option>
                 ))}
@@ -639,18 +652,18 @@ export default function ClassesScheduleManager() {
             </div>
 
             <div>
-              <label className="block font-semibold text-gray-700 mb-1">
+              <label className="block font-semibold text-zinc-300 mb-1">
                 Assign Instructor *
               </label>
               <select
                 value={selectedTrainerId}
                 onChange={(e) => setSelectedTrainerId(e.target.value)}
-                className="w-full h-9 border border-gray-200 rounded-xs px-2 text-xs bg-white"
+                className="w-full h-9 border border-white/[0.12] rounded-xs px-2 text-xs bg-[#0b0b0d] text-white focus:outline-none focus:ring-1 focus:ring-[#22c55e]"
                 required
               >
-                <option value="">-- Choose Coach --</option>
+                <option value="" className="bg-[#0e0e12] text-white">-- Choose Coach --</option>
                 {trainers.map((t) => (
-                  <option key={t.userId} value={t.userId}>
+                  <option key={t.userId} value={t.userId} className="bg-[#0e0e12] text-white">
                     {t.user?.name || "Trainer"} ({t.user?.email})
                   </option>
                 ))}
@@ -659,26 +672,26 @@ export default function ClassesScheduleManager() {
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block font-semibold text-gray-700 mb-1">
+                <label className="block font-semibold text-zinc-300 mb-1">
                   Day of Week *
                 </label>
                 <select
                   value={recDayOfWeek}
                   onChange={(e) => setRecDayOfWeek(e.target.value)}
-                  className="w-full h-9 border border-gray-200 rounded-xs px-2 text-xs bg-white"
+                  className="w-full h-9 border border-white/[0.12] rounded-xs px-2 text-xs bg-[#0b0b0d] text-white focus:outline-none focus:ring-1 focus:ring-[#22c55e]"
                 >
-                  <option value="0">Sunday</option>
-                  <option value="1">Monday</option>
-                  <option value="2">Tuesday</option>
-                  <option value="3">Wednesday</option>
-                  <option value="4">Thursday</option>
-                  <option value="5">Friday</option>
-                  <option value="6">Saturday</option>
+                  <option value="0" className="bg-[#0e0e12] text-white">Sunday</option>
+                  <option value="1" className="bg-[#0e0e12] text-white">Monday</option>
+                  <option value="2" className="bg-[#0e0e12] text-white">Tuesday</option>
+                  <option value="3" className="bg-[#0e0e12] text-white">Wednesday</option>
+                  <option value="4" className="bg-[#0e0e12] text-white">Thursday</option>
+                  <option value="5" className="bg-[#0e0e12] text-white">Friday</option>
+                  <option value="6" className="bg-[#0e0e12] text-white">Saturday</option>
                 </select>
               </div>
 
               <div>
-                <label className="block font-semibold text-gray-700 mb-1">
+                <label className="block font-semibold text-zinc-300 mb-1">
                   Start Time (HH:mm) *
                 </label>
                 <Input
@@ -686,13 +699,14 @@ export default function ClassesScheduleManager() {
                   value={recStartTime}
                   onChange={(e) => setRecStartTime(e.target.value)}
                   required
+                  className="bg-[#0b0b0d] border-white/[0.12] text-white placeholder:text-zinc-600 focus-visible:ring-[#22c55e]"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <label className="block font-semibold text-gray-700 mb-1">
+                <label className="block font-semibold text-zinc-300 mb-1">
                   Duration (min)
                 </label>
                 <Input
@@ -700,11 +714,12 @@ export default function ClassesScheduleManager() {
                   value={recDuration}
                   onChange={(e) => setRecDuration(e.target.value)}
                   required
+                  className="bg-[#0b0b0d] border-white/[0.12] text-white placeholder:text-zinc-600 focus-visible:ring-[#22c55e]"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold text-gray-700 mb-1">
+                <label className="block font-semibold text-zinc-300 mb-1">
                   Capacity
                 </label>
                 <Input
@@ -712,11 +727,12 @@ export default function ClassesScheduleManager() {
                   value={sessionCapacity}
                   onChange={(e) => setSessionCapacity(e.target.value)}
                   required
+                  className="bg-[#0b0b0d] border-white/[0.12] text-white placeholder:text-zinc-600 focus-visible:ring-[#22c55e]"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold text-gray-700 mb-1">
+                <label className="block font-semibold text-zinc-300 mb-1">
                   Weeks Ahead
                 </label>
                 <Input
@@ -726,34 +742,36 @@ export default function ClassesScheduleManager() {
                   value={recWeeks}
                   onChange={(e) => setRecWeeks(e.target.value)}
                   required
+                  className="bg-[#0b0b0d] border-white/[0.12] text-white placeholder:text-zinc-600 focus-visible:ring-[#22c55e]"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block font-semibold text-gray-700 mb-1">
+              <label className="block font-semibold text-zinc-300 mb-1">
                 Studio / Room
               </label>
               <Input
                 value={sessionRoom}
                 onChange={(e) => setSessionRoom(e.target.value)}
                 placeholder="Studio 1"
+                className="bg-[#0b0b0d] border-white/[0.12] text-white placeholder:text-zinc-600 focus-visible:ring-[#22c55e]"
               />
             </div>
 
-            <div className="pt-3 border-t border-gray-100 flex justify-end gap-2">
+            <div className="pt-3 border-t border-white/[0.08] flex justify-end gap-2">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setRecurringModalOpen(false)}
-                className="text-xs"
+                className="text-xs border-white/[0.12] bg-white/[0.03] text-zinc-300 hover:bg-white/[0.08] hover:text-white"
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 disabled={isCreatingRecurring}
-                className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white"
+                className="text-xs bg-[#22c55e] hover:bg-[#16a34a] text-black font-bold font-mono uppercase"
               >
                 {isCreatingRecurring ? (
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />

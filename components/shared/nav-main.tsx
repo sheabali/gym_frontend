@@ -37,7 +37,7 @@ export function NavMain({
 
   return (
     <SidebarGroup>
-      <SidebarMenu>
+      <SidebarMenu className="gap-1 px-2">
         {items?.map((item) => {
           const isActive = item.isActive || pathname === item.url;
 
@@ -53,13 +53,13 @@ export function NavMain({
                   <CollapsibleTrigger asChild>
                     <SidebarMenuButton
                       tooltip={item.title}
-                      className={`${
+                      className={`text-xs font-mono uppercase tracking-wider transition-all rounded-xs py-2.5 ${
                         isActive
-                          ? "bg-primary text-white hover:bg-primary/80 hover:text-white "
-                          : ""
+                          ? "bg-white/[0.06] text-[#22c55e] border-l-2 border-[#22c55e] font-bold"
+                          : "text-zinc-400 hover:text-white hover:bg-white/[0.03]"
                       }`}
                     >
-                      {item.icon && <item.icon className="mr-2 h-5 w-5" />}
+                      {item.icon && <item.icon className="mr-2 h-4 w-4" />}
                       <span>{item.title}</span>
                       <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                     </SidebarMenuButton>
@@ -69,13 +69,13 @@ export function NavMain({
                       {item.items.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
                           <SidebarMenuSubButton asChild>
-                            <Link href={subItem.url}>
+                            <Link href={subItem.url} className="rounded-xs">
                               {subItem.icon && (
-                                <subItem.icon className="mr-2 h-5 w-5" />
+                                <subItem.icon className="mr-2 h-4 w-4" />
                               )}
                               <span
-                                className={`${
-                                  pathname === subItem.url ? "text-primary" : ""
+                                className={`text-xs font-mono uppercase tracking-wider ${
+                                  pathname === subItem.url ? "text-[#22c55e] font-bold" : "text-zinc-400"
                                 }`}
                               >
                                 {subItem.title}
@@ -97,14 +97,14 @@ export function NavMain({
               <SidebarMenuButton
                 asChild
                 tooltip={item.title}
-                className={`${
+                className={`text-xs font-mono uppercase tracking-wider transition-all rounded-xs py-2.5 ${
                   isActive
-                    ? "bg-primary text-white hover:bg-primary/90 hover:text-white"
-                    : ""
+                    ? "bg-white/[0.06] text-[#22c55e] border-l-2 border-[#22c55e] font-bold"
+                    : "text-zinc-400 hover:text-white hover:bg-white/[0.03]"
                 }`}
               >
                 <Link href={item.url}>
-                  {item.icon && <item.icon className="mr-2 h-5 w-5" />}
+                  {item.icon && <item.icon className={`mr-2 h-4 w-4 ${isActive ? "text-[#22c55e]" : "text-zinc-400"}`} />}
                   <span>{item.title}</span>
                 </Link>
               </SidebarMenuButton>

@@ -2,10 +2,12 @@
 
 import React from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { TRAINERS_DATA } from "@/src/data/gymData";
 import { useGetTrainersQuery } from "@/redux/api/trainerApi";
 import { ArrowUpRight } from "lucide-react";
+import CardSpotlight from "@/components/Motion/CardSpotlight";
 
 export default function TrainersSection() {
   const { language, t } = useLanguage();
@@ -57,8 +59,9 @@ export default function TrainersSection() {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 pb-8 border-b border-white/[0.08]">
           <div>
-            <div className="mono-label text-zinc-400 mb-2">
-              [ 04 // COACHING FACULTY ]
+            <div className="mono-label text-zinc-400 mb-2 font-mono flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
+              <span>04 • COACHING FACULTY</span>
             </div>
             <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white uppercase">
               {language === "bn" ? "সার্টিফাইড প্রশিক্ষকবৃন্দ" : "Floor Supervision"}
@@ -77,63 +80,78 @@ export default function TrainersSection() {
             const isFemale = trainer.gender === "female";
 
             return (
-              <div
+              <motion.div
                 key={trainer.id}
-                className="border border-white/[0.08] bg-[#0e0e12] p-2 flex flex-col justify-between group hover:border-white/20 transition-all duration-300"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: idx * 0.1 }}
+                className="h-full"
               >
-                <div>
-                  {/* Photo Container */}
-                  <div className="aspect-[3/4] relative w-full overflow-hidden bg-zinc-900 mb-4">
-                    <Image
-                      src={trainer.image}
-                      alt={trainer.name}
-                      fill
-                      className="object-cover grayscale contrast-115 group-hover:scale-102 transition-transform duration-700"
-                      sizes="(max-width: 768px) 100vw, 300px"
-                    />
-                    <div className="absolute top-2 left-2 px-2 py-0.5 bg-black/80 backdrop-blur-md text-[10px] mono-label text-white">
-                      0{idx + 1} // {isFemale ? "FEMALE COACH" : "MALE COACH"}
+                <CardSpotlight
+                  enableTilt={true}
+                  showReticles={true}
+                  spotlightColor="rgba(34, 197, 94, 0.15)"
+                  className="p-2 flex flex-col justify-between group hover:border-[#22c55e]/40 transition-all duration-300 rounded-xs shadow-xl h-full"
+                >
+                  <div className="flex flex-col justify-between h-full">
+                    <div>
+                      {/* Photo Container */}
+                      <div className="aspect-[4/5] sm:aspect-[3/4] relative w-full overflow-hidden bg-zinc-900 mb-4 rounded-xs">
+                        <Image
+                          src={trainer.image}
+                          alt={trainer.name}
+                          fill
+                          className="object-cover grayscale contrast-110 group-hover:grayscale-0 group-hover:scale-104 transition-all duration-700"
+                          sizes="(max-width: 768px) 100vw, 300px"
+                        />
+                        <div className="absolute top-2 left-2 px-2 py-0.5 bg-black/80 backdrop-blur-md text-[10px] mono-label text-white border border-white/[0.1] rounded-xs font-mono">
+                          0{idx + 1} • {isFemale ? "FEMALE COACH" : "MALE COACH"}
+                        </div>
+                      </div>
+
+                      {/* Typographic Identity */}
+                      <div className="px-2">
+                        <div className="mono-label text-[10px] text-zinc-400 mb-1 truncate font-mono">
+                          {trainer.experience}
+                        </div>
+                        <h3 className="text-lg font-bold text-white tracking-tight mb-1 truncate">
+                          {trainer.name}
+                        </h3>
+                        <p className="text-xs text-zinc-400 font-medium mb-4 leading-snug line-clamp-2 font-sans">
+                          {trainer.role}
+                        </p>
+
+                        {/* Speciality tags with interactive hover */}
+                        <div className="flex flex-wrap gap-1.5 mb-4">
+                          {trainer.specialities.map((spec: string, i: number) => (
+                            <span
+                              key={i}
+                              title={spec}
+                              className="text-[10px] mono-label px-2 py-0.5 border border-white/[0.08] bg-white/[0.02] text-zinc-400 hover:text-[#22c55e] hover:border-[#22c55e]/40 hover:bg-[#22c55e]/5 transition-colors rounded-xs truncate max-w-[120px] font-mono"
+                            >
+                              {spec}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Footer Strip */}
+                    <div className="pt-3 px-2 border-t border-white/[0.06] flex items-center justify-between text-[11px] mono-label text-zinc-400 mt-auto font-mono">
+                      <span className="truncate max-w-[170px]">{trainer.shifts}</span>
+                      <button
+                        type="button"
+                        onClick={handleInquire}
+                        aria-label={`Inquire about coaching with ${trainer.name}`}
+                        className="p-1 text-white hover:text-[#22c55e] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all cursor-pointer rounded-xs"
+                      >
+                        <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
+                      </button>
                     </div>
                   </div>
-
-                  {/* Typographic Identity */}
-                  <div className="px-2">
-                    <div className="mono-label text-[10px] text-zinc-400 mb-1 truncate">
-                      {trainer.experience}
-                    </div>
-                    <h3 className="text-lg font-bold text-white tracking-tight mb-1 truncate">
-                      {trainer.name}
-                    </h3>
-                    <p className="text-xs text-zinc-400 font-medium mb-4 leading-snug line-clamp-2">
-                      {trainer.role}
-                    </p>
-
-                    {/* Speciality tags */}
-                    <div className="flex flex-wrap gap-1.5 mb-4">
-                      {trainer.specialities.map((spec: string, i: number) => (
-                        <span
-                          key={i}
-                          className="text-[10px] mono-label px-2 py-0.5 border border-white/[0.06] bg-white/[0.02] text-zinc-400"
-                        >
-                          {spec}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Footer Strip */}
-                <div className="pt-3 px-2 border-t border-white/[0.06] flex items-center justify-between text-[11px] mono-label text-zinc-400">
-                  <span className="truncate max-w-[170px]">{trainer.shifts}</span>
-                  <button
-                    type="button"
-                    onClick={handleInquire}
-                    className="text-white hover:text-zinc-300 transition-colors cursor-pointer"
-                  >
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
+                </CardSpotlight>
+              </motion.div>
             );
           })}
         </div>

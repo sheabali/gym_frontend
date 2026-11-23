@@ -62,7 +62,7 @@ export default function BmiCalculator() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-white/[0.08]">
         <div>
           <div className="mono-label text-[10px] text-zinc-400 mb-1">
-            CLINICAL TELEMETRY // TOOL 02
+            CLINICAL TELEMETRY • TOOL 02
           </div>
           <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight uppercase">
             {language === "bn"

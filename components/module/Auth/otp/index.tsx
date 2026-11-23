@@ -145,7 +145,7 @@ export default function Otp() {
   }, []);
 
   return (
-    <div className="w-full flex items-center justify-center">
+    <div className="w-full min-h-screen bg-[#0b0b0d] text-white flex items-center justify-center p-4">
       <AnimatePresence>
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -154,19 +154,29 @@ export default function Otp() {
           transition={{ duration: 0.3, ease: [0.4, 0.0, 0.2, 1] }}
           className="relative z-10 w-full max-w-md mx-auto"
         >
-          <div className="bg-white p-4 sm:p-6 md:p-8 w-full">
+          <div className="bg-[#0e0e12] border border-white/[0.08] p-6 sm:p-8 md:p-10 w-full shadow-2xl rounded-xs">
+            {/* Header Telemetry */}
+            <div className="flex items-center justify-between pb-4 mb-6 border-b border-white/[0.06] text-xs font-mono">
+              <span className="mono-label text-zinc-400">
+                SEC-OTP • 4-DIGIT VERIFY
+              </span>
+              <span className="text-[#22c55e] font-bold text-[11px]">
+                TIME-SENSITIVE
+              </span>
+            </div>
+
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.3 }}
               className="text-center mb-6 sm:mb-8"
             >
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-bold text-gray-900 mb-2 tracking-tight">
-                Enter Code
+              <h1 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight mb-2">
+                Verify Code
               </h1>
-              <p className="text-gray-600 text-sm sm:text-base lg:text-[18px] break-words">
-                We’ve sent a code to{" "}
-                <span className="font-semibold text-gray-900 break-all">
+              <p className="text-zinc-400 text-xs sm:text-sm font-sans break-words">
+                Authentication digits dispatched to{" "}
+                <span className="font-semibold text-white font-mono break-all">
                   {email}
                 </span>
               </p>
@@ -193,7 +203,7 @@ export default function Otp() {
                         value={otpValues[index]}
                         onChange={(e) => handleChange(index, e.target.value)}
                         onKeyDown={(e) => handleKeyDown(index, e)}
-                        className="w-full max-w-[68px] aspect-square text-center text-lg sm:text-xl md:text-2xl font-semibold border rounded-xs focus:ring-2 focus:ring-primary/40 focus:border-primary outline-none transition-all border-gray-300 bg-white"
+                        className="w-full max-w-[68px] aspect-square text-center text-lg sm:text-xl md:text-2xl font-mono font-bold border border-white/[0.15] rounded-xs focus:ring-2 focus:ring-[#22c55e]/30 focus:border-[#22c55e] outline-none transition-all bg-[#121216] text-white"
                         aria-label={`Digit ${index + 1} of OTP`}
                       />
                     </div>
@@ -203,21 +213,22 @@ export default function Otp() {
                   <motion.p
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mt-2 text-xs sm:text-sm text-red-600 text-center font-medium"
+                    className="mt-2 text-xs text-red-400 text-center font-mono"
                   >
-                    Please enter a valid 4-digit code
+                    Please enter all 4 digits
                   </motion.p>
                 )}
               </div>
 
-              <div className="text-xs sm:text-sm md:text-base text-gray-600 text-center sm:text-left">
-                Didn’t get a code?{" "}
-                <span
+              <div className="text-xs text-zinc-400 text-center font-sans">
+                Didn’t receive the code?{" "}
+                <button
+                  type="button"
                   onClick={handleResendOtp}
-                  className="text-black font-semibold cursor-pointer hover:underline"
+                  className="text-[#22c55e] font-bold cursor-pointer hover:underline uppercase font-mono tracking-wider"
                 >
-                  Click to resend
-                </span>
+                  Resend OTP
+                </button>
               </div>
 
               <div className="flex items-center gap-3 sm:gap-4 pt-2">
@@ -226,12 +237,12 @@ export default function Otp() {
                   disabled={isVerifyingOtp || otpValues.some((v) => !v)}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="cursor-pointer flex-1 bg-primary disabled:bg-primary/60 text-white font-medium py-3 px-4 rounded-xs transition-colors duration-200 flex items-center justify-center text-sm sm:text-base h-11 sm:h-12"
+                  className="cursor-pointer flex-1 bg-[#22c55e] disabled:opacity-50 text-black font-black uppercase text-xs font-mono py-3.5 px-4 rounded-xs transition-colors flex items-center justify-center shadow-lg shadow-[#22c55e]/20"
                 >
                   {isVerifyingOtp ? (
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
                   ) : (
-                    "Verify OTP"
+                    "Verify Code"
                   )}
                 </motion.button>
 
@@ -240,7 +251,7 @@ export default function Otp() {
                     type="button"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="cursor-pointer w-full border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 font-medium py-3 px-4 rounded-xs transition-colors duration-200 flex items-center justify-center text-sm sm:text-base h-11 sm:h-12"
+                    className="cursor-pointer w-full border border-white/[0.12] bg-white/[0.02] hover:bg-white/[0.08] text-white font-mono uppercase text-xs py-3.5 px-4 rounded-xs transition-colors flex items-center justify-center"
                   >
                     Cancel
                   </motion.button>
