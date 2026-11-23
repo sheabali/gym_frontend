@@ -52,7 +52,13 @@
 }
 
 .mono-label:not([class*="text-"]) {
-  color: #8e8e96;
+  color: #a1a1aa;
+}
+
+/* Accessibility & High-Performance Focus Rings */
+:focus-visible {
+  outline: 2px solid #22c55e !important;
+  outline-offset: 2px !important;
 }
 
 /* Ensure all green primary buttons have high-contrast solid black text and strokes */

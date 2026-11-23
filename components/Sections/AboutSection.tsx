@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { BUSINESS_INFO } from "@/data/gymData";
 import { ArrowUpRight, Check, Minus } from "lucide-react";
@@ -80,8 +81,9 @@ export default function AboutSection() {
         {/* Section Header with Monospace Index */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 pb-8 border-b border-white/[0.08]">
           <div>
-            <div className="mono-label text-zinc-400 mb-2">
-              [ 01 // THE PHILOSOPHY ]
+            <div className="mono-label text-zinc-400 mb-2 font-mono flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
+              <span>01 • THE PHILOSOPHY</span>
             </div>
             <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white uppercase">
               {language === "bn" ? "আমাদের মূল দর্শন" : "Engineered For Focus"}
@@ -117,13 +119,21 @@ export default function AboutSection() {
             </div>
           </div>
 
-          {/* Right: 3 Numbered Architectural Tenets (Clean Rows, NOT 4 Identical Cards!) */}
+          {/* Right: 3 Numbered Architectural Tenets */}
           <div className="lg:col-span-7 flex flex-col divide-y divide-white/[0.08]">
-            {tenets.map((tenet) => (
-              <div key={tenet.num} className="py-8 first:pt-0 last:pb-0 group">
+            {tenets.map((tenet, idx) => (
+              <motion.div
+                key={tenet.num}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: idx * 0.1 }}
+                whileHover={{ x: 6 }}
+                className="py-8 first:pt-0 last:pb-0 group cursor-default transition-all"
+              >
                 <div className="flex items-baseline gap-4 mb-3">
-                  <span className="mono-label text-zinc-500 font-bold">
-                    [ {tenet.num} ]
+                  <span className="mono-label text-zinc-500 font-bold group-hover:text-[#22c55e] transition-colors font-mono">
+                    {tenet.num}
                   </span>
                   <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight group-hover:text-zinc-200 transition-colors">
                     {language === "bn" ? tenet.titleBn : tenet.titleEn}
@@ -132,29 +142,35 @@ export default function AboutSection() {
                 <p className="text-sm text-zinc-400 leading-relaxed pl-10 max-w-xl">
                   {language === "bn" ? tenet.descBn : tenet.descEn}
                 </p>
-              </div>
+              </motion.div>
             ))}
 
             <div className="pt-8">
               <a
                 href="#schedule"
-                className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider !text-white hover:text-[#22c55e] transition-colors"
+                className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider !text-white hover:text-[#22c55e] transition-colors group"
               >
-                <span className="!text-white font-bold hover:text-[#22c55e]">INSPECT SHIFT TIMINGS & SLOTS</span>
-                <ArrowUpRight className="w-3.5 h-3.5 text-[#22c55e]" />
+                <span className="!text-white font-bold group-hover:!text-[#22c55e] transition-colors">INSPECT SHIFT TIMINGS & SLOTS</span>
+                <ArrowUpRight className="w-3.5 h-3.5 text-[#22c55e] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </a>
             </div>
           </div>
         </div>
 
         {/* Minimalist Comparison Table (Architectural Lines) */}
-        <div className="border border-white/[0.08] bg-[#0e0e11] p-6 sm:p-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="border border-white/[0.08] bg-[#0e0e11] p-6 sm:p-10 rounded-xs shadow-xl"
+        >
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-white/[0.08]">
             <div>
-              <div className="mono-label text-zinc-400 mb-1">
-                [ AUDIT // BENCHMARK ]
+              <div className="mono-label text-zinc-400 mb-1 font-mono">
+                AUDIT • BENCHMARK
               </div>
-              <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+              <h3 className="text-xl sm:text-2xl font-black text-white uppercase tracking-tight">
                 {language === "bn"
                   ? "প্লাটিনাম জিম বনাম সাধারণ জিম"
                   : "The Platinum Benchmark vs. Ordinary Gyms"}
@@ -170,10 +186,10 @@ export default function AboutSection() {
               <thead>
                 <tr className="border-b border-white/[0.08] text-[11px] mono-label text-zinc-400">
                   <th className="py-3 px-4 font-normal">PARAMETER</th>
-                  <th className="py-3 px-4 font-bold text-white bg-white/[0.03]">
+                  <th className="py-3 px-4 font-bold text-[#22c55e] bg-white/[0.03]">
                     PLATINUM GYM BANASREE
                   </th>
-                  <th className="py-3 px-4 font-normal text-zinc-400">
+                  <th className="py-3 px-4 font-normal text-zinc-500">
                     CONVENTIONAL GYMS
                   </th>
                 </tr>
@@ -192,7 +208,7 @@ export default function AboutSection() {
                     </td>
                     <td className="py-4 px-4 text-zinc-500">
                       <div className="flex items-center gap-2.5">
-                        <Minus className="w-3.5 h-3.5 text-zinc-600" />
+                        <Minus className="w-3.5 h-3.5 text-red-400/70" />
                         <span>{language === "bn" ? item.ordinaryBn : item.ordinary}</span>
                       </div>
                     </td>
@@ -201,7 +217,7 @@ export default function AboutSection() {
               </tbody>
             </table>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -173,7 +173,7 @@ export default function Footer() {
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-zinc-500">
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-            <span>PLATINUM GYM DHAKA // BST +06:00</span>
+            <span>PLATINUM GYM DHAKA • BST +06:00</span>
           </div>
 
           <p className="text-center sm:text-left">

@@ -1,19 +1,23 @@
 "use client";
 
 import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { BUSINESS_INFO } from "@/data/gymData";
+import { useGetFaqsQuery } from "@/redux/api/contentApi";
 import { ArrowUpRight, Plus, Minus, ShieldCheck, Check } from "lucide-react";
 
 export default function FaqSection() {
   const { language } = useLanguage();
   const [activeTab, setActiveTab] = useState<"all" | "shifts" | "privacy" | "coaching" | "admission">("all");
   const [openId, setOpenId] = useState<string | null>("proto-1");
+  const { data: faqsResponse } = useGetFaqsQuery(undefined) as any;
+  const apiFaqs = faqsResponse?.data || [];
 
-  const protocols = [
+  const baseProtocols = [
     {
       id: "proto-1",
-      code: "01 // SEC-TIMETABLE",
+      code: "01 • SEC-TIMETABLE",
       category: "shifts",
       categoryLabel: language === "bn" ? "শিফট কাঠামো" : "SHIFT ARCHITECTURE",
       badge: "ENFORCED DAILY",
@@ -34,7 +38,7 @@ export default function FaqSection() {
     },
     {
       id: "proto-2",
-      code: "02 // SEC-FEMALE",
+      code: "02 • SEC-FEMALE",
       category: "privacy",
       categoryLabel: language === "bn" ? "নারী নিরাপত্তা" : "FEMALE INTEGRITY",
       badge: "ZERO-TOLERANCE",
@@ -55,7 +59,7 @@ export default function FaqSection() {
     },
     {
       id: "proto-3",
-      code: "03 // SUP-COACHING",
+      code: "03 • SUP-COACHING",
       category: "coaching",
       categoryLabel: language === "bn" ? "ফ্লোর গাইডেন্স" : "FLOOR SUPERVISION",
       badge: "INCLUDED IN ALL TIERS",
@@ -76,7 +80,7 @@ export default function FaqSection() {
     },
     {
       id: "proto-4",
-      code: "04 // SAN-ETIQUETTE",
+      code: "04 • SAN-ETIQUETTE",
       category: "coaching",
       categoryLabel: language === "bn" ? "ফ্লোর অনুশাসন" : "FLOOR ETIQUETTE",
       badge: "MANDATORY STANDARD",
@@ -97,7 +101,7 @@ export default function FaqSection() {
     },
     {
       id: "proto-5",
-      code: "05 // ADM-TRIAL",
+      code: "05 • ADM-TRIAL",
       category: "admission",
       categoryLabel: language === "bn" ? "ভর্তি ও ট্রায়াল" : "TRIAL INDUCTION",
       badge: "ZERO COMMITMENT",
@@ -118,7 +122,7 @@ export default function FaqSection() {
     },
     {
       id: "proto-6",
-      code: "06 // FIN-DUES",
+      code: "06 • FIN-DUES",
       category: "admission",
       categoryLabel: language === "bn" ? "পেমেন্ট ও সুবিধা" : "PAYMENT & FREEZE",
       badge: "TRANSPARENT TERMS",
@@ -139,7 +143,7 @@ export default function FaqSection() {
     },
     {
       id: "proto-7",
-      code: "07 // LOC-CAMPUS",
+      code: "07 • LOC-CAMPUS",
       category: "admission",
       categoryLabel: language === "bn" ? "লোকেশন ও ক্যাম্পাস" : "CAMPUS ACCESS",
       badge: "BANASREE BLOCK-D",
@@ -160,6 +164,20 @@ export default function FaqSection() {
     },
   ];
 
+  const protocols = [
+    ...apiFaqs.map((faq: any, idx: number) => ({
+      id: faq.id,
+      code: `0${idx + 1} • FAQ-LIVE`,
+      category: "admission",
+      categoryLabel: "GENERAL FAQ",
+      badge: "VERIFIED",
+      question: faq.question,
+      answer: faq.answer,
+      specs: [],
+    })),
+    ...baseProtocols,
+  ];
+
   const filtered =
     activeTab === "all"
       ? protocols
@@ -171,8 +189,9 @@ export default function FaqSection() {
         {/* Section Header (100% Synced with Schedule, Pricing, Reviews) */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 pb-8 border-b border-white/[0.08]">
           <div>
-            <div className="mono-label text-zinc-400 mb-2">
-              [ 09 // AUDIT & PROTOCOLS ]
+            <div className="mono-label text-zinc-400 mb-2 font-mono flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
+              <span>09 • AUDIT & PROTOCOLS</span>
             </div>
             <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white uppercase">
               {language === "bn" ? "ক্লাব প্রটোকল ও নিয়মাবলী" : "Rules & Member Protocols"}
@@ -185,24 +204,23 @@ export default function FaqSection() {
           </p>
         </div>
 
-        {/* Minimalist Tab Selector (Identical to ScheduleSection) */}
+        {/* Minimalist Tab Selector */}
         <div className="flex flex-wrap items-center gap-2 mb-10 pb-4 border-b border-white/[0.06]">
           {[
             { key: "all", labelEn: "ALL PROTOCOLS", labelBn: "সকল প্রটোকল" },
-            { key: "shifts", labelEn: "SHIFT ARCHITECTURE", labelBn: "শিফট কাঠামো" },
-            { key: "privacy", labelEn: "FEMALE INTEGRITY", labelBn: "নারী নিরাপত্তা" },
-            { key: "coaching", labelEn: "COACHING & ETIQUETTE", labelBn: "ট্রেইনার ও অনুশাসন" },
+            { key: "shifts", labelEn: "SHIFT TIMINGS", labelBn: "শিফট সময়সূচি" },
+            { key: "privacy", labelEn: "FEMALE PRIVACY", labelBn: "নারী নিরাপত্তা" },
+            { key: "coaching", labelEn: "COACHING & RULES", labelBn: "প্রশিক্ষক ও নিয়মাবলী" },
             { key: "admission", labelEn: "FEES & CAMPUS", labelBn: "ফি ও ক্যাম্পাস" },
           ].map((tab) => (
             <button
               key={tab.key}
               type="button"
               onClick={() => setActiveTab(tab.key as any)}
-              className={`px-4 py-2 text-xs font-mono uppercase tracking-wider transition-all cursor-pointer rounded-xs ${
-                activeTab === tab.key
-                  ? "bg-[#22c55e] !text-black font-black shadow-md shadow-[#22c55e]/20"
-                  : "text-zinc-400 hover:text-white border border-white/[0.08]"
-              }`}
+              className={`px-4 py-2 text-xs font-mono uppercase tracking-wider transition-all cursor-pointer rounded-xs ${activeTab === tab.key
+                ? "bg-[#22c55e] !text-black font-black shadow-md shadow-[#22c55e]/20"
+                : "text-zinc-400 hover:text-white border border-white/[0.08]"
+                }`}
             >
               <span className={activeTab === tab.key ? "!text-black font-black" : ""}>
                 {language === "bn" ? tab.labelBn : tab.labelEn}
@@ -211,9 +229,9 @@ export default function FaqSection() {
           ))}
         </div>
 
-        {/* Architectural Departure-Board Table (Identical to ScheduleSection & FacilitiesSection) */}
-        <div className="border border-white/[0.08] divide-y divide-white/[0.08] bg-[#0e0e12] mb-12">
-          {filtered.map((item) => {
+        {/* Architectural Departure-Board Table with Smooth Animation */}
+        <div className="border border-white/[0.08] divide-y divide-white/[0.08] bg-[#0e0e12] mb-12 rounded-xs shadow-xl">
+          {filtered.map((item: any) => {
             const isOpen = openId === item.id;
 
             return (
@@ -225,7 +243,7 @@ export default function FaqSection() {
                   className="w-full p-6 sm:p-8 text-left flex items-start justify-between gap-6 cursor-pointer group focus:outline-none hover:bg-white/[0.02]"
                 >
                   <div className="flex items-start gap-4 sm:gap-6 flex-1">
-                    <span className="mono-label text-[11px] text-zinc-500 font-bold shrink-0 pt-1">
+                    <span className="mono-label text-[11px] text-zinc-500 font-bold shrink-0 pt-1 group-hover:text-[#22c55e] transition-colors">
                       {item.code}
                     </span>
 
@@ -234,15 +252,14 @@ export default function FaqSection() {
                         <span className="text-[10px] mono-label text-zinc-400">
                           {item.categoryLabel}
                         </span>
-                        <span className="text-[10px] mono-label px-2 py-0.5 border border-white/[0.08] text-zinc-400">
+                        <span className="text-[10px] mono-label px-2 py-0.5 border border-white/[0.08] text-zinc-400 rounded-xs">
                           {item.badge}
                         </span>
                       </div>
 
                       <h3
-                        className={`text-lg sm:text-xl font-bold tracking-tight transition-colors ${
-                          isOpen ? "text-white" : "text-zinc-300 group-hover:text-white"
-                        }`}
+                        className={`text-lg sm:text-xl font-bold tracking-tight transition-colors ${isOpen ? "text-white" : "text-zinc-300 group-hover:text-white"
+                          }`}
                       >
                         {item.question}
                       </h3>
@@ -250,50 +267,59 @@ export default function FaqSection() {
                   </div>
 
                   <div
-                    className={`w-8 h-8 border flex items-center justify-center shrink-0 transition-all ${
-                      isOpen
-                        ? "bg-[#22c55e] border-[#22c55e] text-black font-bold shadow-md shadow-[#22c55e]/20"
-                        : "border-white/[0.12] bg-white/[0.02] text-zinc-400 group-hover:border-white/30 group-hover:text-white"
-                    }`}
+                    className={`w-8 h-8 border flex items-center justify-center shrink-0 transition-all rounded-xs ${isOpen
+                      ? "bg-[#22c55e] border-[#22c55e] text-black font-bold shadow-md shadow-[#22c55e]/20"
+                      : "border-white/[0.12] bg-white/[0.02] text-zinc-400 group-hover:border-white/30 group-hover:text-white"
+                      }`}
                   >
                     {isOpen ? <Minus className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
                   </div>
                 </button>
 
-                {/* Expanded Architectural Details */}
-                {isOpen && (
-                  <div className="px-6 sm:px-8 pb-8 pt-0 border-t border-white/[0.06] bg-[#121217]">
-                    <div className="pt-6 sm:pl-16 space-y-6">
-                      <p className="text-sm sm:text-base text-zinc-300 font-normal leading-relaxed max-w-3xl">
-                        {item.answer}
-                      </p>
+                {/* Expanded Architectural Details with AnimatePresence */}
+                <AnimatePresence>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="overflow-hidden border-t border-white/[0.06] bg-[#121217]"
+                    >
+                      <div className="px-6 sm:px-8 pb-8 pt-6 sm:pl-16 space-y-6">
+                        <p className="text-sm sm:text-base text-zinc-300 font-normal leading-relaxed max-w-3xl font-sans">
+                          {item.answer}
+                        </p>
 
-                      {/* Technical Specifications Matrix Grid */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
-                        {item.specs.map((spec, i) => (
-                          <div
-                            key={i}
-                            className="p-3.5 border border-white/[0.08] bg-[#0e0e12]"
-                          >
-                            <span className="mono-label text-[10px] text-zinc-400 block mb-1">
-                              {spec.label}
-                            </span>
-                            <span className="text-xs sm:text-sm font-bold text-white block">
-                              {spec.value}
-                            </span>
+                        {/* Technical Specifications Matrix Grid */}
+                        {item.specs && item.specs.length > 0 && (
+                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
+                            {item.specs.map((spec: any, i: number) => (
+                              <div
+                                key={i}
+                                className="p-3.5 border border-white/[0.08] bg-[#0e0e12] rounded-xs"
+                              >
+                                <span className="mono-label text-[10px] text-zinc-400 block mb-1">
+                                  {spec.label}
+                                </span>
+                                <span className="text-xs sm:text-sm font-bold text-white block font-sans">
+                                  {spec.value}
+                                </span>
+                              </div>
+                            ))}
                           </div>
-                        ))}
+                        )}
                       </div>
-                    </div>
-                  </div>
-                )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             );
           })}
         </div>
 
-        {/* Minimalist Desk & Campus Audit Box (Synced with ReviewsSection Google Audit Box) */}
-        <div className="border border-white/[0.08] p-6 sm:p-8 bg-[#0e0e12] flex flex-col md:flex-row md:items-center justify-between gap-6">
+        {/* Minimalist Desk & Campus Audit Box */}
+        <div className="border border-white/[0.08] p-6 sm:p-8 bg-[#0e0e12] flex flex-col md:flex-row md:items-center justify-between gap-6 rounded-xs shadow-xl">
           <div>
             <div className="mono-label text-[10px] text-zinc-400 mb-1">
               CAMPUS RECEPTION AUDIT & DIRECT TELEPHONY
@@ -309,7 +335,7 @@ export default function FaqSection() {
           <div className="flex flex-wrap items-center gap-3 shrink-0">
             <a
               href={`tel:${BUSINESS_INFO.phone}`}
-              className="px-4 py-3 border border-white/[0.12] bg-white/[0.03] hover:bg-white/[0.08] text-white text-xs mono-label font-bold transition-colors flex items-center gap-2"
+              className="px-4 py-3 border border-white/[0.12] bg-white/[0.03] hover:bg-white/[0.08] text-white text-xs mono-label font-bold transition-colors flex items-center gap-2 rounded-xs"
             >
               <span>CALL FRONT DESK</span>
             </a>
@@ -318,7 +344,7 @@ export default function FaqSection() {
               href="#contact"
               className="px-5 py-3 bg-[#22c55e] hover:bg-[#16a34a] !text-black font-black text-xs font-mono uppercase tracking-wider transition-all flex items-center gap-2 shadow-lg shadow-[#22c55e]/25 cursor-pointer rounded-xs"
             >
-              <span className="!text-black font-black">ENROLLMENT TERMINAL</span>
+              <span className="!text-black font-black">ENROLLMENT & TRIAL DESK</span>
               <ArrowUpRight className="w-3.5 h-3.5 !text-black stroke-[2.5]" />
             </a>
           </div>

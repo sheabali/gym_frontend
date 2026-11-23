@@ -35,8 +35,8 @@ export default function TransformationSlider() {
     <div className="w-full my-16">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 pb-4 border-b border-white/[0.08]">
         <div>
-          <div className="mono-label text-[10px] text-zinc-400 mb-1">
-            CASE STUDY // AUDIT 01
+          <div className="mono-label text-[10px] text-zinc-400 mb-1 font-mono">
+            CASE STUDY • AUDIT 01
           </div>
           <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
             {language === "bn"
@@ -44,8 +44,8 @@ export default function TransformationSlider() {
               : "Documented Transformation Comparison"}
           </h3>
         </div>
-        <div className="mono-label text-[11px] text-zinc-400">
-          DRAG TO INSPECT // 01 TO 06 MONTHS
+        <div className="mono-label text-[11px] text-zinc-400 font-mono">
+          DRAG TO INSPECT • 01 TO 06 MONTHS
         </div>
       </div>
 
@@ -71,8 +71,8 @@ export default function TransformationSlider() {
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
-          <div className="absolute top-4 right-4 z-10 px-2.5 py-1 bg-black/80 backdrop-blur-md border border-white/[0.08] text-[10px] mono-label text-white">
-            [ MONTH 06 // TRANSFORMED ]
+          <div className="absolute top-4 right-4 z-10 px-2.5 py-1 bg-black/80 backdrop-blur-md border border-white/[0.08] text-[10px] mono-label text-white font-mono">
+            MONTH 06 • TRANSFORMED
           </div>
         </div>
 
@@ -97,8 +97,8 @@ export default function TransformationSlider() {
               priority
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
-            <div className="absolute top-4 left-4 z-10 px-2.5 py-1 bg-black/80 backdrop-blur-md border border-white/[0.08] text-[10px] mono-label text-zinc-300">
-              [ DAY 01 // BASELINE ]
+            <div className="absolute top-4 left-4 z-10 px-2.5 py-1 bg-black/80 backdrop-blur-md border border-white/[0.08] text-[10px] mono-label text-zinc-300 font-mono">
+              DAY 01 • BASELINE
             </div>
           </div>
         </div>

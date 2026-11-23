@@ -45,8 +45,9 @@ export default function TransformationSection() {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 pb-8 border-b border-white/[0.08]">
           <div>
-            <div className="mono-label text-zinc-400 mb-2">
-              [ 06 // PROVEN METRICS & AUDIT ]
+            <div className="mono-label text-zinc-400 mb-2 font-mono flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
+              <span>06 • PROVEN METRICS & AUDIT</span>
             </div>
             <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white uppercase">
               {language === "bn" ? "বাস্তব ফলাফল ও মেম্বার জার্নি" : "Measurable Results"}
