@@ -43,22 +43,22 @@ export default function GallerySection() {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 pb-8 border-b border-white/[0.08]">
           <div>
-            <div className="mono-label text-zinc-400 mb-2 font-mono flex items-center gap-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-medium text-[#22c55e] mb-3">
               <span className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
-              <span>07 • ARCHITECTURAL ARCHIVE</span>
+              <span>Facility Gallery</span>
             </div>
             <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white uppercase">
-              {language === "bn" ? "ফটোগ্রাফি গ্যালারি" : "Spatial Archive"}
+              {language === "bn" ? "ফটোগ্রাফি গ্যালারি" : "Campus Gallery"}
             </h2>
           </div>
-          <p className="text-xs sm:text-sm text-zinc-400 max-w-md font-normal leading-relaxed">
+          <p className="text-sm text-zinc-400 max-w-md font-normal leading-relaxed">
             {language === "bn"
               ? "আমাদের সুপরিসর ফ্লোর, হেভি ডাম্বেল কর্নার ও পরিচ্ছন্ন পরিবেশ এক নজরে দেখে নিন।"
-              : "Visual documentation of our climate-controlled floor, equipment bays, and private training suites."}
+              : "Visual tour of our climate-controlled floor, equipment bays, and private training suites."}
           </p>
         </div>
 
-        {/* Minimalist Filter Pills with Fluid Motion */}
+        {/* Minimalist Filter Pills */}
         <div className="flex flex-wrap items-center gap-2 mb-10 pb-4 border-b border-white/[0.06]">
           {[
             { key: "all", label: t.gallery.filterAll },
@@ -73,24 +73,19 @@ export default function GallerySection() {
                 key={tab.key}
                 type="button"
                 onClick={() => setFilter(tab.key as any)}
-                className="relative px-3 py-1.5 text-xs font-mono uppercase tracking-wider transition-colors cursor-pointer rounded-xs"
+                className={`px-3.5 py-1.5 text-xs font-semibold rounded-full transition-all cursor-pointer ${
+                  isActive
+                    ? "bg-[#22c55e] !text-black shadow-md shadow-[#22c55e]/20"
+                    : "bg-white/[0.04] text-zinc-400 hover:text-white hover:bg-white/[0.08] border border-white/[0.06]"
+                }`}
               >
-                {isActive && (
-                  <motion.div
-                    layoutId="activeGalleryFilterPill"
-                    className="absolute inset-0 bg-[#22c55e] rounded-xs shadow-md shadow-[#22c55e]/20"
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  />
-                )}
-                <span className={`relative z-10 ${isActive ? "!text-black font-black" : "text-zinc-400 hover:text-white"}`}>
-                  {tab.label}
-                </span>
+                {tab.label}
               </button>
             );
           })}
         </div>
 
-        {/* Photographic Grid with Interactive Reveal */}
+        {/* Photographic Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredImages.map((image, idx) => {
             const title = language === "bn" ? image.titleBn : image.titleEn;
@@ -108,36 +103,22 @@ export default function GallerySection() {
                 transition={{ duration: 0.35, delay: idx * 0.05 }}
                 whileHover={{ y: -4 }}
                 onClick={() => setLightboxIndex(idx)}
-                className="group relative border border-white/[0.08] bg-[#121216] p-2 cursor-pointer hover:border-[#22c55e]/40 transition-all duration-300 rounded-xs shadow-xl"
+                className="group relative border border-white/[0.08] bg-[#0e0e12] p-2.5 cursor-pointer hover:border-white/[0.2] transition-all duration-300 rounded-2xl shadow-xl overflow-hidden"
               >
-                {/* Corner reticles on hover */}
-                <span className="pointer-events-none absolute top-1.5 left-1.5 text-[8px] font-mono text-transparent group-hover:text-[#22c55e] transition-colors select-none">
-                  ┌
-                </span>
-                <span className="pointer-events-none absolute top-1.5 right-1.5 text-[8px] font-mono text-transparent group-hover:text-[#22c55e] transition-colors select-none">
-                  ┐
-                </span>
-                <span className="pointer-events-none absolute bottom-1.5 left-1.5 text-[8px] font-mono text-transparent group-hover:text-[#22c55e] transition-colors select-none">
-                  └
-                </span>
-                <span className="pointer-events-none absolute bottom-1.5 right-1.5 text-[8px] font-mono text-transparent group-hover:text-[#22c55e] transition-colors select-none">
-                  ┘
-                </span>
-
-                <div className="aspect-[4/3] relative w-full overflow-hidden bg-zinc-900 rounded-xs">
+                <div className="aspect-[4/3] relative w-full overflow-hidden bg-zinc-900 rounded-xl">
                   <Image
                     src={image.src}
                     alt={image.alt}
                     fill
-                    className="object-cover grayscale contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                    className="object-cover contrast-105 group-hover:scale-105 transition-all duration-500"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
 
-                <div className="pt-3 pb-1 px-2 flex items-center justify-between text-[11px] mono-label text-zinc-400 font-mono">
-                  <span className="truncate pr-2 group-hover:text-white transition-colors">{title}</span>
-                  <span className="text-[#22c55e] shrink-0 font-bold">{categoryLabel}</span>
+                <div className="pt-3 pb-1 px-2 flex items-center justify-between text-xs text-zinc-400">
+                  <span className="truncate pr-2 font-medium group-hover:text-white transition-colors">{title}</span>
+                  <span className="text-[#22c55e] shrink-0 font-semibold text-[11px]">{categoryLabel}</span>
                 </div>
               </motion.div>
             );
