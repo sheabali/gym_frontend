@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { GALLERY_IMAGES } from "@/data/gymData";
 import { X, ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
@@ -42,17 +43,18 @@ export default function GallerySection() {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 pb-8 border-b border-white/[0.08]">
           <div>
-            <div className="mono-label text-zinc-400 mb-2">
-              [ 07 // ARCHITECTURAL ARCHIVE ]
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-medium text-[#22c55e] mb-3">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
+              <span>Facility Gallery</span>
             </div>
             <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white uppercase">
-              {language === "bn" ? "ফটোগ্রাফি গ্যালারি" : "Spatial Archive"}
+              {language === "bn" ? "ফটোগ্রাফি গ্যালারি" : "Campus Gallery"}
             </h2>
           </div>
-          <p className="text-xs sm:text-sm text-zinc-400 max-w-md font-normal leading-relaxed">
+          <p className="text-sm text-zinc-400 max-w-md font-normal leading-relaxed">
             {language === "bn"
               ? "আমাদের সুপরিসর ফ্লোর, হেভি ডাম্বেল কর্নার ও পরিচ্ছন্ন পরিবেশ এক নজরে দেখে নিন।"
-              : "Visual documentation of our climate-controlled floor, equipment bays, and private training suites."}
+              : "Visual tour of our climate-controlled floor, equipment bays, and private training suites."}
           </p>
         </div>
 
@@ -64,22 +66,23 @@ export default function GallerySection() {
             { key: "equipment", label: t.gallery.filterEquipment },
             { key: "cardio", label: t.gallery.filterCardio },
             { key: "training", label: t.gallery.filterTraining },
-          ].map((tab) => (
-            <button
-              key={tab.key}
-              type="button"
-              onClick={() => setFilter(tab.key as any)}
-              className={`px-3 py-1.5 text-xs font-mono uppercase tracking-wider transition-all cursor-pointer rounded-xs ${
-                filter === tab.key
-                  ? "bg-[#22c55e] !text-black font-black shadow-md shadow-[#22c55e]/20"
-                  : "text-zinc-400 hover:text-white border border-white/[0.08]"
-              }`}
-            >
-              <span className={filter === tab.key ? "!text-black font-black" : ""}>
+          ].map((tab) => {
+            const isActive = filter === tab.key;
+            return (
+              <button
+                key={tab.key}
+                type="button"
+                onClick={() => setFilter(tab.key as any)}
+                className={`px-3.5 py-1.5 text-xs font-semibold rounded-full transition-all cursor-pointer ${
+                  isActive
+                    ? "bg-[#22c55e] !text-black shadow-md shadow-[#22c55e]/20"
+                    : "bg-white/[0.04] text-zinc-400 hover:text-white hover:bg-white/[0.08] border border-white/[0.06]"
+                }`}
+              >
                 {tab.label}
-              </span>
-            </button>
-          ))}
+              </button>
+            );
+          })}
         </div>
 
         {/* Photographic Grid */}
@@ -92,26 +95,32 @@ export default function GallerySection() {
                 : image.categoryLabelEn;
 
             return (
-              <div
+              <motion.div
                 key={image.id}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.35, delay: idx * 0.05 }}
+                whileHover={{ y: -4 }}
                 onClick={() => setLightboxIndex(idx)}
-                className="group relative border border-white/[0.08] bg-[#121216] p-2 cursor-pointer hover:border-white/30 transition-all duration-300"
+                className="group relative border border-white/[0.08] bg-[#0e0e12] p-2.5 cursor-pointer hover:border-white/[0.2] transition-all duration-300 rounded-2xl shadow-xl overflow-hidden"
               >
-                <div className="aspect-[4/3] relative w-full overflow-hidden bg-zinc-900">
+                <div className="aspect-[4/3] relative w-full overflow-hidden bg-zinc-900 rounded-xl">
                   <Image
                     src={image.src}
                     alt={image.alt}
                     fill
-                    className="object-cover grayscale contrast-110 group-hover:grayscale-0 group-hover:scale-103 transition-all duration-700"
+                    className="object-cover contrast-105 group-hover:scale-105 transition-all duration-500"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
 
-                <div className="pt-3 pb-1 px-2 flex items-center justify-between text-[11px] mono-label text-zinc-400">
-                  <span className="truncate pr-2">{title}</span>
-                  <span className="text-white shrink-0">[{categoryLabel}]</span>
+                <div className="pt-3 pb-1 px-2 flex items-center justify-between text-xs text-zinc-400">
+                  <span className="truncate pr-2 font-medium group-hover:text-white transition-colors">{title}</span>
+                  <span className="text-[#22c55e] shrink-0 font-semibold text-[11px]">{categoryLabel}</span>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
@@ -172,8 +181,8 @@ export default function GallerySection() {
               </div>
 
               <div className="mt-4 text-center">
-                <span className="text-xs mono-label text-zinc-400 block mb-1">
-                  [ {filteredImages[lightboxIndex].categoryLabelEn} // ARCHIVE {lightboxIndex + 1} OF {filteredImages.length} ]
+                <span className="text-xs mono-label text-zinc-400 block mb-1 font-mono">
+                  {filteredImages[lightboxIndex].categoryLabelEn} • ARCHIVE {lightboxIndex + 1} OF {filteredImages.length}
                 </span>
                 <p className="text-sm font-bold text-white">
                   {language === "bn"

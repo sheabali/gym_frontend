@@ -80,38 +80,12 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Top Editorial Telemetry Strip */}
-      <div className="bg-[#0e0e11] border-b border-white/[0.06] py-1.5 px-4 text-[11px] mono-label hidden md:block">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <span className="flex items-center gap-2 text-zinc-300">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
-              <span>BANASREE BLOCK-D • DHAKA 1219</span>
-            </span>
-            <span className="text-zinc-600">/</span>
-            <span className="text-zinc-400">DAILY 07:00 — 22:30 [CLOSING]</span>
-          </div>
-
-          <div className="flex items-center gap-6">
-            <span className="text-zinc-400">GOOGLE VERIFIED 4.4★ (173 REVIEWS)</span>
-            <span className="text-zinc-600">/</span>
-            <a
-              href={`tel:${BUSINESS_INFO.phone}`}
-              className="text-zinc-200 hover:text-white transition-colors flex items-center gap-1.5"
-            >
-              <span>DIRECT: {BUSINESS_INFO.phone}</span>
-            </a>
-          </div>
-        </div>
-      </div>
-
       {/* Main Architectural Header */}
       <header
-        className={`sticky top-0 z-50 transition-all duration-300 border-b ${
-          isScrolled
-            ? "bg-[#0b0b0d]/95 backdrop-blur-xl border-white/[0.08] shadow-lg shadow-black/40 py-3.5"
-            : "bg-[#0b0b0d]/80 backdrop-blur-md border-white/[0.05] py-4"
-        }`}
+        className={`sticky top-0 z-50 transition-all duration-300 border-b ${isScrolled
+          ? "bg-[#0b0b0d]/95 backdrop-blur-xl border-white/[0.08] shadow-lg shadow-black/40 py-3.5"
+          : "bg-[#0b0b0d]/80 backdrop-blur-md border-white/[0.05] py-4"
+          }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
@@ -147,11 +121,10 @@ export default function Navbar() {
                     key={link.id}
                     href={link.href}
                     onClick={(e) => handleNavClick(e, link.href)}
-                    className={`text-xs uppercase tracking-wider font-medium transition-colors relative py-1 ${
-                      isActive
-                        ? "text-white font-semibold"
-                        : "text-zinc-400 hover:text-white"
-                    }`}
+                    className={`text-xs uppercase tracking-wider font-medium transition-colors relative py-1 ${isActive
+                      ? "text-white font-semibold"
+                      : "text-zinc-400 hover:text-white"
+                      }`}
                   >
                     <span>{link.label}</span>
                     {isActive && (
@@ -220,11 +193,10 @@ export default function Navbar() {
                   key={link.id}
                   href={link.href}
                   onClick={(e) => handleNavClick(e, link.href)}
-                  className={`text-sm uppercase tracking-wider font-medium py-2 flex items-center justify-between border-b border-white/[0.04] ${
-                    activeSection === link.id
-                      ? "text-[#22c55e]"
-                      : "text-zinc-300 hover:text-white"
-                  }`}
+                  className={`text-sm uppercase tracking-wider font-medium py-2 flex items-center justify-between border-b border-white/[0.04] ${activeSection === link.id
+                    ? "text-[#22c55e]"
+                    : "text-zinc-300 hover:text-white"
+                    }`}
                 >
                   <span>{link.label}</span>
                   <ArrowUpRight className="w-4 h-4 opacity-50" />

@@ -50,39 +50,39 @@ export default function AnalyticsSection() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Main Growth Area Chart (2 cols) */}
-      <div className="lg:col-span-2 bg-white p-5 sm:p-6 rounded-xs border border-gray-200/80 shadow-xs flex flex-col justify-between">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+      <div className="lg:col-span-2 bg-[#0e0e12] p-5 sm:p-6 rounded-xs border border-white/[0.08] shadow-lg flex flex-col justify-between text-white">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-white/[0.06]">
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-base sm:text-lg font-bold text-gray-900">
-                Growth & Activity Trends
+              <h2 className="text-base sm:text-lg font-black text-white uppercase tracking-tight">
+                Activity & Growth Telemetry
               </h2>
-              <span className="bg-emerald-50 text-emerald-700 text-xs font-semibold px-2 py-0.5 rounded-xs border border-emerald-200">
+              <span className="bg-[#22c55e]/10 text-[#22c55e] text-xs font-mono font-bold px-2 py-0.5 rounded-xs border border-[#22c55e]/30">
                 +24.8% YoY
               </span>
             </div>
-            <p className="text-xs text-gray-500 mt-0.5">
-              Monthly overview of newly registered members vs active sessions
+            <p className="text-xs text-zinc-400 font-sans mt-0.5">
+              Monthly overview of newly registered members vs active workout sessions
             </p>
           </div>
 
-          <div className="inline-flex p-0.5 bg-gray-100 rounded-xs border border-gray-200 text-xs font-medium self-start sm:self-auto">
+          <div className="inline-flex p-0.5 bg-[#121216] rounded-xs border border-white/[0.08] text-xs font-mono self-start sm:self-auto">
             <button
               onClick={() => setActiveTab("users")}
-              className={`px-3 py-1 rounded-xs transition-all cursor-pointer ${
+              className={`px-3 py-1 rounded-xs transition-all cursor-pointer uppercase tracking-wider text-[11px] ${
                 activeTab === "users"
-                  ? "bg-white text-gray-900 shadow-xs font-semibold"
-                  : "text-gray-600 hover:text-gray-900"
+                  ? "bg-[#22c55e] !text-black font-black shadow-xs"
+                  : "text-zinc-400 hover:text-white"
               }`}
             >
               Signups
             </button>
             <button
               onClick={() => setActiveTab("sessions")}
-              className={`px-3 py-1 rounded-xs transition-all cursor-pointer ${
+              className={`px-3 py-1 rounded-xs transition-all cursor-pointer uppercase tracking-wider text-[11px] ${
                 activeTab === "sessions"
-                  ? "bg-white text-gray-900 shadow-xs font-semibold"
-                  : "text-gray-600 hover:text-gray-900"
+                  ? "bg-[#22c55e] !text-black font-black shadow-xs"
+                  : "text-zinc-400 hover:text-white"
               }`}
             >
               Sessions
@@ -99,8 +99,8 @@ export default function AnalyticsSection() {
             >
               <defs>
                 <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#10b981" stopOpacity="0.35" />
-                  <stop offset="100%" stopColor="#10b981" stopOpacity="0.0" />
+                  <stop offset="0%" stopColor="#22c55e" stopOpacity="0.35" />
+                  <stop offset="100%" stopColor="#22c55e" stopOpacity="0.0" />
                 </linearGradient>
               </defs>
 
@@ -117,15 +117,16 @@ export default function AnalyticsSection() {
                       y1={yPos}
                       x2="720"
                       y2={yPos}
-                      stroke="#f1f5f9"
+                      stroke="rgba(255, 255, 255, 0.06)"
                       strokeDasharray="4 4"
                       strokeWidth="1"
                     />
                     <text
                       x="30"
                       y={yPos + 4}
-                      fill="#94a3b8"
+                      fill="#71717a"
                       fontSize="10"
+                      fontFamily="monospace"
                       textAnchor="end"
                     >
                       {labelVal}
@@ -150,7 +151,7 @@ export default function AnalyticsSection() {
                 transition={{ duration: 1.2, ease: "easeInOut" }}
                 d={linePath}
                 fill="none"
-                stroke="#10b981"
+                stroke="#22c55e"
                 strokeWidth="2.5"
                 strokeLinecap="round"
               />
@@ -162,16 +163,17 @@ export default function AnalyticsSection() {
                     cx={pt.x}
                     cy={pt.y}
                     r="4"
-                    fill="#ffffff"
-                    stroke="#10b981"
+                    fill="#0e0e12"
+                    stroke="#22c55e"
                     strokeWidth="2"
                     className="transition-transform group-hover:scale-150"
                   />
                   <text
                     x={pt.x}
                     y="245"
-                    fill="#64748b"
+                    fill="#a1a1aa"
                     fontSize="11"
+                    fontFamily="monospace"
                     textAnchor="middle"
                     fontWeight="500"
                   >
@@ -185,18 +187,18 @@ export default function AnalyticsSection() {
       </div>
 
       {/* Role & Demographics Donut Card (1 col) */}
-      <div className="bg-white p-5 sm:p-6 rounded-xs border border-gray-200/80 shadow-xs flex flex-col justify-between">
+      <div className="bg-[#0e0e12] p-5 sm:p-6 rounded-xs border border-white/[0.08] shadow-lg flex flex-col justify-between text-white">
         <div>
           <div className="flex items-center justify-between mb-2">
-            <h2 className="text-base sm:text-lg font-bold text-gray-900">
-              User Distribution
+            <h2 className="text-base sm:text-lg font-black text-white uppercase tracking-tight">
+              Account Demographics
             </h2>
-            <button className="text-gray-400 hover:text-gray-600">
+            <button className="text-zinc-500 hover:text-white transition-colors">
               <Info size={16} />
             </button>
           </div>
-          <p className="text-xs text-gray-500">
-            Breakdown by user roles and platform privileges
+          <p className="text-xs text-zinc-400 font-sans">
+            Roster distribution by permissions and roles
           </p>
         </div>
 
@@ -210,7 +212,7 @@ export default function AnalyticsSection() {
                 cy="18"
                 r="15.9155"
                 fill="none"
-                stroke="#f1f5f9"
+                stroke="rgba(255, 255, 255, 0.08)"
                 strokeWidth="3.5"
               />
               {/* Registered Users (75%) */}
@@ -219,7 +221,7 @@ export default function AnalyticsSection() {
                 cy="18"
                 r="15.9155"
                 fill="none"
-                stroke="#10b981"
+                stroke="#22c55e"
                 strokeWidth="3.5"
                 strokeDasharray="75, 100"
                 strokeDashoffset="0"
@@ -241,45 +243,45 @@ export default function AnalyticsSection() {
                 cy="18"
                 r="15.9155"
                 fill="none"
-                stroke="#8b5cf6"
+                stroke="#a855f7"
                 strokeWidth="3.5"
                 strokeDasharray="7, 100"
                 strokeDashoffset="-93"
               />
             </svg>
             <div className="absolute text-center">
-              <span className="text-2xl font-bold text-gray-900">14.8k</span>
-              <span className="block text-[11px] text-gray-500 font-medium">
-                Total Accounts
+              <span className="text-2xl font-black text-white font-mono block">14.8k</span>
+              <span className="block text-[10px] text-zinc-400 font-mono uppercase tracking-wider">
+                Total Roster
               </span>
             </div>
           </div>
         </div>
 
         {/* Legend */}
-        <div className="space-y-2 pt-2 border-t border-gray-100 text-xs">
+        <div className="space-y-2.5 pt-3 border-t border-white/[0.06] text-xs font-mono">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-              <span className="text-gray-700 font-medium">Standard Users</span>
+              <span className="w-2 h-2 rounded-full bg-[#22c55e]" />
+              <span className="text-zinc-300">Standard Members</span>
             </div>
-            <span className="text-gray-900 font-semibold">75% (11,169)</span>
+            <span className="text-white font-bold">75% (11,169)</span>
           </div>
 
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />
-              <span className="text-gray-700 font-medium">Staff & Managers</span>
+              <span className="w-2 h-2 rounded-full bg-blue-500" />
+              <span className="text-zinc-300">Coaches & Trainers</span>
             </div>
-            <span className="text-gray-900 font-semibold">18% (2,680)</span>
+            <span className="text-white font-bold">18% (2,680)</span>
           </div>
 
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-purple-500" />
-              <span className="text-gray-700 font-medium">Super Admins</span>
+              <span className="w-2 h-2 rounded-full bg-purple-500" />
+              <span className="text-zinc-300">Super Admins</span>
             </div>
-            <span className="text-gray-900 font-semibold">7% (1,043)</span>
+            <span className="text-white font-bold">7% (1,043)</span>
           </div>
         </div>
       </div>

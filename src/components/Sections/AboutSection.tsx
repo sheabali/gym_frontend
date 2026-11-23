@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { BUSINESS_INFO } from "@/data/gymData";
 import { ArrowUpRight, Check, Minus } from "lucide-react";
@@ -15,13 +16,13 @@ export default function AboutSection() {
       titleEn: "Climate Architecture",
       titleBn: "সেন্ট্রাল তাপমাত্রা ও অক্সিজেন নিয়ন্ত্রণ",
       descEn:
-        "High-output inverter air conditioning maintains a crisp 20°C and steady airflow. You train without the suffocating humidity and fatigue common in Dhaka basements.",
+        "High-capacity inverter air conditioning maintains a crisp 20°C with continuous air exchange, ensuring high energy and zero stuffiness even during intense Dhaka summers.",
       descBn:
         "উন্নত ইনভার্টার এসি সিস্টেম সার্বক্ষণিক ২০ ডিগ্রি তাপমাত্রা ও সতেজ বাতাস নিশ্চিত করে, যা তীব্র গরমেও ক্লান্তিহীন ও স্বাস্থ্যকর ওয়ার্কআউট নিশ্চিত করে।",
     },
     {
       num: "02",
-      titleEn: "Shift Segregation & Privacy",
+      titleEn: "Shift Privacy & Modesty",
       titleBn: "সম্পূর্ণ নিরাপদ নারী ও পুরুষ শিফট",
       descEn:
         "We reject crowded combined free-for-alls. Our two male shifts and one dedicated female exclusive shift—coached by certified female instructors—guarantee absolute privacy.",
@@ -75,124 +76,133 @@ export default function AboutSection() {
   ];
 
   return (
-    <section id="about" className="py-28 px-4 sm:px-6 lg:px-8 border-b border-white/[0.06] bg-[#0b0b0d]">
+    <section id="about" className="py-24 px-4 sm:px-6 lg:px-8 border-b border-white/[0.06] bg-[#0b0b0d]">
       <div className="max-w-7xl mx-auto">
-        {/* Section Header with Monospace Index */}
+        {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 pb-8 border-b border-white/[0.08]">
           <div>
-            <div className="mono-label text-zinc-400 mb-2">
-              [ 01 // THE PHILOSOPHY ]
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-medium text-[#22c55e] mb-3">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
+              <span>About Platinum Gym</span>
             </div>
             <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white uppercase">
               {language === "bn" ? "আমাদের মূল দর্শন" : "Engineered For Focus"}
             </h2>
           </div>
-          <p className="text-xs sm:text-sm text-zinc-400 max-w-md font-normal leading-relaxed">
+          <p className="text-sm text-zinc-400 max-w-md font-normal leading-relaxed">
             {language === "bn"
-              ? "একটি জিম শুধু লোহার স্তূপ নয়; এটি এমন একটি পরিবেশ যেখানে আপনার শৃঙ্খলা ও একাগ্রতাকে সম্মান জানানো হয়।"
-              : "A gym is not a warehouse of steel. It is an architectural sanctuary where athletic discipline is respected."}
+              ? "একটি জিম শুধু লোহার স্তূপ নয়; এটি এমন একটি সুপরিকল্পিত পরিবেশ যেখানে আপনার একাগ্রতা ও স্বাস্থ্য অগ্রাধিকারে থাকে।"
+              : "A gym is not a warehouse of steel. It is an intentional sanctuary where discipline, privacy, and athletic progress are respected."}
           </p>
         </div>
 
-        {/* Asymmetrical Editorial Composition */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start mb-24">
-          {/* Left: Architectural Imagery with Telemetry Card */}
+        {/* Editorial Composition */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start mb-20">
+          {/* Left: Facility Photo */}
           <div className="lg:col-span-5 relative">
-            <div className="relative border border-white/[0.08] p-2 bg-[#121216]">
-              <div className="aspect-[4/5] relative w-full overflow-hidden bg-zinc-900">
+            <div className="relative border border-white/[0.08] bg-[#0e0e12] rounded-2xl overflow-hidden shadow-2xl p-2.5">
+              <div className="aspect-[4/5] relative w-full overflow-hidden rounded-xl bg-zinc-900">
                 <Image
                   src="https://images.unsplash.com/photo-1540497077202-7c8a3999166f?auto=format&fit=crop&w=1200&q=80"
                   alt="Platinum Gym interior floor in Banasree Dhaka"
                   fill
-                  className="object-cover contrast-110 filter grayscale-[20%]"
+                  className="object-cover contrast-105"
                   sizes="(max-width: 768px) 100vw, 500px"
                 />
               </div>
 
-              {/* Minimalist Telemetry Strip */}
-              <div className="pt-3 pb-1 px-2 flex items-center justify-between text-[11px] mono-label text-zinc-400">
-                <span>HOUSE-16, ROAD-03, BLOCK-D</span>
-                <span className="text-white font-bold">{BUSINESS_INFO.plusCode}</span>
+              <div className="pt-3 pb-1 px-2 flex items-center justify-between text-xs text-zinc-400">
+                <span className="font-medium text-zinc-300">House-16, Road-03, Block-D</span>
+                <span className="text-[#22c55e] font-semibold">{BUSINESS_INFO.plusCode}</span>
               </div>
             </div>
           </div>
 
-          {/* Right: 3 Numbered Architectural Tenets (Clean Rows, NOT 4 Identical Cards!) */}
+          {/* Right: 3 Key Tenets */}
           <div className="lg:col-span-7 flex flex-col divide-y divide-white/[0.08]">
-            {tenets.map((tenet) => (
-              <div key={tenet.num} className="py-8 first:pt-0 last:pb-0 group">
-                <div className="flex items-baseline gap-4 mb-3">
-                  <span className="mono-label text-zinc-500 font-bold">
-                    [ {tenet.num} ]
-                  </span>
-                  <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight group-hover:text-zinc-200 transition-colors">
+            {tenets.map((tenet, idx) => (
+              <motion.div
+                key={tenet.num}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.35, delay: idx * 0.08 }}
+                className="py-7 first:pt-0 last:pb-0 group"
+              >
+                <div className="flex items-center gap-3.5 mb-2.5">
+                  <div className="w-8 h-8 rounded-full bg-white/[0.05] border border-white/[0.08] flex items-center justify-center text-xs font-bold text-[#22c55e] group-hover:bg-[#22c55e] group-hover:text-black transition-colors">
+                    {tenet.num}
+                  </div>
+                  <h3 className="text-xl font-bold text-white tracking-tight group-hover:text-zinc-200 transition-colors">
                     {language === "bn" ? tenet.titleBn : tenet.titleEn}
                   </h3>
                 </div>
-                <p className="text-sm text-zinc-400 leading-relaxed pl-10 max-w-xl">
+                <p className="text-sm text-zinc-400 leading-relaxed pl-11 max-w-xl">
                   {language === "bn" ? tenet.descBn : tenet.descEn}
                 </p>
-              </div>
+              </motion.div>
             ))}
 
-            <div className="pt-8">
+            <div className="pt-7">
               <a
                 href="#schedule"
-                className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider !text-white hover:text-[#22c55e] transition-colors"
+                className="inline-flex items-center gap-2 text-sm font-semibold !text-white hover:text-[#22c55e] transition-colors group"
               >
-                <span className="!text-white font-bold hover:text-[#22c55e]">INSPECT SHIFT TIMINGS & SLOTS</span>
-                <ArrowUpRight className="w-3.5 h-3.5 text-[#22c55e]" />
+                <span className="!text-white group-hover:!text-[#22c55e] transition-colors">
+                  View Operating Shifts & Daily Timetable
+                </span>
+                <ArrowUpRight className="w-4 h-4 text-[#22c55e] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </a>
             </div>
           </div>
         </div>
 
-        {/* Minimalist Comparison Table (Architectural Lines) */}
-        <div className="border border-white/[0.08] bg-[#0e0e11] p-6 sm:p-10">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-white/[0.08]">
+        {/* Minimalist Comparison Table */}
+        <div className="border border-white/[0.08] bg-[#0e0e12] p-6 sm:p-8 rounded-2xl shadow-xl">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-5 border-b border-white/[0.08]">
             <div>
-              <div className="mono-label text-zinc-400 mb-1">
-                [ AUDIT // BENCHMARK ]
+              <div className="text-xs font-semibold uppercase tracking-wider text-[#22c55e] mb-1">
+                Quality Comparison
               </div>
-              <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+              <h3 className="text-xl sm:text-2xl font-black text-white uppercase tracking-tight">
                 {language === "bn"
                   ? "প্লাটিনাম জিম বনাম সাধারণ জিম"
-                  : "The Platinum Benchmark vs. Ordinary Gyms"}
+                  : "The Platinum Standard vs. Conventional Gyms"}
               </h3>
             </div>
-            <span className="text-xs mono-label text-zinc-400">
-              BANASREE AREA STANDARDS
+            <span className="text-xs text-zinc-400 font-medium">
+              Banasree Fitness Standards
             </span>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm">
               <thead>
-                <tr className="border-b border-white/[0.08] text-[11px] mono-label text-zinc-400">
-                  <th className="py-3 px-4 font-normal">PARAMETER</th>
-                  <th className="py-3 px-4 font-bold text-white bg-white/[0.03]">
-                    PLATINUM GYM BANASREE
+                <tr className="border-b border-white/[0.08] text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+                  <th className="py-3 px-4 font-normal">Feature</th>
+                  <th className="py-3 px-4 font-bold text-[#22c55e] bg-white/[0.02] rounded-t-lg">
+                    Platinum Gym Banasree
                   </th>
-                  <th className="py-3 px-4 font-normal text-zinc-400">
-                    CONVENTIONAL GYMS
+                  <th className="py-3 px-4 font-normal text-zinc-500">
+                    Typical Gyms
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/[0.05]">
                 {comparison.map((item, idx) => (
                   <tr key={idx} className="hover:bg-white/[0.015] transition-colors">
-                    <td className="py-4 px-4 font-semibold text-zinc-300">
+                    <td className="py-4 px-4 font-medium text-zinc-300">
                       {language === "bn" ? item.metricBn : item.metric}
                     </td>
-                    <td className="py-4 px-4 bg-white/[0.03] text-white font-medium">
+                    <td className="py-4 px-4 bg-white/[0.02] text-white font-medium">
                       <div className="flex items-center gap-2.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
+                        <Check className="w-4 h-4 text-[#22c55e] shrink-0 stroke-[2.5]" />
                         <span>{language === "bn" ? item.platinumBn : item.platinum}</span>
                       </div>
                     </td>
                     <td className="py-4 px-4 text-zinc-500">
                       <div className="flex items-center gap-2.5">
-                        <Minus className="w-3.5 h-3.5 text-zinc-600" />
+                        <Minus className="w-4 h-4 text-zinc-600 shrink-0" />
                         <span>{language === "bn" ? item.ordinaryBn : item.ordinary}</span>
                       </div>
                     </td>

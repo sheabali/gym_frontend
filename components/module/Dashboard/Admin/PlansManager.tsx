@@ -144,47 +144,47 @@ export default function PlansManager() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 text-white">
       {/* Action Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-xs border border-gray-200/80 shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#0e0e12] p-4 rounded-xs border border-white/[0.08] shadow-lg">
         <div>
-          <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
-            <Layers className="w-4 h-4 text-emerald-600" />
+          <h2 className="text-base font-black text-white uppercase tracking-tight flex items-center gap-2">
+            <Layers className="w-4 h-4 text-[#22c55e]" />
             <span>Membership Plans Catalog</span>
           </h2>
-          <p className="text-xs text-gray-500 mt-0.5">
-            Prices are saved in paisa integers and snapshotted at time of purchase.
+          <p className="text-xs text-zinc-400 font-sans mt-0.5">
+            Rates are saved in paisa integers and snapshotted at time of checkout.
           </p>
         </div>
 
         <Button
           onClick={openCreateModal}
           size="sm"
-          className="gap-1.5 text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer"
+          className="gap-1.5 text-xs font-mono uppercase tracking-wider font-black bg-[#22c55e] hover:bg-[#16a34a] !text-black rounded-xs shadow-md shadow-[#22c55e]/20 cursor-pointer"
         >
-          <Plus size={14} />
+          <Plus size={14} className="stroke-[2.5]" />
           <span>Add New Plan</span>
         </Button>
       </div>
 
       {/* Plans Table */}
       {isLoading ? (
-        <div className="flex h-48 items-center justify-center bg-white rounded-xs border border-gray-200">
-          <Loader2 className="w-6 h-6 animate-spin text-emerald-600" />
+        <div className="flex h-48 items-center justify-center bg-[#0e0e12] rounded-xs border border-white/[0.08]">
+          <Loader2 className="w-6 h-6 animate-spin text-[#22c55e]" />
         </div>
       ) : plans.length === 0 ? (
-        <div className="bg-white p-12 text-center rounded-xs border border-gray-200 shadow-xs">
-          <Layers className="w-10 h-10 text-gray-300 mx-auto mb-2" />
-          <p className="text-sm font-semibold text-gray-900">No membership plans created yet</p>
-          <Button onClick={openCreateModal} size="sm" className="mt-3 text-xs">
+        <div className="bg-[#0e0e12] p-12 text-center rounded-xs border border-white/[0.08] shadow-lg">
+          <Layers className="w-10 h-10 text-zinc-600 mx-auto mb-2" />
+          <p className="text-sm font-bold text-white">No membership plans created yet</p>
+          <Button onClick={openCreateModal} size="sm" className="mt-3 text-xs bg-[#22c55e] text-black font-bold">
             Create First Plan
           </Button>
         </div>
       ) : (
-        <div className="bg-white rounded-xs border border-gray-200/80 shadow-xs overflow-hidden">
+        <div className="bg-[#0e0e12] rounded-xs border border-white/[0.08] shadow-lg overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-gray-50 border-b border-gray-200 text-gray-600 uppercase font-mono text-[10px]">
+              <thead className="bg-[#121217] border-b border-white/[0.08] text-zinc-400 uppercase font-mono text-[10px] tracking-wider">
                 <tr>
                   <th className="py-3 px-4">Plan Name & Slug</th>
                   <th className="py-3 px-4">Price (BDT)</th>
@@ -195,27 +195,27 @@ export default function PlansManager() {
                   <th className="py-3 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-white/[0.05]">
                 {plans.map((plan) => {
                   const priceBdtFormatted = (plan.price / 100).toLocaleString("en-US");
 
                   return (
-                    <tr key={plan.id} className="hover:bg-gray-50/50">
+                    <tr key={plan.id} className="hover:bg-white/[0.02] transition-colors">
                       <td className="py-3 px-4">
-                        <div className="font-bold text-gray-900">{plan.name}</div>
-                        <div className="text-[11px] text-gray-400 font-mono">
+                        <div className="font-bold text-white">{plan.name}</div>
+                        <div className="text-[11px] text-zinc-500 font-mono">
                           /{plan.slug}
                         </div>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="font-bold text-emerald-700">
+                        <span className="font-bold text-[#22c55e] font-mono">
                           ৳ {priceBdtFormatted}
                         </span>
-                        <span className="text-[10px] text-gray-400 block font-mono">
+                        <span className="text-[10px] text-zinc-500 block font-mono">
                           {plan.price} paisa
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-gray-700">
+                      <td className="py-3 px-4 text-zinc-300 font-mono">
                         {plan.durationDays} days
                       </td>
                       <td className="py-3 px-4 max-w-xs">

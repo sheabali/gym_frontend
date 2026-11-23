@@ -57,36 +57,36 @@ export default function RecentActivityFeed() {
   const getIconContainer = (type: ActivityItem["type"]) => {
     switch (type) {
       case "success":
-        return "bg-emerald-50 text-emerald-600 border-emerald-200";
+        return "bg-[#22c55e]/10 text-[#22c55e] border-[#22c55e]/30";
       case "info":
-        return "bg-blue-50 text-blue-600 border-blue-200";
+        return "bg-blue-500/10 text-blue-400 border-blue-500/30";
       case "warning":
-        return "bg-amber-50 text-amber-600 border-amber-200";
+        return "bg-amber-500/10 text-amber-400 border-amber-500/30";
       case "alert":
-        return "bg-red-50 text-red-600 border-red-200";
+        return "bg-red-500/10 text-red-400 border-red-500/30";
     }
   };
 
   return (
-    <div className="bg-white p-5 sm:p-6 rounded-xs border border-gray-200/80 shadow-xs flex flex-col justify-between">
+    <div className="bg-[#0e0e12] p-5 sm:p-6 rounded-xs border border-white/[0.08] shadow-lg flex flex-col justify-between text-white">
       <div>
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
-            <Zap size={18} className="text-primary" />
-            <h2 className="text-base sm:text-lg font-bold text-gray-900">
-              Audit & Activity Feed
+            <Zap size={18} className="text-[#22c55e]" />
+            <h2 className="text-base sm:text-lg font-black text-white uppercase tracking-tight">
+              Audit & Activity Log
             </h2>
           </div>
-          <span className="text-xs text-primary font-medium hover:underline cursor-pointer">
+          <span className="text-xs text-[#22c55e] font-mono uppercase tracking-wider font-bold hover:underline cursor-pointer">
             View All
           </span>
         </div>
-        <p className="text-xs text-gray-500 mb-6">
+        <p className="text-xs text-zinc-400 font-sans mb-6">
           Real-time security logs and administrative changes
         </p>
 
         {/* Timeline */}
-        <div className="space-y-4 relative before:absolute before:left-4 before:top-2 before:bottom-2 before:w-[1px] before:bg-gray-200">
+        <div className="space-y-4 relative before:absolute before:left-4 before:top-2 before:bottom-2 before:w-[1px] before:bg-white/[0.08]">
           {activities.map((item) => {
             const Icon = item.icon;
             return (
@@ -97,20 +97,20 @@ export default function RecentActivityFeed() {
                 <div
                   className={`relative z-10 p-1.5 rounded-xs border shadow-xs ${getIconContainer(
                     item.type
-                  )} bg-white`}
+                  )} bg-[#121217]`}
                 >
                   <Icon size={14} />
                 </div>
                 <div className="flex-1 -mt-0.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-gray-900 block">
+                    <span className="text-xs font-bold text-white block">
                       {item.title}
                     </span>
-                    <span className="text-[11px] text-gray-400">
+                    <span className="text-[10px] text-zinc-500 font-mono">
                       {item.time}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
+                  <p className="text-xs text-zinc-400 mt-0.5 leading-relaxed font-sans">
                     {item.description}
                   </p>
                 </div>

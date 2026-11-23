@@ -45,31 +45,32 @@ export default function TransformationSection() {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 pb-8 border-b border-white/[0.08]">
           <div>
-            <div className="mono-label text-zinc-400 mb-2">
-              [ 06 // PROVEN METRICS & AUDIT ]
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-medium text-[#22c55e] mb-3">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
+              <span>Proven Results</span>
             </div>
             <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white uppercase">
               {language === "bn" ? "বাস্তব ফলাফল ও মেম্বার জার্নি" : "Measurable Results"}
             </h2>
           </div>
-          <p className="text-xs sm:text-sm text-zinc-400 max-w-md font-normal leading-relaxed">
+          <p className="text-sm text-zinc-400 max-w-md font-normal leading-relaxed">
             {language === "bn"
               ? "ফলাফল কোনো দুর্ঘটনা নয়; এটি সঠিক টেকনিক, সেন্ট্রাল তাপমাত্রা এবং নিয়মিত অনুশীলনের ফল।"
-              : "Progress is empirical. We track body composition, strength milestones, and cardiovascular endurance."}
+              : "Progress is empirical. We track body composition, strength milestones, and cardiovascular health."}
           </p>
         </div>
 
-        {/* 4 Architectural Telemetry Stats (Clean 1px Line Columns) */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16 border-b border-white/[0.08] pb-12">
+        {/* 4 Stats Cards */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-16 border-b border-white/[0.08] pb-12">
           {metrics.map((m, idx) => (
-            <div key={idx} className="flex flex-col">
-              <span className="mono-label text-[10px] text-zinc-400 mb-1">
+            <div key={idx} className="p-5 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex flex-col justify-between hover:border-white/[0.12] transition-colors">
+              <span className="text-xs text-zinc-400 font-medium mb-2">
                 {language === "bn" ? m.labelBn : m.labelEn}
               </span>
-              <div className="text-4xl sm:text-5xl font-black text-white tracking-tight font-mono">
+              <div className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
                 {m.value}
               </div>
-              <span className="text-xs text-zinc-400 mt-1">
+              <span className="text-xs text-zinc-500 mt-1">
                 {language === "bn" ? m.subBn : m.subEn}
               </span>
             </div>

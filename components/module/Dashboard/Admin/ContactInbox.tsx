@@ -52,24 +52,24 @@ export default function ContactInbox() {
   const newCount = messages.filter((m) => m.status === "NEW").length;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 text-white">
       {/* Header & Filter Controls */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-xs border border-gray-200/80 shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#0e0e12] p-4 rounded-xs border border-white/[0.08] shadow-lg">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-emerald-50 text-emerald-700 rounded border border-emerald-200">
+          <div className="p-2 bg-[#22c55e]/10 text-[#22c55e] rounded-xs border border-[#22c55e]/30">
             <Inbox className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-base font-bold text-gray-900">
-              Visitor Contact Inquiries
+            <h2 className="text-base font-black text-white uppercase tracking-tight">
+              Visitor Inquiries & Trials
             </h2>
-            <p className="text-xs text-gray-500">
-              Inquiries and membership requests submitted via the public website contact form.
+            <p className="text-xs text-zinc-400 font-sans">
+              Submissions received from the public website contact terminal.
             </p>
           </div>
         </div>
 
-        <div className="inline-flex items-center p-0.5 bg-gray-100 rounded-xs border border-gray-200 text-xs font-medium">
+        <div className="inline-flex items-center p-0.5 bg-[#121216] rounded-xs border border-white/[0.08] text-xs font-mono">
           {(["ALL", "NEW", "REPLIED", "CLOSED"] as const).map((filter) => (
             <button
               key={filter}
@@ -77,10 +77,10 @@ export default function ContactInbox() {
                 setStatusFilter(filter);
                 setSelectedMessage(null);
               }}
-              className={`px-3 py-1 rounded-xs transition-all cursor-pointer ${
+              className={`px-3 py-1 rounded-xs transition-all cursor-pointer uppercase tracking-wider text-[11px] ${
                 statusFilter === filter
-                  ? "bg-white text-gray-900 shadow-xs font-semibold"
-                  : "text-gray-500 hover:text-gray-900"
+                  ? "bg-[#22c55e] !text-black font-black shadow-xs"
+                  : "text-zinc-400 hover:text-white"
               }`}
             >
               {filter}
@@ -97,21 +97,21 @@ export default function ContactInbox() {
       {/* Main Inbox Layout: Master / Detail */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left List */}
-        <div className="lg:col-span-1 bg-white rounded-xs border border-gray-200/80 shadow-xs overflow-hidden">
-          <div className="p-3 border-b border-gray-100 text-xs font-bold text-gray-700 uppercase tracking-wider">
+        <div className="lg:col-span-1 bg-[#0e0e12] rounded-xs border border-white/[0.08] shadow-lg overflow-hidden">
+          <div className="p-3 border-b border-white/[0.06] text-xs font-mono uppercase tracking-wider text-zinc-400 font-bold">
             Inquiries ({messages.length})
           </div>
 
           {isLoading ? (
             <div className="flex h-48 items-center justify-center">
-              <Loader2 className="w-6 h-6 animate-spin text-emerald-600" />
+              <Loader2 className="w-6 h-6 animate-spin text-[#22c55e]" />
             </div>
           ) : messages.length === 0 ? (
-            <div className="p-8 text-center text-xs text-gray-400">
-              No inquiries found in this folder.
+            <div className="p-8 text-center text-xs text-zinc-500 font-mono">
+              No inquiries found in this view.
             </div>
           ) : (
-            <div className="divide-y divide-gray-100 max-h-[600px] overflow-y-auto">
+            <div className="divide-y divide-white/[0.05] max-h-[600px] overflow-y-auto">
               {messages.map((item) => {
                 const isSelected = selectedMessage?.id === item.id;
                 const isNew = item.status === "NEW";
@@ -122,32 +122,32 @@ export default function ContactInbox() {
                     onClick={() => setSelectedMessage(item)}
                     className={`p-3.5 transition-colors cursor-pointer ${
                       isSelected
-                        ? "bg-emerald-50/60 border-l-3 border-emerald-600"
-                        : "hover:bg-gray-50/80"
+                        ? "bg-white/[0.06] border-l-3 border-[#22c55e]"
+                        : "hover:bg-white/[0.02]"
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <span className={`text-xs ${isNew ? "font-bold text-gray-900" : "font-medium text-gray-700"}`}>
+                      <span className={`text-xs ${isNew ? "font-bold text-white" : "font-medium text-zinc-300"}`}>
                         {item.name}
                       </span>
                       <span
                         className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded ${
                           item.status === "NEW"
-                            ? "bg-rose-50 text-rose-700 border border-rose-200"
+                            ? "bg-rose-500/10 text-rose-400 border border-rose-500/30"
                             : item.status === "REPLIED"
-                            ? "bg-blue-50 text-blue-700 border border-blue-200"
-                            : "bg-gray-100 text-gray-600 border border-gray-200"
+                            ? "bg-blue-500/10 text-blue-400 border border-blue-500/30"
+                            : "bg-white/[0.04] text-zinc-400 border border-white/[0.08]"
                         }`}
                       >
                         {item.status}
                       </span>
                     </div>
 
-                    <p className="text-[11px] text-gray-500 line-clamp-2">
+                    <p className="text-[11px] text-zinc-400 line-clamp-2">
                       {item.message}
                     </p>
 
-                    <div className="mt-2 text-[10px] text-gray-400 font-mono">
+                    <div className="mt-2 text-[10px] text-zinc-500 font-mono">
                       {new Date(item.createdAt).toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",
@@ -163,18 +163,18 @@ export default function ContactInbox() {
         </div>
 
         {/* Right Detail Pane */}
-        <div className="lg:col-span-2 bg-white p-6 rounded-xs border border-gray-200/80 shadow-xs h-fit">
+        <div className="lg:col-span-2 bg-[#0e0e12] p-6 rounded-xs border border-white/[0.08] shadow-lg h-fit text-white">
           {selectedMessage ? (
             <div className="space-y-5 text-xs">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-gray-100">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-white/[0.06]">
                 <div>
-                  <h3 className="text-base font-bold text-gray-900">
+                  <h3 className="text-base font-bold text-white font-sans">
                     {selectedMessage.name}
                   </h3>
-                  <div className="flex flex-wrap items-center gap-3 mt-1 text-gray-500">
+                  <div className="flex flex-wrap items-center gap-3 mt-1 text-zinc-400 font-mono">
                     {selectedMessage.email && (
                       <span className="flex items-center gap-1">
-                        <Mail size={12} className="text-gray-400" />
+                        <Mail size={12} className="text-zinc-500" />
                         <span>{selectedMessage.email}</span>
                       </span>
                     )}

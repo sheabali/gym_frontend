@@ -19,26 +19,26 @@ export default function LiveEnergyTicker() {
           "সরাসরি ফোন: ০১৭৩৩-৫২১০৫২",
         ]
       : [
-          "100% INVERTER CLIMATE CONTROL",
-          "HOUSE-16, ROAD-03, BLOCK-D, BANASREE",
-          "GOOGLE RATING 4.4★ (173 REVIEWS)",
-          "DEDICATED MALE & FEMALE TIME SLOTS",
-          "CERTIFIED FLOOR COACHES ON DUTY",
-          "OPENS DAILY AT 07:00 SHARP",
-          "DIRECT LINE: 01733-521052",
+          "100% Inverter Central Air Conditioning",
+          "House-16, Road-03, Block-D, Banasree",
+          "Google Rating 4.4★ (173 Verified Reviews)",
+          "Dedicated Separate Male & Female Time Slots",
+          "Certified Floor Trainers on Duty Every Shift",
+          "Open Daily from 07:00 AM",
+          "Direct Front Desk: 01733-521052",
         ];
 
   return (
-    <div className="w-full bg-[#0d0d10] border-b border-white/[0.08] py-2.5 overflow-hidden select-none">
+    <div className="w-full bg-[#0a0a0d] border-b border-white/[0.06] py-3 overflow-hidden select-none">
       <div className="flex w-max animate-marquee-slow">
         {[...items, ...items, ...items].map((text, idx) => (
           <div
             key={idx}
-            className="flex items-center gap-4 mx-6 text-xs mono-label text-zinc-400 whitespace-nowrap"
+            className="flex items-center gap-4 mx-6 text-xs text-zinc-400 font-medium whitespace-nowrap"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
             <span className="hover:text-white transition-colors">{text}</span>
-            <span className="text-zinc-700 ml-4">/</span>
+            <span className="text-zinc-700 ml-4">•</span>
           </div>
         ))}
       </div>

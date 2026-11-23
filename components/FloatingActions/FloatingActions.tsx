@@ -26,7 +26,7 @@ export default function FloatingActions() {
     if (el) {
       const topOffset = 80;
       const elementPosition = el.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - topOffset;
+      const offsetPosition = elementPosition + window.scrollY - topOffset;
       window.scrollTo({
         top: offsetPosition,
         behavior: "smooth",
@@ -36,13 +36,13 @@ export default function FloatingActions() {
 
   return (
     <>
-      {/* Scroll to Top FAB (Desktop & Tablet) */}
+      {/* Scroll to Top FAB (Desktop, Tablet & Mobile) */}
       {showScrollTop && (
         <button
           type="button"
           onClick={scrollToTop}
           aria-label="Scroll to top"
-          className="hidden md:flex fixed bottom-6 right-6 z-40 w-10 h-10 rounded-full bg-[#121216]/90 hover:bg-[#1c1c22] border border-white/[0.12] text-white items-center justify-center shadow-2xl backdrop-blur-md transition-all hover:scale-105 cursor-pointer font-mono"
+          className="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-40 w-10 h-10 rounded-full bg-[#121216]/90 hover:bg-[#1c1c22] border border-white/[0.12] text-white flex items-center justify-center shadow-2xl backdrop-blur-md transition-all hover:scale-105 active:scale-95 cursor-pointer font-mono"
         >
           <ArrowUp className="w-4 h-4 text-[#22c55e]" />
         </button>

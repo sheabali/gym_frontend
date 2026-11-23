@@ -19,6 +19,8 @@ type PHInputProps = {
   disabled?: boolean;
   placeholder?: string;
   control: any;
+  className?: string;
+  labelClassName?: string;
 };
 
 const PHInput = ({
@@ -28,6 +30,8 @@ const PHInput = ({
   disabled,
   placeholder,
   control,
+  className,
+  labelClassName,
 }: PHInputProps) => {
   const isPassword = type === "password";
   const [showPassword, setShowPassword] = useState(false);
@@ -44,7 +48,10 @@ const PHInput = ({
       render={({ field }) => (
         <FormItem className="space-y-1.5 sm:space-y-2">
           {label && (
-            <FormLabel htmlFor={name} className="text-sm font-medium text-gray-700">
+            <FormLabel
+              htmlFor={name}
+              className={labelClassName || "text-xs font-mono uppercase tracking-wider text-zinc-300 font-semibold"}
+            >
               {label}
             </FormLabel>
           )}
@@ -57,7 +64,7 @@ const PHInput = ({
                 disabled={disabled}
                 placeholder={placeholder}
                 type={isPassword ? (showPassword ? "text" : "password") : type}
-                className={inputPaddingClass}
+                className={`bg-[#121216] border-white/[0.12] text-white placeholder:text-zinc-600 focus-visible:border-[#22c55e] focus-visible:ring-[#22c55e]/20 transition-all ${inputPaddingClass} ${className || ""}`}
               />
 
               {/* Password Toggle */}
@@ -66,7 +73,7 @@ const PHInput = ({
                   type="button"
                   tabIndex={-1}
                   onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none transition-colors cursor-pointer"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white focus:outline-none transition-colors cursor-pointer"
                 >
                   {showPassword ? (
                     <EyeOff className="h-5 w-5" />
@@ -78,7 +85,7 @@ const PHInput = ({
             </div>
           </FormControl>
 
-          <FormMessage className="text-xs sm:text-sm" />
+          <FormMessage className="text-xs text-red-400 font-mono" />
         </FormItem>
       )}
     />

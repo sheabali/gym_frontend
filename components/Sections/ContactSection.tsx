@@ -8,6 +8,8 @@ import { toast } from "sonner";
 import { useLanguage } from "@/context/LanguageContext";
 import { BUSINESS_INFO } from "@/data/gymData";
 import { useSubmitContactMutation } from "@/redux/api/contactApi";
+import { motion } from "framer-motion";
+import MagneticButton from "@/components/Motion/MagneticButton";
 import {
   MapPin,
   Phone,
@@ -16,8 +18,8 @@ import {
   CheckCircle2,
   ExternalLink,
   ShieldCheck,
-  Copy,
-  Check,
+  Clock,
+  Star,
 } from "lucide-react";
 
 const formSchema = z.object({
@@ -36,7 +38,6 @@ export default function ContactSection() {
   const { language, t } = useLanguage();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [copiedPlusCode, setCopiedPlusCode] = useState(false);
 
   const {
     register,
@@ -70,53 +71,32 @@ export default function ContactSection() {
     return () => window.removeEventListener("select-gym-plan", handleSelectGymPlan);
   }, [setValue]);
 
-  const handleCopyPlusCode = () => {
-    navigator.clipboard.writeText(BUSINESS_INFO.plusCode);
-    setCopiedPlusCode(true);
-    toast.success(
-      language === "bn"
-        ? "প্লাস কোড QC6J+VP কপি করা হয়েছে!"
-        : "Google Plus Code QC6J+VP copied to clipboard!"
-    );
-    setTimeout(() => setCopiedPlusCode(false), 3000);
-  };
-
   const [submitContact] = useSubmitContactMutation();
 
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     try {
-      const messageContent = `Plan: ${data.plan} | Preferred Slot: ${data.slot}${
-        data.message ? ` | Note: ${data.message}` : ""
-      }`;
-
-      try {
-        await submitContact({
-          name: data.name,
-          phone: data.phone,
-          message: messageContent,
-        }).unwrap();
-      } catch {
-        // Fallback to local API route
-        await fetch("/api/contact", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        });
-      }
+      await submitContact({
+        name: data.name,
+        phone: data.phone,
+        preferredPlan: data.plan,
+        preferredSlot: data.slot,
+        message: data.message || "Website Direct Booking Form Inquiry",
+      }).unwrap();
 
       setIsSubmitted(true);
+      reset();
       toast.success(
         language === "bn"
-          ? "আপনার বার্তা সফলভাবে গৃহীত হয়েছে! ফ্রন্ট ডেস্ক থেকে দ্রুত কল করা হবে।"
-          : "Enrollment transmission received. Reception desk will verify your session shortly."
+          ? "আপনার অনুরোধ সফলভাবে পাঠানো হয়েছে! আমরা শীঘ্রই যোগাযোগ করব।"
+          : "Your visit request has been received! Our front desk will contact you."
       );
-      reset();
-    } catch (err) {
+    } catch (err: any) {
       toast.error(
-        language === "bn"
-          ? "সাময়িক ত্রুটি। অনুগ্রহ করে সরাসরি ফোন করুন: 01733-521052"
-          : "Network error. Please call us directly at 01733-521052"
+        err?.data?.message ||
+          (language === "bn"
+            ? "দুঃখিত, অনুরোধ পাঠাতে ব্যর্থ হয়েছে। অনুগ্রহ করে ফোন করুন।"
+            : "Failed to submit request. Please call our front desk directly.")
       );
     } finally {
       setIsSubmitting(false);
@@ -124,50 +104,11 @@ export default function ContactSection() {
   };
 
   const planOptions = [
-    {
-      id: "trial",
-      titleEn: "Free Trial",
-      titleBn: "ফ্রি ট্রায়াল",
-      price: "৳0",
-      subEn: "Complimentary Workout",
-      subBn: "১টি ফ্রি সেশন",
-    },
-    {
-      id: "single",
-      titleEn: "Single",
-      titleBn: "সিঙ্গেল মেম্বারশিপ",
-      price: "৳3,300",
-      subEn: "1 Month (Renewal ৳1.5K)",
-      subBn: "১ মাস (রিনিউ ১.৫K)",
-      tag: "SAVE ৳200",
-    },
-    {
-      id: "quarterly",
-      titleEn: "3 Months",
-      titleBn: "৩ মাস প্যাকেজ",
-      price: "৳5,700",
-      subEn: "3 Months Total",
-      subBn: "৩ মাস সর্বমোট",
-      tag: "SAVE ৳800",
-    },
-    {
-      id: "half-yearly",
-      titleEn: "6 Months",
-      titleBn: "৬ মাস প্যাকেজ",
-      price: "৳9,500",
-      subEn: "6 Months Commitment",
-      subBn: "৬ মাস পূর্ণ প্যাকেজ",
-      tag: "POPULAR • SAVE ৳1.5K",
-    },
-    {
-      id: "yearly",
-      titleEn: "1 Year",
-      titleBn: "১ বছর মেম্বারশিপ",
-      price: "৳17,000",
-      subEn: "Full 12 Months",
-      subBn: "পূর্ণ ১ বছর",
-      tag: "BEST VALUE • SAVE ৳3K",
-    },
+    { id: "single", titleEn: "Monthly", titleBn: "১ মাস", price: "৳2,500" },
+    { id: "quarterly", titleEn: "3 Months", titleBn: "৩ মাস", price: "৳6,500" },
+    { id: "half-yearly", titleEn: "6 Months", titleBn: "৬ মাস", price: "৳11,000" },
+    { id: "yearly", titleEn: "12 Months", titleBn: "১ বছর", price: "৳18,000" },
+    { id: "trial", titleEn: "Free Trial", titleBn: "ফ্রি ট্রায়াল", price: "Free" },
   ];
 
   const slotOptions = [
@@ -178,22 +119,21 @@ export default function ContactSection() {
       time: "07:00 – 11:30 AM",
     },
     {
-      id: "female-shift",
-      titleEn: "Female Private",
-      titleBn: "নারী এক্সক্লুসিভ",
+      id: "female-afternoon",
+      titleEn: "Female Only",
+      titleBn: "নারী শিফট",
       time: "12:00 – 04:30 PM",
-      highlight: true,
     },
     {
       id: "combined-shift",
-      titleEn: "Combined Shift",
-      titleBn: "কম্বাইন্ড শিফট",
+      titleEn: "Combined",
+      titleBn: "কম্বাইন্ড",
       time: "04:30 – 06:30 PM",
     },
     {
       id: "male-evening",
       titleEn: "Male Prime",
-      titleBn: "পুরুষ সন্ধ্যা/নাইট",
+      titleBn: "পুরুষ সন্ধ্যা",
       time: "06:30 – 10:30 PM",
     },
   ];
@@ -204,18 +144,19 @@ export default function ContactSection() {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14 pb-8 border-b border-white/[0.08]">
           <div>
-            <div className="mono-label text-zinc-400 mb-2">
-              [ 10 // PHYSICAL LOCATION & DIRECT ENROLLMENT ]
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-medium text-[#22c55e] mb-3">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
+              <span>Get in Touch</span>
             </div>
             <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white uppercase">
               {language === "bn" ? "লোকেশন ও যোগাযোগ" : "Visit & Connect"}
             </h2>
           </div>
           <div className="max-w-md">
-            <span className="text-xs font-mono text-[#22c55e] uppercase tracking-wider font-bold block mb-1">
-              HOUSE-16, ROAD-03, BLOCK-D, BANASREE, DHAKA 1219
+            <span className="text-xs text-[#22c55e] font-semibold block mb-1">
+              House-16, Road-03, Block-D, Banasree, Dhaka 1219
             </span>
-            <p className="text-xs sm:text-sm text-zinc-400 font-normal leading-relaxed">
+            <p className="text-sm text-zinc-400 font-normal leading-relaxed">
               {language === "bn"
                 ? "সরাসরি চলে আসুন বনশ্রী ব্লক-ডি প্রধান জিম ভিজিট করতে, অথবা নিচের ফর্মটি পূরণ করে ফ্রি ট্রায়াল নিশ্চিত করুন।"
                 : "Drop by our Banasree Block-D flagship campus, or schedule your complimentary walkthrough and trial below."}
@@ -223,32 +164,35 @@ export default function ContactSection() {
           </div>
         </div>
 
-        {/* 2-Column Balanced & Airy Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-          {/* Left Column (5 Cols): Clean Physical Campus & Location */}
+        {/* 2-Column Balanced Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+          {/* Left Column (5 Cols): Campus Details & Location Map */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="border border-white/[0.08] bg-[#0e0e12] p-6 sm:p-8 space-y-6">
+            <div className="border border-white/[0.08] bg-[#0e0e12] p-6 sm:p-7 rounded-2xl space-y-5 shadow-xl">
               <div>
-                <span className="text-[10px] font-mono text-[#22c55e] uppercase tracking-wider font-bold block mb-1.5">
-                  MAIN CAMPUS • BANASREE BLOCK-D
+                <span className="text-xs text-[#22c55e] font-semibold block mb-1">
+                  Main Campus • Banasree Block-D
                 </span>
-                <h3 className="text-xl sm:text-2xl font-black text-white uppercase tracking-tight">
+                <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
                   House-16, Road-03, Block-D
                 </h3>
-                <p className="text-xs text-zinc-400 mt-1.5 font-mono leading-relaxed">
+                <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
                   Banasree, Rampura Thana, Dhaka 1219. Near Banasree Central Mosque.
                 </p>
               </div>
 
               {/* Hours & Rating */}
-              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/[0.06] text-xs font-mono">
+              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/[0.06] text-xs">
                 <div>
-                  <span className="text-[10px] text-zinc-500 uppercase block mb-0.5">HOURS</span>
-                  <span className="font-bold text-white">Daily 07:00 AM – 10:30 PM</span>
+                  <span className="text-[11px] text-zinc-500 font-medium block mb-0.5">Operating Hours</span>
+                  <span className="font-semibold text-white">Daily 07:00 AM – 10:30 PM</span>
                 </div>
                 <div>
-                  <span className="text-[10px] text-zinc-500 uppercase block mb-0.5">VERIFIED RATING</span>
-                  <span className="font-bold text-[#22c55e]">★ 4.4 (173 Reviews)</span>
+                  <span className="text-[11px] text-zinc-500 font-medium block mb-0.5">Verified Rating</span>
+                  <span className="font-bold text-[#22c55e] flex items-center gap-1">
+                    <Star className="w-3.5 h-3.5 fill-[#22c55e]" />
+                    <span>4.4 (173 Reviews)</span>
+                  </span>
                 </div>
               </div>
 
@@ -256,7 +200,7 @@ export default function ContactSection() {
               <div className="grid grid-cols-2 gap-3 pt-2">
                 <a
                   href={`tel:${BUSINESS_INFO.phone}`}
-                  className="py-3 px-3 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.12] text-white font-mono text-xs flex items-center justify-center gap-2 transition-colors font-bold rounded-xs"
+                  className="py-2.5 px-3 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.1] text-white text-xs flex items-center justify-center gap-2 transition-colors font-semibold rounded-xl"
                 >
                   <Phone className="w-3.5 h-3.5 text-[#22c55e]" />
                   <span>{BUSINESS_INFO.phone}</span>
@@ -266,23 +210,23 @@ export default function ContactSection() {
                   href={`https://wa.me/8801733521052?text=Hello%20Platinum%20Gym%2C%20I%20want%20to%20visit%20the%20gym%20in%20Banasree%20Block-D`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="py-3 px-3 bg-[#22c55e]/10 hover:bg-[#22c55e]/20 border border-[#22c55e]/30 text-[#22c55e] font-mono text-xs flex items-center justify-center gap-2 transition-colors font-bold rounded-xs"
+                  className="py-2.5 px-3 bg-[#22c55e]/10 hover:bg-[#22c55e]/20 border border-[#22c55e]/30 text-[#22c55e] text-xs flex items-center justify-center gap-2 transition-colors font-semibold rounded-xl"
                 >
                   <MessageSquare className="w-3.5 h-3.5" />
-                  <span>WHATSAPP DESK</span>
+                  <span>WhatsApp</span>
                 </a>
               </div>
             </div>
 
             {/* Google Map Box */}
-            <div className="border border-white/[0.08] bg-[#0e0e12] overflow-hidden">
-              <div className="h-64 sm:h-72 w-full relative">
+            <div className="border border-white/[0.08] bg-[#0e0e12] overflow-hidden rounded-2xl shadow-xl">
+              <div className="h-60 sm:h-64 w-full relative">
                 <iframe
                   title="Platinum Gym Banasree Dhaka Map"
                   src={BUSINESS_INFO.googleMapsEmbedUrl}
                   width="100%"
                   height="100%"
-                  style={{ border: 0 }}
+                  style={{ border: 0, filter: "invert(90%) hue-rotate(180deg) contrast(120%)" }}
                   allowFullScreen={false}
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
@@ -290,75 +234,75 @@ export default function ContactSection() {
                 />
               </div>
 
-              <div className="p-3.5 bg-[#121216] flex items-center justify-between text-xs font-mono border-t border-white/[0.08]">
-                <span className="flex items-center gap-1.5 text-zinc-400">
+              <div className="p-3.5 bg-[#121216] flex items-center justify-between text-xs border-t border-white/[0.08]">
+                <span className="flex items-center gap-2 text-zinc-300">
                   <span className="w-2 h-2 rounded-full bg-[#22c55e]" />
-                  <span>QC6J+VP BANASREE</span>
+                  <span>QC6J+VP Banasree</span>
                 </span>
                 <a
                   href={BUSINESS_INFO.googleMapsDirectionsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#22c55e] hover:text-[#16a34a] font-bold flex items-center gap-1 transition-colors"
+                  className="text-[#22c55e] hover:text-[#16a34a] font-semibold flex items-center gap-1 transition-colors"
                 >
-                  <span>GET DIRECTIONS</span>
+                  <span>Get Directions</span>
                   <ExternalLink className="w-3.5 h-3.5" />
                 </a>
               </div>
             </div>
           </div>
 
-          {/* Right Column (7 Cols): Streamlined, Clean Booking Form */}
-          <div className="lg:col-span-7 border border-white/[0.08] bg-[#0e0e12] p-6 sm:p-8">
+          {/* Right Column (7 Cols): Modern Booking Form */}
+          <div className="lg:col-span-7 border border-white/[0.08] bg-[#0e0e12] p-6 sm:p-8 rounded-2xl shadow-xl">
             <div className="pb-5 mb-6 border-b border-white/[0.08]">
-              <span className="text-[10px] font-mono text-[#22c55e] uppercase tracking-wider font-bold block mb-1">
-                ONLINE REGISTRATION & INQUIRY
+              <span className="text-xs text-[#22c55e] font-semibold block mb-1">
+                Online Registration & Inquiry
               </span>
-              <h3 className="text-xl sm:text-2xl font-black text-white uppercase tracking-tight">
+              <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
                 {language === "bn" ? "অ্যাডমিশন ও ফ্রি ট্রায়াল ফর্ম" : "Book a Visit or Membership"}
               </h3>
             </div>
 
             {isSubmitted ? (
-              <div className="py-12 px-6 border border-[#22c55e]/30 bg-[#22c55e]/5 text-center flex flex-col items-center">
-                <div className="w-12 h-12 bg-[#22c55e] text-black flex items-center justify-center mb-4 rounded-xs">
+              <div className="py-12 px-6 border border-[#22c55e]/30 bg-[#22c55e]/5 text-center flex flex-col items-center rounded-xl">
+                <div className="w-12 h-12 bg-[#22c55e] text-black flex items-center justify-center mb-4 rounded-full">
                   <CheckCircle2 className="w-6 h-6 !text-black stroke-[2.5]" />
                 </div>
-                <h4 className="text-xl sm:text-2xl font-black text-white mb-2 uppercase tracking-tight">
-                  {language === "bn" ? "অনুরোধ নিশ্চিত করা হয়েছে!" : "Booking Confirmed."}
+                <h4 className="text-xl sm:text-2xl font-bold text-white mb-2">
+                  {language === "bn" ? "অনুরোধ নিশ্চিত করা হয়েছে!" : "Booking Request Received!"}
                 </h4>
-                <p className="text-xs sm:text-sm text-zinc-400 max-w-md mb-8 leading-relaxed font-mono">
+                <p className="text-sm text-zinc-400 max-w-md mb-8 leading-relaxed">
                   {language === "bn"
                     ? "প্লাটিনাম জিম বনশ্রী ব্লক-ডি নির্বাচন করার জন্য ধন্যবাদ। আমাদের ফ্রন্ট ডেস্ক ম্যানেজার আপনার নম্বরে দ্রুত কল করে সেশন নিশ্চিত করবেন।"
-                    : "Thank you for selecting Platinum Gym. Our Banasree front desk manager will contact you shortly to confirm your entry."}
+                    : "Thank you for choosing Platinum Gym. Our Banasree front desk team will contact you shortly to confirm your entry."}
                 </p>
                 <div className="flex flex-wrap items-center justify-center gap-3">
                   <a
                     href="https://wa.me/8801733521052?text=Hello%20Platinum%20Gym%2C%20I%20just%20submitted%20my%20enrollment%20request"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-5 py-2.5 bg-[#22c55e] hover:bg-[#16a34a] !text-black font-mono text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2 rounded-xs shadow-md shadow-[#22c55e]/20"
+                    className="px-5 py-2.5 bg-[#22c55e] hover:bg-[#16a34a] !text-black text-xs font-bold transition-all flex items-center gap-2 rounded-xl shadow-md shadow-[#22c55e]/20"
                   >
                     <MessageSquare className="w-3.5 h-3.5 !text-black stroke-[2.5]" />
-                    <span className="!text-black font-black">NOTIFY VIA WHATSAPP</span>
+                    <span className="!text-black">Notify via WhatsApp</span>
                   </a>
                   <button
                     type="button"
                     onClick={() => setIsSubmitted(false)}
-                    className="px-5 py-2.5 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.12] text-xs font-mono uppercase tracking-wider text-white transition-colors cursor-pointer rounded-xs"
+                    className="px-5 py-2.5 bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.1] text-xs font-medium text-white transition-colors cursor-pointer rounded-xl"
                   >
-                    {language === "bn" ? "আরেকটি ফর্ম পূরণ করুন" : "SUBMIT ANOTHER RECORD"}
+                    {language === "bn" ? "আরেকটি ফর্ম পূরণ করুন" : "Submit Another Request"}
                   </button>
                 </div>
               </div>
             ) : (
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                {/* 1. Clean Package Selector */}
+                {/* 1. Package Selector */}
                 <div>
-                  <label className="text-xs font-mono uppercase tracking-wider text-zinc-300 font-semibold mb-2.5 block">
-                    01. SELECT PLAN / GOAL
+                  <label className="text-xs uppercase tracking-wider text-zinc-300 font-semibold mb-2.5 block">
+                    1. Select Membership Plan
                   </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-2">
                     {planOptions.map((opt) => {
                       const isSelected = selectedPlan === opt.id;
                       return (
@@ -366,7 +310,7 @@ export default function ContactSection() {
                           key={opt.id}
                           type="button"
                           onClick={() => setValue("plan", opt.id)}
-                          className={`py-2.5 px-3 border text-center transition-all cursor-pointer rounded-xs ${
+                          className={`py-2.5 px-3 border text-center transition-all cursor-pointer rounded-xl ${
                             isSelected
                               ? "bg-[#22c55e] !text-black font-bold border-[#22c55e] shadow-md shadow-[#22c55e]/20"
                               : "bg-[#121216] border-white/[0.08] text-zinc-300 hover:border-white/20 hover:text-white"
@@ -375,7 +319,7 @@ export default function ContactSection() {
                           <span className={`text-xs block font-bold ${isSelected ? "!text-black" : "text-white"}`}>
                             {language === "bn" ? opt.titleBn : opt.titleEn}
                           </span>
-                          <span className={`text-[10px] font-mono block mt-0.5 ${isSelected ? "!text-black/80 font-bold" : "text-[#22c55e]"}`}>
+                          <span className={`text-[11px] block mt-0.5 ${isSelected ? "!text-black/80 font-bold" : "text-[#22c55e]"}`}>
                             {opt.price}
                           </span>
                         </button>
@@ -384,10 +328,10 @@ export default function ContactSection() {
                   </div>
                 </div>
 
-                {/* 2. Clean Shift Selector */}
+                {/* 2. Shift Selector */}
                 <div>
-                  <label className="text-xs font-mono uppercase tracking-wider text-zinc-300 font-semibold mb-2.5 block">
-                    02. PREFERRED SHIFT
+                  <label className="text-xs uppercase tracking-wider text-zinc-300 font-semibold mb-2.5 block">
+                    2. Preferred Shift Slot
                   </label>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                     {slotOptions.map((slot) => {
@@ -397,7 +341,7 @@ export default function ContactSection() {
                           key={slot.id}
                           type="button"
                           onClick={() => setValue("slot", slot.id)}
-                          className={`py-2 px-2.5 border text-center transition-all cursor-pointer rounded-xs ${
+                          className={`py-2 px-2.5 border text-center transition-all cursor-pointer rounded-xl ${
                             isSelected
                               ? "bg-[#22c55e] !text-black font-bold border-[#22c55e] shadow-md shadow-[#22c55e]/20"
                               : "bg-[#121216] border-white/[0.08] text-zinc-300 hover:border-white/20 hover:text-white"
@@ -406,7 +350,7 @@ export default function ContactSection() {
                           <span className={`text-xs block font-bold ${isSelected ? "!text-black" : "text-white"}`}>
                             {language === "bn" ? slot.titleBn : slot.titleEn}
                           </span>
-                          <span className={`text-[10px] font-mono block mt-0.5 ${isSelected ? "!text-black/80" : "text-zinc-400"}`}>
+                          <span className={`text-[10px] block mt-0.5 ${isSelected ? "!text-black/80 font-medium" : "text-zinc-400"}`}>
                             {slot.time}
                           </span>
                         </button>
@@ -418,70 +362,83 @@ export default function ContactSection() {
                 {/* 3. Name & Phone */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-mono uppercase tracking-wider text-zinc-400 mb-1.5 font-medium">
+                    <label className="block text-xs font-medium text-zinc-300 mb-1.5">
                       {t.contact.nameLabel} <span className="text-[#22c55e]">*</span>
                     </label>
                     <input
                       type="text"
                       {...register("name")}
                       placeholder={t.contact.namePlaceholder}
-                      className={`w-full px-4 py-3 bg-[#121216] border text-sm text-white placeholder-zinc-600 focus:outline-none transition-all font-mono rounded-xs ${
+                      className={`w-full px-4 py-3 bg-[#121216] border text-sm text-white placeholder-zinc-500 focus:outline-none transition-all rounded-xl ${
                         errors.name
                           ? "border-red-500 focus:border-red-500"
                           : "border-white/[0.08] focus:border-[#22c55e]"
                       }`}
                     />
                     {errors.name && (
-                      <p className="text-xs text-red-400 mt-1 font-mono">
+                      <p className="text-xs text-red-400 mt-1">
                         {errors.name.message}
                       </p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-xs font-mono uppercase tracking-wider text-zinc-400 mb-1.5 font-medium">
+                    <label className="block text-xs font-medium text-zinc-300 mb-1.5">
                       {t.contact.phoneLabel} <span className="text-[#22c55e]">*</span>
                     </label>
                     <input
                       type="tel"
                       {...register("phone")}
                       placeholder={t.contact.phonePlaceholder}
-                      className={`w-full px-4 py-3 bg-[#121216] border text-sm text-white placeholder-zinc-600 focus:outline-none transition-all font-mono rounded-xs ${
+                      className={`w-full px-4 py-3 bg-[#121216] border text-sm text-white placeholder-zinc-500 focus:outline-none transition-all rounded-xl ${
                         errors.phone
                           ? "border-red-500 focus:border-red-500"
                           : "border-white/[0.08] focus:border-[#22c55e]"
                       }`}
                     />
                     {errors.phone && (
-                      <p className="text-xs text-red-400 mt-1 font-mono">
+                      <p className="text-xs text-red-400 mt-1">
                         {errors.phone.message}
                       </p>
                     )}
                   </div>
                 </div>
 
+                {/* Optional Message Field */}
+                <div>
+                  <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+                    {language === "bn" ? "অতিরিক্ত বার্তা বা লক্ষ্য (ঐচ্ছিক)" : "Additional Notes or Goal (Optional)"}
+                  </label>
+                  <textarea
+                    {...register("message")}
+                    rows={2}
+                    placeholder={language === "bn" ? "আপনার কোনো বিশেষ লক্ষ্য বা জিজ্ঞাসা থাকলে লিখুন..." : "Any fitness goals, weight targets, or questions..."}
+                    className="w-full px-4 py-2.5 bg-[#121216] border border-white/[0.08] focus:border-[#22c55e] text-sm text-white placeholder-zinc-500 focus:outline-none transition-all rounded-xl resize-none"
+                  />
+                </div>
+
                 {/* 4. Action Button */}
                 <div className="pt-2">
-                  <button
+                  <MagneticButton
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full py-4 rounded-xs text-xs sm:text-sm font-mono uppercase tracking-wider font-black !text-black bg-[#22c55e] hover:bg-[#16a34a] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed shadow-xl shadow-[#22c55e]/25"
+                    className="w-full py-3.5 rounded-xl text-sm font-bold !text-black bg-[#22c55e] hover:bg-[#16a34a] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-[#22c55e]/25"
                   >
                     {isSubmitting ? (
-                      <span className="!text-black font-black">{t.contact.submitting}</span>
+                      <span className="!text-black">{t.contact.submitting}</span>
                     ) : (
                       <>
-                        <span className="!text-black font-black">
-                          {language === "bn" ? "বুকিং নিশ্চিত করুন" : "CONFIRM ADMISSION / TRIAL"}
+                        <span className="!text-black">
+                          {language === "bn" ? "বুকিং নিশ্চিত করুন" : "Confirm Admission or Trial"}
                         </span>
                         <ArrowRight className="w-4 h-4 !text-black stroke-[2.5]" />
                       </>
                     )}
-                  </button>
+                  </MagneticButton>
 
-                  <div className="flex items-center justify-center gap-2 pt-3 text-[11px] font-mono text-zinc-400">
-                    <ShieldCheck className="w-3.5 h-3.5 text-[#22c55e]" />
-                    <span>NO ADVANCE PAYMENT • IMMEDIATE CONFIRMATION BY PHONE</span>
+                  <div className="flex items-center justify-center gap-2 pt-3 text-xs text-zinc-400">
+                    <ShieldCheck className="w-4 h-4 text-[#22c55e]" />
+                    <span>No advance payment needed • Confirmation call by front desk</span>
                   </div>
                 </div>
               </form>

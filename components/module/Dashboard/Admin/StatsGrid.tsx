@@ -24,22 +24,22 @@ export default function StatsGrid() {
       id: "active-members",
       title: "Active Subscribed Members",
       value: isLoading ? "..." : activeMembers.toLocaleString("en-US"),
-      change: "+100%",
+      change: "Active roster",
       isPositive: true,
-      period: "current active roster",
+      period: "verified members",
       icon: Users,
-      accentColor: "bg-emerald-50 text-emerald-600 border-emerald-200",
+      accentColor: "bg-[#22c55e]/10 text-[#22c55e] border-[#22c55e]/30",
       progressPercent: Math.min(100, Math.max(20, activeMembers * 10)),
     },
     {
       id: "monthly-revenue",
       title: "30-Day Revenue (BDT)",
       value: isLoading ? "..." : `৳${monthlyRevenueBdt.toLocaleString("en-US")}`,
-      change: "+15.2%",
+      change: "Live collections",
       isPositive: true,
-      period: "verified collections",
+      period: "verified gateway & cash",
       icon: CreditCard,
-      accentColor: "bg-blue-50 text-blue-600 border-blue-200",
+      accentColor: "bg-blue-500/10 text-blue-400 border-blue-500/30",
       progressPercent: 85,
     },
     {
@@ -50,7 +50,7 @@ export default function StatsGrid() {
       isPositive: true,
       period: "scheduled today",
       icon: Activity,
-      accentColor: "bg-purple-50 text-purple-600 border-purple-200",
+      accentColor: "bg-purple-500/10 text-purple-400 border-purple-500/30",
       progressPercent: 75,
     },
     {
@@ -61,7 +61,7 @@ export default function StatsGrid() {
       isPositive: pendingPayments === 0,
       period: "cash / gateway pending",
       icon: Clock,
-      accentColor: "bg-amber-50 text-amber-600 border-amber-200",
+      accentColor: "bg-amber-500/10 text-amber-400 border-amber-500/30",
       progressPercent: Math.min(100, pendingPayments * 20),
     },
   ];
@@ -77,43 +77,45 @@ export default function StatsGrid() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: idx * 0.08 }}
-            className="bg-white p-5 rounded-xs border border-gray-200/80 shadow-xs hover:shadow-sm hover:border-gray-300 transition-all flex flex-col justify-between"
+            className="bg-[#0e0e12] p-5 rounded-xs border border-white/[0.08] shadow-lg hover:border-white/20 transition-all flex flex-col justify-between"
           >
             <div>
               <div className="flex items-center justify-between">
-                <span className="text-xs sm:text-sm font-medium text-gray-500">
+                <span className="text-xs font-mono uppercase tracking-wider text-zinc-400 font-medium">
                   {stat.title}
                 </span>
                 <div
                   className={`p-2 rounded-xs border ${stat.accentColor}`}
                 >
-                  <IconComponent size={18} />
+                  <IconComponent size={16} />
                 </div>
               </div>
 
               <div className="mt-3 flex items-baseline justify-between">
-                <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
+                <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight font-mono">
                   {stat.value}
                 </h3>
               </div>
             </div>
 
-            <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-xs">
-              <div className="flex items-center gap-1">
+            <div className="mt-4 pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs font-mono">
+              <div className="flex items-center gap-1.5">
                 <span
-                  className={`inline-flex items-center font-semibold ${stat.isPositive ? "text-emerald-600" : "text-amber-600"
-                    }`}
+                  className={`inline-flex items-center font-bold text-[11px] ${
+                    stat.isPositive ? "text-[#22c55e]" : "text-amber-400"
+                  }`}
                 >
-                  <ArrowUpRight size={14} className="mr-0.5" />
+                  <ArrowUpRight size={13} className="mr-0.5" />
                   {stat.change}
                 </span>
-                <span className="text-gray-400">{stat.period}</span>
+                <span className="text-zinc-500 text-[10px]">• {stat.period}</span>
               </div>
 
-              <div className="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+              <div className="w-16 h-1 bg-white/[0.08] rounded-full overflow-hidden">
                 <div
-                  className={`h-full rounded-full ${stat.isPositive ? "bg-[#22c55e]" : "bg-amber-400"
-                    }`}
+                  className={`h-full rounded-full ${
+                    stat.isPositive ? "bg-[#22c55e]" : "bg-amber-400"
+                  }`}
                   style={{ width: `${stat.progressPercent}%` }}
                 />
               </div>
