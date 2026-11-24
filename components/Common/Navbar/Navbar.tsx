@@ -3,6 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import ThemeToggle from "@/components/Theme/ThemeToggle";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -95,14 +96,16 @@ export default function Navbar() {
                 </button>
               ))}
             </div>
-            <div className="hidden lg:block">
+            <div className="hidden lg:flex items-center gap-3">
+              <ThemeToggle />
               <Button variant="default" className="gap-2 py-6">
                 Become a Member
               </Button>
             </div>
           </div>
 
-          <div className="lg:hidden">
+          <div className="lg:hidden flex items-center gap-2">
+            <ThemeToggle />
             <button
               onClick={() => setSidebarOpen(true)}
               className="p-2.5 hover:bg-gray-100 rounded-sm transition-all duration-200 active:scale-95"

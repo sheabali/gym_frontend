@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 import { BUSINESS_INFO } from "@/data/gymData";
 import { Menu, X, ArrowUpRight } from "lucide-react";
+import ThemeToggle from "@/components/Theme/ThemeToggle";
 
 export default function Navbar() {
   const { language, toggleLanguage, t } = useLanguage();
@@ -135,8 +136,11 @@ export default function Navbar() {
               })}
             </nav>
 
-            {/* Language Switch + Primary Action */}
-            <div className="hidden sm:flex items-center gap-4">
+            {/* Language Switch + Theme Toggle + Primary Action */}
+            <div className="hidden sm:flex items-center gap-3">
+              {/* Theme Toggle Button */}
+              <ThemeToggle />
+
               {/* Refined Language Toggle */}
               <button
                 type="button"
@@ -158,12 +162,14 @@ export default function Navbar() {
               </a>
             </div>
 
-            {/* Mobile Menu Button */}
-            <div className="flex items-center gap-3 lg:hidden">
+            {/* Mobile Controls */}
+            <div className="flex items-center gap-2 lg:hidden">
+              <ThemeToggle />
+
               <button
                 type="button"
                 onClick={toggleLanguage}
-                className="px-2 py-1 text-[11px] mono-label border border-white/10 text-zinc-300 sm:hidden"
+                className="px-2 py-1 text-[11px] mono-label border border-white/10 text-zinc-300 rounded-sm sm:hidden"
               >
                 {language === "en" ? "বাং" : "EN"}
               </button>

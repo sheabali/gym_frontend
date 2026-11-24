@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Bell, ChevronRight, Home, Search } from "lucide-react";
 import Link from "next/link";
+import ThemeToggle from "@/components/Theme/ThemeToggle";
 
 import { useAppSelector } from "@/redux/hooks";
 import { useDecodedToken } from "@/src/hooks/useDecodedToken";
@@ -55,6 +56,9 @@ export default function DashboardLayout({
                 ⌘K
               </kbd>
             </div>
+
+            {/* Theme Toggle */}
+            <ThemeToggle />
 
             {/* Notification Bell */}
             <button
