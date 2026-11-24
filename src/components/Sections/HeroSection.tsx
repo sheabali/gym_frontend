@@ -60,7 +60,7 @@ export default function HeroSection() {
             <div className="text-base sm:text-lg font-semibold text-zinc-200 mb-4">
               {language === "bn"
                 ? "প্লাটিনাম জিম • বনশ্রীর সর্বাধুনিক সেন্ট্রাল এসি ফিটনেস সেন্টার"
-                : "Platinum Gym (প্লাটিনাম জিম) • House-16, Road-03, Block-D, Banasree"}
+                : "Platinum Gym • House-16, Road-03, Block-D, Banasree"}
             </div>
 
             {/* Description */}
@@ -74,7 +74,7 @@ export default function HeroSection() {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 w-full sm:w-auto mb-12">
               <MagneticButton
                 onClick={() => handleScrollTo("contact")}
-                className="px-6 py-3.5 bg-[#22c55e] hover:bg-[#16a34a] !text-black text-sm font-bold rounded-xl shadow-lg shadow-[#22c55e]/25 transition-all"
+                className="px-6 py-3.5 bg-[#22c55e] hover:bg-[#16a34a] !text-black text-sm font-bold rounded-sm shadow-lg shadow-[#22c55e]/25 transition-all"
               >
                 <span className="!text-black font-bold">{t.hero.bookTrial}</span>
                 <ArrowUpRight className="w-4 h-4 !text-black stroke-[2.5]" />

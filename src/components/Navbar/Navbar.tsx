@@ -102,7 +102,7 @@ export default function Navbar() {
                   <span className="font-extrabold text-sm sm:text-base tracking-tight text-white group-hover:text-zinc-200 transition-colors">
                     PLATINUM GYM
                   </span>
-                  <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-xs bg-[#22c55e]/15 text-[#22c55e] border border-[#22c55e]/30 font-bold">
+                  <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-sm bg-[#22c55e]/15 text-[#22c55e] border border-[#22c55e]/30 font-bold">
                     EST. 2015
                   </span>
                 </div>
@@ -142,7 +142,7 @@ export default function Navbar() {
                 type="button"
                 onClick={toggleLanguage}
                 aria-label="Switch Language"
-                className="px-2.5 py-1 text-xs mono-label text-zinc-300 hover:text-white border border-white/[0.1] hover:border-white/20 transition-all rounded-xs cursor-pointer"
+                className="px-2.5 py-1 text-xs mono-label text-zinc-300 hover:text-white border border-white/[0.1] hover:border-white/20 transition-all rounded-sm cursor-pointer"
               >
                 {language === "en" ? "BN / বাং" : "EN / English"}
               </button>
@@ -151,7 +151,7 @@ export default function Navbar() {
               <a
                 href="#contact"
                 onClick={(e) => handleNavClick(e, "#contact")}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xs text-xs uppercase tracking-wider font-black !text-black bg-[#22c55e] hover:bg-[#16a34a] transition-colors cursor-pointer shadow-lg shadow-[#22c55e]/20"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-sm text-xs uppercase tracking-wider font-black !text-black bg-[#22c55e] hover:bg-[#16a34a] transition-colors cursor-pointer shadow-lg shadow-[#22c55e]/20"
               >
                 <span className="!text-black font-black">{t.nav.joinNow}</span>
                 <ArrowUpRight className="w-3.5 h-3.5 !text-black stroke-[2.5]" />

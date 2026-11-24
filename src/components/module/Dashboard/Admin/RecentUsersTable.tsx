@@ -154,7 +154,7 @@ export default function RecentUsersTable() {
                   setStatusFilter(tab);
                   setCurrentPage(1);
                 }}
-                className={`px-2.5 py-1 rounded-xs transition-all cursor-pointer uppercase tracking-wider text-[11px] ${statusFilter === tab
+                className={`px-2.5 py-1 rounded-sm transition-all cursor-pointer uppercase tracking-wider text-[11px] ${statusFilter === tab
                     ? "bg-[#22c55e] !text-black font-black shadow-xs"
                     : "text-zinc-400 hover:text-white"
                   }`}
@@ -251,7 +251,7 @@ export default function RecentUsersTable() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-8 w-8 p-0 rounded-xs text-zinc-400 hover:text-white hover:bg-white/[0.06] cursor-pointer"
+                            className="h-8 w-8 p-0 rounded-sm text-zinc-400 hover:text-white hover:bg-white/[0.06] cursor-pointer"
                           >
                             <MoreHorizontal size={16} />
                           </Button>
@@ -317,7 +317,7 @@ export default function RecentUsersTable() {
             size="sm"
             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
             disabled={pagination.page <= 1}
-            className="h-8 px-2.5 rounded-xs border-white/[0.1] bg-white/[0.02] text-white text-xs font-mono uppercase tracking-wider cursor-pointer hover:bg-white/[0.08] disabled:opacity-40"
+            className="h-8 px-2.5 rounded-sm border-white/[0.1] bg-white/[0.02] text-white text-xs font-mono uppercase tracking-wider cursor-pointer hover:bg-white/[0.08] disabled:opacity-40"
           >
             <ChevronLeft size={14} className="mr-1" />
             Previous
@@ -327,7 +327,7 @@ export default function RecentUsersTable() {
             size="sm"
             onClick={() => setCurrentPage((p) => Math.min(pagination.pages, p + 1))}
             disabled={pagination.page >= pagination.pages}
-            className="h-8 px-2.5 rounded-xs border-white/[0.1] bg-white/[0.02] text-white text-xs font-mono uppercase tracking-wider cursor-pointer hover:bg-white/[0.08] disabled:opacity-40"
+            className="h-8 px-2.5 rounded-sm border-white/[0.1] bg-white/[0.02] text-white text-xs font-mono uppercase tracking-wider cursor-pointer hover:bg-white/[0.08] disabled:opacity-40"
           >
             Next
             <ChevronRight size={14} className="ml-1" />

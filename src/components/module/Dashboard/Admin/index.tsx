@@ -49,7 +49,7 @@ export default function AdminDashboardModule() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-3.5 py-2 text-xs font-mono uppercase tracking-wider font-bold rounded-xs transition-all whitespace-nowrap cursor-pointer ${
+              className={`flex items-center gap-2 px-3.5 py-2 text-xs font-mono uppercase tracking-wider font-bold rounded-sm transition-all whitespace-nowrap cursor-pointer ${
                 isActive
                   ? "bg-[#22c55e] !text-black shadow-md shadow-[#22c55e]/20"
                   : "bg-[#121216] text-zinc-400 hover:text-white hover:bg-white/[0.04] border border-white/[0.08]"

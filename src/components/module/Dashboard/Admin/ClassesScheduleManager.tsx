@@ -191,7 +191,7 @@ export default function ClassesScheduleManager() {
             onClick={() => setTypeModalOpen(true)}
             variant="outline"
             size="sm"
-            className="text-xs font-mono uppercase tracking-wider rounded-xs border-white/[0.12] bg-white/[0.02] text-white hover:bg-white/[0.08] gap-1.5 cursor-pointer"
+            className="text-xs font-mono uppercase tracking-wider rounded-sm border-white/[0.12] bg-white/[0.02] text-white hover:bg-white/[0.08] gap-1.5 cursor-pointer"
           >
             <Dumbbell size={14} />
             <span>New Class Type</span>
@@ -201,7 +201,7 @@ export default function ClassesScheduleManager() {
             onClick={() => setRecurringModalOpen(true)}
             variant="outline"
             size="sm"
-            className="text-xs font-mono uppercase tracking-wider rounded-xs gap-1.5 border-[#22c55e]/30 text-[#22c55e] bg-[#22c55e]/5 hover:bg-[#22c55e]/15 cursor-pointer"
+            className="text-xs font-mono uppercase tracking-wider rounded-sm gap-1.5 border-[#22c55e]/30 text-[#22c55e] bg-[#22c55e]/5 hover:bg-[#22c55e]/15 cursor-pointer"
           >
             <Repeat size={14} />
             <span>Bulk Weekly Generator</span>
@@ -210,7 +210,7 @@ export default function ClassesScheduleManager() {
           <Button
             onClick={() => setSessionModalOpen(true)}
             size="sm"
-            className="text-xs font-mono uppercase tracking-wider font-black gap-1.5 bg-[#22c55e] hover:bg-[#16a34a] !text-black cursor-pointer rounded-xs shadow-md shadow-[#22c55e]/20"
+            className="text-xs font-mono uppercase tracking-wider font-black gap-1.5 bg-[#22c55e] hover:bg-[#16a34a] !text-black cursor-pointer rounded-sm shadow-md shadow-[#22c55e]/20"
           >
             <Plus size={14} className="stroke-[2.5]" />
             <span>Schedule Session</span>

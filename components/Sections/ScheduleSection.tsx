@@ -93,7 +93,7 @@ export default function ScheduleSection() {
                 key={tab.key}
                 type="button"
                 onClick={() => setActiveTab(tab.key as any)}
-                className={`px-4 py-2 text-xs font-semibold rounded-full transition-all cursor-pointer ${
+                className={`px-4 py-2 text-xs font-semibold rounded-sm transition-all cursor-pointer ${
                   isActive
                     ? "bg-[#22c55e] !text-black shadow-md shadow-[#22c55e]/20"
                     : "bg-white/[0.04] text-zinc-300 hover:text-white hover:bg-white/[0.08] border border-white/[0.06]"

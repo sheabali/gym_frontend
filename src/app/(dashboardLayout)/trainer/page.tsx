@@ -198,7 +198,7 @@ export default function TrainerDashboardPage() {
         <div className="flex items-center gap-1.5 bg-[#121216] p-1 rounded-xs border border-white/[0.08] text-xs font-mono">
           <button
             onClick={() => setActiveTab("classes")}
-            className={`px-3 py-1.5 uppercase tracking-wider font-bold rounded-xs transition-all cursor-pointer text-[11px] ${
+            className={`px-3 py-1.5 uppercase tracking-wider font-bold rounded-sm transition-all cursor-pointer text-[11px] ${
               activeTab === "classes"
                 ? "bg-[#22c55e] !text-black shadow-xs"
                 : "text-zinc-400 hover:text-white"
@@ -208,7 +208,7 @@ export default function TrainerDashboardPage() {
           </button>
           <button
             onClick={() => setActiveTab("profile")}
-            className={`px-3 py-1.5 uppercase tracking-wider font-bold rounded-xs transition-all cursor-pointer text-[11px] ${
+            className={`px-3 py-1.5 uppercase tracking-wider font-bold rounded-sm transition-all cursor-pointer text-[11px] ${
               activeTab === "profile"
                 ? "bg-[#22c55e] !text-black shadow-xs"
                 : "text-zinc-400 hover:text-white"
@@ -276,7 +276,7 @@ export default function TrainerDashboardPage() {
                 <button
                   key={filter}
                   onClick={() => setFilterState(filter)}
-                  className={`px-3 py-1 rounded-xs transition-all cursor-pointer font-mono uppercase text-[11px] ${
+                  className={`px-3 py-1 rounded-sm transition-all cursor-pointer font-mono uppercase text-[11px] ${
                     filterState === filter
                       ? "bg-[#22c55e] text-black shadow-xs font-bold"
                       : "text-zinc-400 hover:text-white"
@@ -395,7 +395,7 @@ export default function TrainerDashboardPage() {
 
                     <Button
                       onClick={() => handleOpenRoster(session)}
-                      className="mt-5 w-full gap-2 text-xs font-bold font-mono uppercase tracking-wider bg-[#22c55e] hover:bg-[#16a34a] text-black transition-colors cursor-pointer rounded-xs"
+                      className="mt-5 w-full gap-2 text-xs font-bold font-mono uppercase tracking-wider bg-[#22c55e] hover:bg-[#16a34a] text-black transition-colors cursor-pointer rounded-sm"
                     >
                       <Users className="w-3.5 h-3.5 stroke-[2.5]" />
                       <span>Inspect Roster & Attendance</span>
@@ -462,7 +462,7 @@ export default function TrainerDashboardPage() {
                 <Button
                   type="submit"
                   disabled={isUpdatingProfile}
-                  className="gap-2 text-xs font-bold font-mono uppercase tracking-wider bg-[#22c55e] hover:bg-[#16a34a] text-black cursor-pointer rounded-xs"
+                  className="gap-2 text-xs font-bold font-mono uppercase tracking-wider bg-[#22c55e] hover:bg-[#16a34a] text-black cursor-pointer rounded-sm"
                 >
                   {isUpdatingProfile ? (
                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -619,7 +619,7 @@ export default function TrainerDashboardPage() {
                                 size="sm"
                                 disabled={isMarking || isAttended}
                                 onClick={() => handleMarkStatus(booking.id, "ATTENDED")}
-                                className={`h-7 px-2.5 text-[11px] font-semibold gap-1 rounded-xs cursor-pointer font-mono uppercase ${
+                                className={`h-7 px-2.5 text-[11px] font-semibold gap-1 rounded-sm cursor-pointer font-mono uppercase ${
                                   isAttended
                                     ? "bg-[#22c55e]/20 text-[#22c55e] border border-[#22c55e]/30 hover:bg-[#22c55e]/20"
                                     : "bg-[#22c55e] hover:bg-[#16a34a] text-black font-bold"
@@ -634,7 +634,7 @@ export default function TrainerDashboardPage() {
                                 variant="outline"
                                 disabled={isMarking || isNoShow}
                                 onClick={() => handleMarkStatus(booking.id, "NO_SHOW")}
-                                className={`h-7 px-2.5 text-[11px] font-semibold gap-1 rounded-xs cursor-pointer font-mono uppercase ${
+                                className={`h-7 px-2.5 text-[11px] font-semibold gap-1 rounded-sm cursor-pointer font-mono uppercase ${
                                   isNoShow
                                     ? "bg-rose-500/20 text-rose-300 border border-rose-500/30 hover:bg-rose-500/20"
                                     : "border-rose-500/30 text-rose-400 hover:bg-rose-500/10 hover:text-rose-300"

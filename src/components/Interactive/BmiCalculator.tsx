@@ -80,7 +80,7 @@ export default function BmiCalculator() {
           <button
             type="button"
             onClick={() => setGender("male")}
-            className={`px-4 py-1 text-xs font-semibold rounded-full transition-all cursor-pointer ${
+            className={`px-4 py-1 text-xs font-semibold rounded-sm transition-all cursor-pointer ${
               gender === "male"
                 ? "bg-[#22c55e] !text-black shadow-sm"
                 : "text-zinc-400 hover:text-white"
@@ -91,7 +91,7 @@ export default function BmiCalculator() {
           <button
             type="button"
             onClick={() => setGender("female")}
-            className={`px-4 py-1 text-xs font-semibold rounded-full transition-all cursor-pointer ${
+            className={`px-4 py-1 text-xs font-semibold rounded-sm transition-all cursor-pointer ${
               gender === "female"
                 ? "bg-[#22c55e] !text-black shadow-sm"
                 : "text-zinc-400 hover:text-white"
@@ -166,7 +166,7 @@ export default function BmiCalculator() {
                   key={idx}
                   type="button"
                   onClick={() => setActivity(lvl.factor)}
-                  className={`py-2 px-2 text-xs rounded-xl border transition-all cursor-pointer text-center ${
+                  className={`py-2 px-2 text-xs rounded-sm border transition-all cursor-pointer text-center ${
                     activity === lvl.factor
                       ? "bg-[#22c55e] !text-black font-bold border-[#22c55e] shadow-sm"
                       : "bg-white/[0.02] text-zinc-400 border-white/[0.08] hover:border-white/20 hover:text-white"
@@ -212,7 +212,7 @@ export default function BmiCalculator() {
           <button
             type="button"
             onClick={handleConsult}
-            className="w-full py-3 bg-[#22c55e] hover:bg-[#16a34a] !text-black text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-[#22c55e]/25 rounded-xl"
+            className="w-full py-3 bg-[#22c55e] hover:bg-[#16a34a] !text-black text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-[#22c55e]/25 rounded-sm"
           >
             <span className="!text-black">Consult Floor Coach for Custom Diet Plan</span>
             <ArrowUpRight className="w-3.5 h-3.5 !text-black stroke-[2.5]" />

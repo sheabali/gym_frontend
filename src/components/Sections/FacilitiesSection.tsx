@@ -165,7 +165,7 @@ export default function FacilitiesSection() {
               <div className="mt-3 pt-3 border-t border-white/[0.08]">
                 <MagneticButton
                   onClick={handleScheduleTour}
-                  className="w-full py-2.5 px-4 bg-white/[0.04] hover:bg-[#22c55e] text-zinc-200 hover:!text-black text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm"
+                  className="w-full py-2.5 px-4 bg-white/[0.04] hover:bg-[#22c55e] text-zinc-200 hover:!text-black text-xs font-bold rounded-sm transition-all flex items-center justify-center gap-2 shadow-sm"
                 >
                   <span>Schedule Facility Tour</span>
                   <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />

@@ -38,7 +38,7 @@ export default function DashboardHeader() {
           <button
             onClick={handleRefresh}
             title="Refresh Data"
-            className="p-1.5 text-zinc-400 hover:text-white hover:bg-white/[0.06] rounded-xs transition-all cursor-pointer"
+            className="p-1.5 text-zinc-400 hover:text-white hover:bg-white/[0.06] rounded-sm transition-all cursor-pointer"
           >
             <RefreshCw
               size={16}
@@ -58,7 +58,7 @@ export default function DashboardHeader() {
             <button
               key={range}
               onClick={() => setSelectedRange(range)}
-              className={`px-2.5 py-1.5 rounded-xs transition-all cursor-pointer uppercase tracking-wider text-[11px] ${
+              className={`px-2.5 py-1.5 rounded-sm transition-all cursor-pointer uppercase tracking-wider text-[11px] ${
                 selectedRange === range
                   ? "bg-[#22c55e] !text-black font-black shadow-xs"
                   : "text-zinc-400 hover:text-white"
@@ -74,7 +74,7 @@ export default function DashboardHeader() {
           onClick={handleExport}
           variant="outline"
           size="sm"
-          className="h-9 gap-1.5 rounded-xs border-white/[0.12] bg-white/[0.02] text-white hover:bg-white/[0.08] text-xs font-mono uppercase tracking-wider cursor-pointer"
+          className="h-9 gap-1.5 rounded-sm border-white/[0.12] bg-white/[0.02] text-white hover:bg-white/[0.08] text-xs font-mono uppercase tracking-wider cursor-pointer"
         >
           <Download size={14} />
           <span>Export CSV</span>
@@ -82,7 +82,7 @@ export default function DashboardHeader() {
 
         <Button
           size="sm"
-          className="h-9 gap-1.5 rounded-xs font-mono uppercase tracking-wider font-black text-xs cursor-pointer bg-[#22c55e] hover:bg-[#16a34a] !text-black shadow-md shadow-[#22c55e]/20"
+          className="h-9 gap-1.5 rounded-sm font-mono uppercase tracking-wider font-black text-xs cursor-pointer bg-[#22c55e] hover:bg-[#16a34a] !text-black shadow-md shadow-[#22c55e]/20"
           onClick={() => toast.info("Add Member modal opening...")}
         >
           <Plus size={14} className="stroke-[2.5]" />

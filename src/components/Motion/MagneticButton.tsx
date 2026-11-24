@@ -26,7 +26,7 @@ export default function MagneticButton({
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.15, ease: "easeOut" }}
-      className={`relative inline-flex items-center justify-center select-none font-medium transition-colors cursor-pointer ${className}`}
+      className={`relative inline-flex items-center justify-center select-none font-medium transition-colors cursor-pointer rounded-sm ${className}`}
       {...(props as any)}
     >
       <span className="inline-flex items-center justify-center gap-2 pointer-events-none w-full">

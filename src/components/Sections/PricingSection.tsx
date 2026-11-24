@@ -266,7 +266,7 @@ export default function PricingSection() {
                     <div className="pt-2 mt-auto">
                       <MagneticButton
                         onClick={() => handleSelectPlan(plan.rawId, plan.nameEn, plan.pricePaisa, plan.durationDays)}
-                        className={`w-full py-3 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-md ${
+                        className={`w-full py-3 text-xs font-bold rounded-sm transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-md ${
                           isPopular
                             ? "bg-[#22c55e] !text-black hover:bg-[#16a34a] shadow-[#22c55e]/25"
                             : "bg-white/[0.04] border border-white/[0.1] text-zinc-200 hover:bg-[#22c55e] hover:!text-black hover:border-[#22c55e]"
@@ -379,7 +379,7 @@ export default function PricingSection() {
                   <button
                     type="button"
                     onClick={() => setPaymentMethod("ONLINE")}
-                    className={`p-3 rounded-xs border text-left flex flex-col gap-1 transition-all cursor-pointer ${paymentMethod === "ONLINE"
+                    className={`p-3 rounded-sm border text-left flex flex-col gap-1 transition-all cursor-pointer ${paymentMethod === "ONLINE"
                       ? "border-[#22c55e] bg-[#22c55e]/10 text-white"
                       : "border-white/[0.1] bg-white/[0.02] text-zinc-400 hover:text-white"
                       }`}
@@ -392,7 +392,7 @@ export default function PricingSection() {
                   <button
                     type="button"
                     onClick={() => setPaymentMethod("CASH")}
-                    className={`p-3 rounded-xs border text-left flex flex-col gap-1 transition-all cursor-pointer ${paymentMethod === "CASH"
+                    className={`p-3 rounded-sm border text-left flex flex-col gap-1 transition-all cursor-pointer ${paymentMethod === "CASH"
                       ? "border-[#22c55e] bg-[#22c55e]/10 text-white"
                       : "border-white/[0.1] bg-white/[0.02] text-zinc-400 hover:text-white"
                       }`}
@@ -407,7 +407,7 @@ export default function PricingSection() {
               <Button
                 onClick={handleConfirmCheckout}
                 disabled={checkingOut}
-                className="w-full bg-[#22c55e] hover:bg-[#16a34a] text-black font-black text-xs font-mono uppercase tracking-wider py-4 rounded-xs cursor-pointer shadow-lg shadow-[#22c55e]/20"
+                className="w-full bg-[#22c55e] hover:bg-[#16a34a] text-black font-black text-xs font-mono uppercase tracking-wider py-4 rounded-sm cursor-pointer shadow-lg shadow-[#22c55e]/20"
               >
                 {checkingOut ? (
                   <>

@@ -73,7 +73,7 @@ export default function GallerySection() {
                 key={tab.key}
                 type="button"
                 onClick={() => setFilter(tab.key as any)}
-                className={`px-3.5 py-1.5 text-xs font-semibold rounded-full transition-all cursor-pointer ${
+                className={`px-3.5 py-1.5 text-xs font-semibold rounded-sm transition-all cursor-pointer ${
                   isActive
                     ? "bg-[#22c55e] !text-black shadow-md shadow-[#22c55e]/20"
                     : "bg-white/[0.04] text-zinc-400 hover:text-white hover:bg-white/[0.08] border border-white/[0.06]"

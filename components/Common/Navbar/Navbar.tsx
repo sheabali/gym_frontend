@@ -84,7 +84,7 @@ export default function Navbar() {
                 <button
                   key={idx}
                   onClick={() => handleNavigation(item.href)}
-                  className={`py-3 px-5 rounded-full transition-all duration-200 active:scale-95 ${
+                  className={`py-3 px-5 rounded-sm transition-all duration-200 active:scale-95 ${
                     isActive(item.href)
                       ? "underline underline-offset-6 decoration-2 text-black"
                       : "hover:bg-gray-100"
@@ -105,7 +105,7 @@ export default function Navbar() {
           <div className="lg:hidden">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="p-2.5 hover:bg-gray-100 rounded-xl transition-all duration-200 active:scale-95"
+              className="p-2.5 hover:bg-gray-100 rounded-sm transition-all duration-200 active:scale-95"
               aria-label="Open mobile menu"
             >
               <Menu size={20} className="text-gray-700" />
@@ -133,7 +133,7 @@ export default function Navbar() {
           />
           <button
             onClick={() => setSidebarOpen(false)}
-            className="p-2 hover:bg-gray-100 rounded-xl transition-all duration-200 active:scale-95"
+            className="p-2 hover:bg-gray-100 rounded-sm transition-all duration-200 active:scale-95"
             aria-label="Close mobile menu"
           >
             <X size={24} className="text-gray-600" />
@@ -146,7 +146,7 @@ export default function Navbar() {
             <button
               key={idx}
               onClick={() => handleNavigation(item.href)}
-              className={`w-full text-left py-4 px-5 rounded-2xl text-lg font-medium transition-all duration-200 active:scale-95 border ${
+              className={`w-full text-left py-4 px-5 rounded-sm text-lg font-medium transition-all duration-200 active:scale-95 border ${
                 isActive(item.href)
                   ? "bg-[#d99b35] text-white border-[#d99b35]"
                   : "hover:bg-gray-100 border-[#FFDFAA]"

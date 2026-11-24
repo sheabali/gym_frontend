@@ -161,7 +161,7 @@ export default function TrainersManager() {
             setAddModalOpen(true);
           }}
           size="sm"
-          className="gap-1.5 text-xs font-semibold bg-[#22c55e] hover:bg-[#16a34a] text-black font-black uppercase font-mono tracking-wider cursor-pointer rounded-xs"
+          className="gap-1.5 text-xs font-semibold bg-[#22c55e] hover:bg-[#16a34a] text-black font-black uppercase font-mono tracking-wider cursor-pointer rounded-sm"
         >
           <Plus size={14} className="stroke-[2.5]" />
           <span>Onboard New Trainer</span>

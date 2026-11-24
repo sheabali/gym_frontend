@@ -74,7 +74,7 @@ export default function HeroSection() {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 w-full sm:w-auto mb-12">
               <MagneticButton
                 onClick={() => handleScrollTo("contact")}
-                className="px-6 py-3.5 bg-[#22c55e] hover:bg-[#16a34a] !text-black text-sm font-bold rounded-xl shadow-lg shadow-[#22c55e]/25 transition-all"
+                className="px-6 py-3.5 bg-[#22c55e] hover:bg-[#16a34a] !text-black text-sm font-bold rounded-sm shadow-lg shadow-[#22c55e]/25 transition-all"
               >
                 <span className="!text-black font-bold">{t.hero.bookTrial}</span>
                 <ArrowUpRight className="w-4 h-4 !text-black stroke-[2.5]" />
@@ -82,7 +82,7 @@ export default function HeroSection() {
 
               <MagneticButton
                 onClick={() => window.open(`tel:${BUSINESS_INFO.phone}`, "_self")}
-                className="px-6 py-3.5 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.12] hover:border-white/30 text-white text-sm font-medium rounded-xl transition-all"
+                className="px-6 py-3.5 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.12] hover:border-white/30 text-white text-sm font-medium rounded-sm transition-all"
               >
                 <Phone className="w-4 h-4 text-[#22c55e]" />
                 <span>Call {BUSINESS_INFO.phone}</span>
@@ -128,6 +128,11 @@ export default function HeroSection() {
             className="lg:col-span-5 relative flex items-center justify-center"
           >
             <div className="w-full relative border border-white/[0.08] bg-[#0e0e12]/80 backdrop-blur-sm p-4 rounded-2xl shadow-2xl">
+              <div className="flex items-center justify-between pb-3 border-b border-white/[0.06] text-xs text-zinc-400">
+                <span className="font-semibold text-white">Olympic Standard Equipment</span>
+                <span className="text-[#22c55e] font-medium">Banasree Dhaka</span>
+              </div>
+
               {/* 3D Canvas Rig */}
               <Hero3DCanvas />
 

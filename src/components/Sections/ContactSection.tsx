@@ -200,7 +200,7 @@ export default function ContactSection() {
               <div className="grid grid-cols-2 gap-3 pt-2">
                 <a
                   href={`tel:${BUSINESS_INFO.phone}`}
-                  className="py-2.5 px-3 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.1] text-white text-xs flex items-center justify-center gap-2 transition-colors font-semibold rounded-xl"
+                  className="py-2.5 px-3 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.1] text-white text-xs flex items-center justify-center gap-2 transition-colors font-semibold rounded-sm"
                 >
                   <Phone className="w-3.5 h-3.5 text-[#22c55e]" />
                   <span>{BUSINESS_INFO.phone}</span>
@@ -210,7 +210,7 @@ export default function ContactSection() {
                   href={`https://wa.me/8801733521052?text=Hello%20Platinum%20Gym%2C%20I%20want%20to%20visit%20the%20gym%20in%20Banasree%20Block-D`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="py-2.5 px-3 bg-[#22c55e]/10 hover:bg-[#22c55e]/20 border border-[#22c55e]/30 text-[#22c55e] text-xs flex items-center justify-center gap-2 transition-colors font-semibold rounded-xl"
+                  className="py-2.5 px-3 bg-[#22c55e]/10 hover:bg-[#22c55e]/20 border border-[#22c55e]/30 text-[#22c55e] text-xs flex items-center justify-center gap-2 transition-colors font-semibold rounded-sm"
                 >
                   <MessageSquare className="w-3.5 h-3.5" />
                   <span>WhatsApp</span>
@@ -264,7 +264,7 @@ export default function ContactSection() {
             </div>
 
             {isSubmitted ? (
-              <div className="py-12 px-6 border border-[#22c55e]/30 bg-[#22c55e]/5 text-center flex flex-col items-center rounded-xl">
+              <div className="py-12 px-6 border border-[#22c55e]/30 bg-[#22c55e]/5 text-center flex flex-col items-center rounded-sm">
                 <div className="w-12 h-12 bg-[#22c55e] text-black flex items-center justify-center mb-4 rounded-full">
                   <CheckCircle2 className="w-6 h-6 !text-black stroke-[2.5]" />
                 </div>
@@ -281,7 +281,7 @@ export default function ContactSection() {
                     href="https://wa.me/8801733521052?text=Hello%20Platinum%20Gym%2C%20I%20just%20submitted%20my%20enrollment%20request"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-5 py-2.5 bg-[#22c55e] hover:bg-[#16a34a] !text-black text-xs font-bold transition-all flex items-center gap-2 rounded-xl shadow-md shadow-[#22c55e]/20"
+                    className="px-5 py-2.5 bg-[#22c55e] hover:bg-[#16a34a] !text-black text-xs font-bold transition-all flex items-center gap-2 rounded-sm shadow-md shadow-[#22c55e]/20"
                   >
                     <MessageSquare className="w-3.5 h-3.5 !text-black stroke-[2.5]" />
                     <span className="!text-black">Notify via WhatsApp</span>
@@ -289,7 +289,7 @@ export default function ContactSection() {
                   <button
                     type="button"
                     onClick={() => setIsSubmitted(false)}
-                    className="px-5 py-2.5 bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.1] text-xs font-medium text-white transition-colors cursor-pointer rounded-xl"
+                    className="px-5 py-2.5 bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.1] text-xs font-medium text-white transition-colors cursor-pointer rounded-sm"
                   >
                     {language === "bn" ? "আরেকটি ফর্ম পূরণ করুন" : "Submit Another Request"}
                   </button>
@@ -310,7 +310,7 @@ export default function ContactSection() {
                           key={opt.id}
                           type="button"
                           onClick={() => setValue("plan", opt.id)}
-                          className={`py-2.5 px-3 border text-center transition-all cursor-pointer rounded-xl ${
+                          className={`py-2.5 px-3 border text-center transition-all cursor-pointer rounded-sm ${
                             isSelected
                               ? "bg-[#22c55e] !text-black font-bold border-[#22c55e] shadow-md shadow-[#22c55e]/20"
                               : "bg-[#121216] border-white/[0.08] text-zinc-300 hover:border-white/20 hover:text-white"
@@ -341,7 +341,7 @@ export default function ContactSection() {
                           key={slot.id}
                           type="button"
                           onClick={() => setValue("slot", slot.id)}
-                          className={`py-2 px-2.5 border text-center transition-all cursor-pointer rounded-xl ${
+                          className={`py-2 px-2.5 border text-center transition-all cursor-pointer rounded-sm ${
                             isSelected
                               ? "bg-[#22c55e] !text-black font-bold border-[#22c55e] shadow-md shadow-[#22c55e]/20"
                               : "bg-[#121216] border-white/[0.08] text-zinc-300 hover:border-white/20 hover:text-white"
@@ -413,7 +413,7 @@ export default function ContactSection() {
                     {...register("message")}
                     rows={2}
                     placeholder={language === "bn" ? "আপনার কোনো বিশেষ লক্ষ্য বা জিজ্ঞাসা থাকলে লিখুন..." : "Any fitness goals, weight targets, or questions..."}
-                    className="w-full px-4 py-2.5 bg-[#121216] border border-white/[0.08] focus:border-[#22c55e] text-sm text-white placeholder-zinc-500 focus:outline-none transition-all rounded-xl resize-none"
+                    className="w-full px-4 py-2.5 bg-[#121216] border border-white/[0.08] focus:border-[#22c55e] text-sm text-white placeholder-zinc-500 focus:outline-none transition-all rounded-sm resize-none"
                   />
                 </div>
 
@@ -422,7 +422,7 @@ export default function ContactSection() {
                   <MagneticButton
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full py-3.5 rounded-xl text-sm font-bold !text-black bg-[#22c55e] hover:bg-[#16a34a] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-[#22c55e]/25"
+                    className="w-full py-3.5 rounded-sm text-sm font-bold !text-black bg-[#22c55e] hover:bg-[#16a34a] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-[#22c55e]/25"
                   >
                     {isSubmitting ? (
                       <span className="!text-black">{t.contact.submitting}</span>

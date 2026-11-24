@@ -34,7 +34,7 @@ export default function FaqSection() {
         { label: language === "bn" ? "পুরুষ সকাল শিফট" : "Male Morning Shift", value: "07:00 AM – 11:30 AM" },
         { label: language === "bn" ? "নারী এক্সক্লুসিভ শিফট" : "Female Exclusive Shift", value: "12:00 PM – 04:30 PM (Private)" },
         { label: language === "bn" ? "যৌথ কম্বাইন্ড শিফট" : "Combined Evening Shift", value: "04:30 PM – 06:30 PM" },
-        { label: language === "bn" ? "পুরুষ প্রাইম শিফট" : "Male Prime Night Shift", value: "06:30 PM – 10:30 PM [Closing]" },
+        { label: language === "bn" ? "পুরুষ প্রাইম শিফট" : "Male Prime Night Shift", value: "06:30 PM – 10:30 PM" },
       ],
     },
     {
@@ -211,7 +211,7 @@ export default function FaqSection() {
               key={tab.key}
               type="button"
               onClick={() => setActiveTab(tab.key as any)}
-              className={`px-4 py-2 text-xs font-semibold rounded-full transition-all cursor-pointer ${
+              className={`px-4 py-2 text-xs font-semibold rounded-sm transition-all cursor-pointer ${
                 activeTab === tab.key
                   ? "bg-[#22c55e] !text-black shadow-md shadow-[#22c55e]/20"
                   : "bg-white/[0.04] text-zinc-300 hover:text-white border border-white/[0.06]"
@@ -324,7 +324,7 @@ export default function FaqSection() {
           <div className="flex flex-wrap items-center gap-3 shrink-0">
             <a
               href={`tel:${BUSINESS_INFO.phone}`}
-              className="px-4 py-2.5 border border-white/[0.12] bg-white/[0.04] hover:bg-white/[0.08] text-white text-xs font-semibold transition-colors flex items-center gap-2 rounded-xl"
+              className="px-4 py-2.5 border border-white/[0.12] bg-white/[0.04] hover:bg-white/[0.08] text-white text-xs font-semibold transition-colors flex items-center gap-2 rounded-sm"
             >
               <Phone className="w-3.5 h-3.5 text-[#22c55e]" />
               <span>Call Front Desk</span>
@@ -332,7 +332,7 @@ export default function FaqSection() {
 
             <a
               href="#contact"
-              className="px-5 py-2.5 bg-[#22c55e] hover:bg-[#16a34a] !text-black font-bold text-xs transition-all flex items-center gap-1.5 shadow-md shadow-[#22c55e]/25 cursor-pointer rounded-xl"
+              className="px-5 py-2.5 bg-[#22c55e] hover:bg-[#16a34a] !text-black font-bold text-xs transition-all flex items-center gap-1.5 shadow-md shadow-[#22c55e]/25 cursor-pointer rounded-sm"
             >
               <span className="!text-black">Book Free Trial</span>
               <ArrowUpRight className="w-3.5 h-3.5 !text-black stroke-[2.5]" />

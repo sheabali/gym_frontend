@@ -133,7 +133,7 @@ export default function UserDashboardPage() {
             <Button
               variant="outline"
               size="sm"
-              className="text-xs font-mono uppercase tracking-wider rounded-xs border-white/[0.12] bg-white/[0.02] text-white hover:bg-white/[0.08] cursor-pointer"
+              className="text-xs font-mono uppercase tracking-wider rounded-sm border-white/[0.12] bg-white/[0.02] text-white hover:bg-white/[0.08] cursor-pointer"
             >
               Browse Plans
             </Button>
@@ -141,7 +141,7 @@ export default function UserDashboardPage() {
           <Button
             size="sm"
             onClick={() => setActiveTab("schedule")}
-            className="text-xs font-mono uppercase tracking-wider font-black rounded-xs bg-[#22c55e] hover:bg-[#16a34a] !text-black shadow-md shadow-[#22c55e]/20 cursor-pointer"
+            className="text-xs font-mono uppercase tracking-wider font-black rounded-sm bg-[#22c55e] hover:bg-[#16a34a] !text-black shadow-md shadow-[#22c55e]/20 cursor-pointer"
           >
             <Plus size={14} className="mr-1 stroke-[2.5]" />
             Book a Class
@@ -325,7 +325,7 @@ export default function UserDashboardPage() {
               size="sm"
               variant="outline"
               onClick={() => setActiveTab("schedule")}
-              className="text-xs font-mono uppercase tracking-wider rounded-xs border-white/[0.12] bg-white/[0.02] text-white hover:bg-white/[0.08] cursor-pointer"
+              className="text-xs font-mono uppercase tracking-wider rounded-sm border-white/[0.12] bg-white/[0.02] text-white hover:bg-white/[0.08] cursor-pointer"
             >
               + Reserve Another Spot
             </Button>
@@ -408,7 +408,7 @@ export default function UserDashboardPage() {
                               variant="ghost"
                               size="sm"
                               onClick={() => setCancellingBookingId(booking.id)}
-                              className="text-xs font-mono uppercase text-red-400 hover:text-red-300 hover:bg-red-500/10 h-7 px-2 cursor-pointer rounded-xs"
+                              className="text-xs font-mono uppercase text-red-400 hover:text-red-300 hover:bg-red-500/10 h-7 px-2 cursor-pointer rounded-sm"
                             >
                               <XCircle size={13} className="mr-1" />
                               Cancel
@@ -442,7 +442,7 @@ export default function UserDashboardPage() {
                 <button
                   key={filter}
                   onClick={() => setScheduleFilter(filter)}
-                  className={`px-2.5 py-1 rounded-xs uppercase tracking-wider transition-all cursor-pointer ${
+                  className={`px-2.5 py-1 rounded-sm uppercase tracking-wider transition-all cursor-pointer ${
                     scheduleFilter === filter
                       ? "bg-[#22c55e] !text-black font-black"
                       : "text-zinc-400 hover:text-white"
@@ -653,7 +653,7 @@ export default function UserDashboardPage() {
                 variant="outline"
                 size="sm"
                 onClick={() => setCancellingBookingId(null)}
-                className="text-xs font-mono uppercase tracking-wider rounded-xs border-white/[0.12] bg-white/[0.02] text-white hover:bg-white/[0.08]"
+                className="text-xs font-mono uppercase tracking-wider rounded-sm border-white/[0.12] bg-white/[0.02] text-white hover:bg-white/[0.08]"
               >
                 Keep Booking
               </Button>
@@ -661,7 +661,7 @@ export default function UserDashboardPage() {
                 size="sm"
                 onClick={handleConfirmCancel}
                 disabled={isCancelling}
-                className="text-xs font-mono uppercase tracking-wider font-bold bg-red-600 hover:bg-red-700 text-white rounded-xs"
+                className="text-xs font-mono uppercase tracking-wider font-bold bg-red-600 hover:bg-red-700 text-white rounded-sm"
               >
                 {isCancelling ? "Cancelling..." : "Confirm Cancellation"}
               </Button>

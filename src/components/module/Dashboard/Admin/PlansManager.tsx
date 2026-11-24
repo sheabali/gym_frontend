@@ -160,7 +160,7 @@ export default function PlansManager() {
         <Button
           onClick={openCreateModal}
           size="sm"
-          className="gap-1.5 text-xs font-mono uppercase tracking-wider font-black bg-[#22c55e] hover:bg-[#16a34a] !text-black rounded-xs shadow-md shadow-[#22c55e]/20 cursor-pointer"
+          className="gap-1.5 text-xs font-mono uppercase tracking-wider font-black bg-[#22c55e] hover:bg-[#16a34a] !text-black rounded-sm shadow-md shadow-[#22c55e]/20 cursor-pointer"
         >
           <Plus size={14} className="stroke-[2.5]" />
           <span>Add New Plan</span>

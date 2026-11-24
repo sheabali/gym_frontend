@@ -107,7 +107,7 @@ const ExampleTable = () => {
               setSelectedItem(row.getValue("name"));
               console.log("Edit item with ID:", row.getValue("id"));
             }}
-            className="bg-green-500 text-white p-2 rounded-md font-semibold mr-2"
+            className="bg-green-500 text-white p-2 rounded-sm font-semibold mr-2"
           >
             Edit
           </button>
@@ -117,7 +117,7 @@ const ExampleTable = () => {
               setSelectedItem(row.getValue("name"));
               setModalOpen(true);
             }}
-            className="bg-red-500 text-white p-2 rounded-md font-semibold"
+            className="bg-red-500 text-white p-2 rounded-sm font-semibold"
           >
             Delete
           </button>

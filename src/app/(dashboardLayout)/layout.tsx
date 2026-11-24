@@ -59,7 +59,7 @@ export default function DashboardLayout({
             {/* Notification Bell */}
             <button
               title="Notifications"
-              className="relative p-2 text-zinc-400 hover:text-white hover:bg-white/[0.05] rounded-xs transition-colors cursor-pointer"
+              className="relative p-2 text-zinc-400 hover:text-white hover:bg-white/[0.05] rounded-sm transition-colors cursor-pointer"
             >
               <Bell size={18} />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#22c55e] ring-2 ring-[#0b0b0d]" />

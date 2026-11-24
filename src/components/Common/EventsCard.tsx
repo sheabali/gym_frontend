@@ -35,7 +35,7 @@ export default function EventCard({ event }: any) {
           </div>
         </div>
 
-        <Button className="rounded-full px-6 py-5 bg-purple-200 text-purple-900 hover:bg-purple-300">
+        <Button className="rounded-sm px-6 py-5 bg-purple-200 text-purple-900 hover:bg-purple-300">
           Event Details
         </Button>
       </CardContent>

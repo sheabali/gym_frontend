@@ -215,7 +215,7 @@ export default function RegistrationForm() {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-4 text-xs sm:text-sm font-mono uppercase tracking-wider font-black !text-black bg-[#22c55e] hover:bg-[#16a34a] transition-all rounded-xs shadow-lg shadow-[#22c55e]/20 cursor-pointer"
+                  className="w-full py-4 text-xs sm:text-sm font-mono uppercase tracking-wider font-black !text-black bg-[#22c55e] hover:bg-[#16a34a] transition-all rounded-sm shadow-lg shadow-[#22c55e]/20 cursor-pointer"
                 >
                   {isLoading ? <Spinner /> : "Complete Registration"}
                 </Button>

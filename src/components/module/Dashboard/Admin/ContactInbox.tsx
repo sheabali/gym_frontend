@@ -77,7 +77,7 @@ export default function ContactInbox() {
                 setStatusFilter(filter);
                 setSelectedMessage(null);
               }}
-              className={`px-3 py-1 rounded-xs transition-all cursor-pointer uppercase tracking-wider text-[11px] ${
+              className={`px-3 py-1 rounded-sm transition-all cursor-pointer uppercase tracking-wider text-[11px] ${
                 statusFilter === filter
                   ? "bg-[#22c55e] !text-black font-black shadow-xs"
                   : "text-zinc-400 hover:text-white"

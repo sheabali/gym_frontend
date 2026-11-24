@@ -263,7 +263,7 @@ export default function ChangePassword() {
             <div className="pt-2">
               <Button
                 type="submit"
-                className="w-full bg-primary hover:bg-primary/90 disabled:bg-gray-400 disabled:cursor-not-allowed rounded-xl font-semibold text-white text-base py-3 transition-colors"
+                className="w-full bg-primary hover:bg-primary/90 disabled:bg-gray-400 disabled:cursor-not-allowed rounded-sm font-semibold text-white text-base py-3 transition-colors"
                 disabled={!isFormValid || isLoading || isSubmitting}
               >
                 {isLoading || isSubmitting

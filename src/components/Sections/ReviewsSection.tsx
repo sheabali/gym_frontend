@@ -42,7 +42,7 @@ export default function ReviewsSection() {
 
             <MagneticButton
               onClick={() => window.open(BUSINESS_INFO.googleMapsDirectionsUrl, "_blank")}
-              className="px-4 py-2.5 bg-[#22c55e] hover:bg-[#16a34a] !text-black font-bold text-xs rounded-xl transition-all flex items-center gap-1.5 shadow-md shadow-[#22c55e]/20"
+              className="px-4 py-2.5 bg-[#22c55e] hover:bg-[#16a34a] !text-black font-bold text-xs rounded-sm transition-all flex items-center gap-1.5 shadow-md shadow-[#22c55e]/20"
             >
               <span className="!text-black">{language === "bn" ? "গুগলে দেখুন" : "View on Google"}</span>
               <ArrowUpRight className="w-3.5 h-3.5 !text-black stroke-[2.5]" />
