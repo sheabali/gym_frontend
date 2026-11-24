@@ -39,7 +39,7 @@ export default function FacilitiesSection() {
   const activeFacility = FACILITIES_DATA.find((f) => f.id === activeHoverId);
 
   return (
-    <section id="facilities" className="py-24 px-4 sm:px-6 lg:px-8 border-b border-white/[0.06] bg-[#0c0c0f] relative overflow-hidden">
+    <section id="facilities" className="py-24 px-4 sm:px-6 lg:px-8 border-b border-white/[0.06] bg-slate-50 dark:bg-[#0c0c0f] relative overflow-hidden">
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 pb-8 border-b border-white/[0.08]">

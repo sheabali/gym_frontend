@@ -27,7 +27,7 @@ export default function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative min-h-[88vh] flex items-center justify-center border-b border-white/[0.06] pt-12 pb-16 px-4 sm:px-6 lg:px-8 bg-[#0b0b0d]"
+      className="relative min-h-[88vh] flex items-center justify-center border-b border-white/[0.06] pt-12 pb-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-[#0b0b0d]"
     >
       <div className="max-w-7xl mx-auto w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">

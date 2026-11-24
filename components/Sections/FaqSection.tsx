@@ -178,7 +178,7 @@ export default function FaqSection() {
       : protocols.filter((p) => p.category === activeTab);
 
   return (
-    <section id="faq" className="py-24 px-4 sm:px-6 lg:px-8 border-b border-white/[0.06] bg-[#0b0b0d]">
+    <section id="faq" className="py-24 px-4 sm:px-6 lg:px-8 border-b border-white/[0.06] bg-white dark:bg-[#0b0b0d]">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 pb-8 border-b border-white/[0.08]">

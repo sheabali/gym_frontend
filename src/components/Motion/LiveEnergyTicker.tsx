@@ -29,7 +29,7 @@ export default function LiveEnergyTicker() {
         ];
 
   return (
-    <div className="w-full bg-[#0a0a0d] border-b border-white/[0.06] py-3 overflow-hidden select-none">
+    <div className="w-full bg-slate-100 dark:bg-[#0a0a0d] border-b border-white/[0.06] py-3 overflow-hidden select-none">
       <div className="flex w-max animate-marquee-slow">
         {[...items, ...items, ...items].map((text, idx) => (
           <div

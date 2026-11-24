@@ -76,7 +76,7 @@ export default function AboutSection() {
   ];
 
   return (
-    <section id="about" className="py-24 px-4 sm:px-6 lg:px-8 border-b border-white/[0.06] bg-[#0b0b0d]">
+    <section id="about" className="py-24 px-4 sm:px-6 lg:px-8 border-b border-white/[0.06] bg-white dark:bg-[#0b0b0d]">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 pb-8 border-b border-white/[0.08]">
@@ -146,9 +146,9 @@ export default function AboutSection() {
             <div className="pt-7">
               <a
                 href="#schedule"
-                className="inline-flex items-center gap-2 text-sm font-semibold !text-white hover:text-[#22c55e] transition-colors group"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-white hover:text-[#22c55e] transition-colors group"
               >
-                <span className="!text-white group-hover:!text-[#22c55e] transition-colors">
+                <span className="text-zinc-900 dark:text-white group-hover:!text-[#22c55e] transition-colors">
                   View Operating Shifts & Daily Timetable
                 </span>
                 <ArrowUpRight className="w-4 h-4 text-[#22c55e] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
